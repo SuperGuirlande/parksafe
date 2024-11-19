@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load session_tags %}
+
+{% block title %}Mon Compte - CodeMaster{% endblock %}
+
+{% block content %}
+    <div class="mx-auto my-auto max-w-3xl py-12">
+        <h1 class="text-5xl text-blue-500 font-extrabold text-center">
+            <span class='text-slate-700'>Numéro de </span>
+            Mobile
+        </h1>
+        <p class="text-2xl font-light text-center my-3">
+            Renseignez votre numéro de téléphone mobile afin de faciliter vos échanges sur la plateforme.
+        </p>
+        <form method="POST" class="w-full px-5 max-w-[500px] mx-auto flex flex-col my-10">
+            {% csrf_token %}
+            {{ form.phone }}
+            {% if form.phone.errors %}
+                {% for error in form.phone.errors %}
+                    <p class='text-red-500 text-xl mt-8'>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+                    
+            {% if request.session.alert %}
+                <!--ERREUR NUMERO EXISTANT-->
+                <p class='text-red-500 text-xl mt-8'>
+                    {{ request.session.alert }}
+                </p>
+                {% del_session_message %}
+            {% endif %}
+
+            <div class="flex gap-10 w-fit mx-auto">
+                <a class="mx-auto my-10 w-fit text-xl text-white bg-red-500 px-8 py-3 rounded-xl shadow-lg
+                hover:bg-red-600 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 ease-in-out" 
+                href="{% url 'my_account' %}">
+                    Annuler
+                </a>
+                <button class="mx-auto my-10 w-fit text-xl text-white bg-blue-500 px-8 py-3 rounded-xl shadow-lg
+                hover:bg-blue-400 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 ease-in-out">
+                    Enregistrer
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

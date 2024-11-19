@@ -1,0 +1,107 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load places_tags %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block content %}
+<main class="min-h-screen font-poppins">
+    <!-- Section Hero avec barre de recherche -->
+    <section class="relative py-32 bg-white shadow-lg z-[0]">
+        <div class="container mx-auto px-4">
+            <h1 class="text-6xl text-blue-500 font-extrabold text-center mb-10">
+                Rechercher <span>une Place</span>
+            </h1>
+            
+            <div class="max-w-3xl mx-auto">
+                <input type="text" 
+                    class="w-full px-6 py-4 rounded-xl border border-gray-300 shadow-sm mb-6"
+                    placeholder="Exemples : Rue de la fiole - 13000 - Près de la gare">
+                
+                <div class="text-center">
+                    <button class="px-8 py-4 text-xl font-bold text-white bg-blue-500 rounded-xl shadow-md
+                        uppercase hover:bg-blue-400 hover:-translate-y-1 hover:shadow-2xl 
+                        transition-all duration-300 ease-in-out">
+                        Rechercher
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section des dernières places -->
+    <section class="bg-slate-100 py-20 relative z-[1]">
+        <div class="container mx-auto px-4">
+            <h2 class="text-5xl text-blue-500 font-extrabold text-center mb-12">
+                Dernières places ajoutées
+            </h2>
+
+            <!-- Liste des places -->
+            <div class="max-w-5xl mx-auto space-y-8">
+                {% for place in all_places %}
+                <a href="{% url 'parking_place_detail' token=place.token %}" 
+                   class="block transition-transform hover:-translate-y-1">
+                    <article class="bg-white rounded-3xl shadow-md overflow-hidden">
+                        <div class="p-6 flex gap-8">
+                            <!-- Image et prix -->
+                            <div class="w-80 flex flex-col gap-4">
+                                <div class="h-48 w-full">
+                                    <img src="{{place.thumbnail.url}}" 
+                                         class="h-full w-full object-cover rounded-xl"
+                                         alt="Photo de la place">
+                                </div>
+                                <div class="text-center">
+                                    <p class='text-2xl secondary font-bold'>
+                                        Chez {{place.user.first_name}} {{place.user.last_name|slice:"1"}}.
+                                    </p>
+                                </div>
+                                <div class="text-center">
+                                    <span class="inline-block py-3 px-6 bg-secondary text-white rounded-lg font-bold text-2xl">
+                                        {{place.price}}€/jour
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="w-px bg-gray-200"></div>
+
+                            <!-- Informations -->
+                            <div class="flex-1 flex flex-col pr-5">
+                                <h3 class="font-extrabold text-2xl secondary mb-4">
+                                    {{place|simple_format_title}}
+                                </h3>
+                                <div class="space-y-2 text-gray-700 text-lg">
+                                    <p>&#128663; {{place.get_vehicles_types_display}}</p>
+                                    <p>&#x2708; {{place.get_distance_to_transport_display}} des transports</p>
+                                    {% if place.electric_vehicle %}
+                                        <p>&#x1F50C; Recharge de véhicules éléctriques</p>
+                                    {% else %}
+                                        <p>&#x1F50C; Pas de recharge de véhicules éléctriques</p>
+                                    {% endif %}
+                                    {% if place.handicaped_place %}
+                                        <p>&#x1F9BD; Accès aux personnes à mobilité réduite</p>
+                                    {% else %}
+                                        <p>&#x1F9BD; Pas d'accès aux personnes à mobilité réduite</p>
+                                    {% endif %}
+
+                                </div>
+                                <p class="mt-4 text-gray-700">{{place.description}}</p>
+                                
+                                <div class="mt-auto ml-auto">
+                                    <button class="px-6 py-2 bg-secondary text-white rounded-lg text-lg uppercase hover:bg-blue-500 transition-colors">
+                                        Voir l'annonce
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

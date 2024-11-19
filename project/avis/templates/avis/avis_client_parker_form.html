@@ -1,0 +1,118 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+    .star-rating {
+        display: flex;
+        gap: 8px;
+        font-size: 2rem;
+        justify-content: center;
+        margin: 20px 0;
+    }
+    
+    .star {
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #ccc;
+        user-select: none;
+    }
+    
+    .star:hover {
+        transform: scale(1.2);
+    }
+    
+    .star.active {
+        color: #FFD700;
+    }
+
+    #id_stars {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section poppins flex flex-col py-20">
+    <div class="container mx-auto">
+        <h1 class="primary text-5xl uppercase font-semibold text-center" id="laissez-votre-avis">
+            Laissez votre avis
+        </h1>
+
+        <p class="text-center mt-4">
+            Ces avis sont très importants pour les autres utilisateurs.
+            N'hésitez pas à laisser un avis construit sur votre experience avec l'utilisateur de ParkSafe©
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="star-rating" id="star-container">
+                <span class="star" data-rating="1">★</span>
+                <span class="star" data-rating="2">★</span>
+                <span class="star" data-rating="3">★</span>
+                <span class="star" data-rating="4">★</span>
+                <span class="star" data-rating="5">★</span>
+            </div>
+            {{ form.stars }}
+            
+            <div class="mt-4">
+                {{ form.avis }}
+            </div>
+
+            <div class="text-center mt-6">
+                <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg">
+                    Envoyer mon avis
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const starContainer = document.getElementById('star-container');
+        const starsInput = document.getElementById('id_stars');
+        const stars = document.querySelectorAll('.star');
+
+        // Met à jour l'affichage des étoiles
+        function updateStars(selectedRating) {
+            stars.forEach(star => {
+                const rating = parseInt(star.dataset.rating);
+                if (rating <= selectedRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Gestion du clic
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const selectedRating = parseInt(this.dataset.rating);
+                starsInput.value = selectedRating; // Met à jour l'input immédiatement
+                updateStars(selectedRating); // Met à jour l'affichage immédiatement
+                console.log(selectedRating)
+            });
+            
+            // Gestion du survol
+            star.addEventListener('mouseover', function() {
+                const hoveredRating = parseInt(this.dataset.rating);
+                updateStars(hoveredRating);
+            });
+        });
+
+        // Quand la souris quitte la zone des étoiles
+        starContainer.addEventListener('mouseleave', function() {
+            const currentRating = parseInt(starsInput.value) || 5;
+            updateStars(currentRating);
+        });
+
+        // Initialisation
+        updateStars(parseInt(starsInput.value) || 5);
+    });
+</script>
+{% endblock %}

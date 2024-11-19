@@ -1,0 +1,28 @@
+#avisContainer {
+    display: flex;
+    transition: all 0.3s ease;
+    gap: 20px;
+    position: relative;
+}
+
+.avis-cards-wrapper {
+    display: flex;
+    transition: transform 0.3s ease;
+    gap: 20px;
+}
+
+.avis-card {
+    flex: 0 0 auto;
+    width: 450px;
+}
+
+#prevBtn, #nextBtn {
+    transition: all 0.2s ease;
+    transform: translateY(-50%);
+    opacity: 0.8;
+}
+
+#prevBtn:hover, #nextBtn:hover {
+    transform: translateY(-50%) scale(1.1);
+    opacity: 1;
+}

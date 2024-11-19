@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}A propos de ParkSafe | Location de places de parking entre particuliers{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'faq/faq_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Comment ça marche ? -->
+ <div class="shadow-md relative z-[0] bg-blue-50">
+    {% include 'main/sections/comment_ca_marche_section.html' %}
+</div>
+     <!-- FAQ -->
+<div class="relative z-[-1]">
+    {% include 'main/sections/faq_section.html' %}
+</div>
+
+{% endblock %}
+
+
+{% block extra_script %}
+<script src="{% static 'faq/faq_script.js' %}"></script>
+{% endblock %}

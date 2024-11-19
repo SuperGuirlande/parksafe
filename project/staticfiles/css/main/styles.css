@@ -1,0 +1,54 @@
+:root {
+    --primary-blue: #4495FF;
+    --secondary-blue: #18477A;
+    --tertiary-green: #5BE8AB;
+
+    --primary-hover: #67a9ff;
+    --secondary-hover: #295e97;
+    --tertiary-hover: #86e9be;
+}
+
+/* TEXT FONTS */
+.jomhuria { font-family: 'Jomhuria', sans-serif;}
+.montserrat {font-family: 'Montserrat', sans-serif;}
+.poppins {font-family: 'Poppins', sans-serif;}
+.opensans {font-family: 'Open Sans', sans-serif;}
+
+
+/* TEXT COLORS */
+.primary {color: var(--primary-blue);}
+.secondary {color: var(--secondary-blue);}
+.tertiary {color: var(--tertiary-green);}
+
+/* BACKGROUND COLORS */
+.bg-primary {background-color: var(--primary-blue);}
+.bg-secondary {background-color: var(--secondary-blue);}
+.bg-tertiary {background-color: var(--tertiary-green);}
+
+
+/* BUTTONS */
+.button {
+    padding: 10px 20px;
+    border-radius: 12px;
+
+    transition: all .3s ease-in-out;
+}
+
+.secondary-button {
+    background-color: var(--secondary-blue);
+}
+
+.secondary-button:hover {
+    background-color: var(--secondary-hover);
+}
+
+.white-border-button {
+    padding: 8px 18px;
+    border: solid 2px white;
+    color: white;
+}
+
+.white-border-button:hover {
+    border-color: #96d8ff;
+    color: #96d8ff;
+}

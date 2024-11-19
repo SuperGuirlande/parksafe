@@ -1,0 +1,39 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_head %}{% endblock %}
+
+{% block content %}
+<section class="my-20 py-24 bg-slate-100 shadow-xl poppins text-center">
+    <div class='flex flex-col w-full max-w-[650px] mx-auto gap-10'>
+        <img src="{% static 'images/marks/check.png' %}" class="w-24 mx-auto">
+        <h1 class="text-3xl secondary font-medium">
+            Votre demande à été transmise à l'hôte
+        </h1>
+        <p class="text-xl font-light text-slate-700">
+            La demande de réservation est en attente d'acceptation de la part de l'hôte
+            <br><br>
+            Vous recevrez une notification par email/sms une fois vous indiquant la réponse de l'hôte.
+            <br><br>
+            Vous pouvez faire plusieurs demande à des hôtes différents pour maximiser les chances d'avoir la place idéale pour votre voyage 
+        </p>
+        <div class="flex gap-5 mx-auto">
+            <a href="{% url 'client_reservations_waiting' %}">
+                <button class='bg-primary py-2 px-6 uppercase text-white rounded-xl text-lg shadow-lg
+                    hover:bg-blue-400 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 ease-in-out'>
+                    Mes réservation
+                </button>
+            </a>
+            <a href="{% url 'index' %}">
+                <button class='bg-secondary py-2 px-6 uppercase text-white rounded-xl text-lg shadow-lg
+                    hover:bg-blue-700 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 ease-in-out'>
+                    Retour à l'accueil
+                </button>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_script %}{% endblock %}

@@ -1,0 +1,222 @@
+{% extends 'accounts/account_base.html' %}
+{% load static %}
+{% load session_tags %}
+
+{% block title %}Modifier le contenu - Page devenir Hôte | ParkSafe{% endblock %}
+
+{% block extra_head %}
+<style>
+    .order-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .btn-move {
+        padding: 0.25rem 0.5rem;
+        background-color: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-move:hover:not(:disabled) {
+        background-color: #e2e8f0;
+    }
+    .btn-move:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    .btn-delete:hover:not(:disabled) {
+        background-color: #fee2e2;
+        border-color: #fecaca;
+    }
+    .btn-add {
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen">
+    {% include 'accounts/account_sidebar.html' %}
+    
+    <main class="mx-auto max-w-[1080px] poppins py-12">
+        <h1 class="text-5xl font-bold primary">Modifier le contenu de la page Devenir Hôte</h1>
+        <p class="text-xl font-light mt-6 mb-12">
+            Dans cette section, vous avez un aperçu des sections de la page devenir hôte, et vous pouvez en changer l'ordre et le contenu.
+        </p>
+
+        <!-- COMMENT CA MARCHE -->
+        <section class="flex flex-col poppins pb-12">
+            <div class="container max-w-[1200px] mx-auto relative">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl secondary font-semibold mt-5">
+                        Comment ça marche<span>?</span>
+                    </h1>
+                    <button onclick="window.location.href='{% url 'devenir_hote_add_ccm' %}'" 
+                            class="btn-add bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg transition-colors">
+                        + Ajouter une étape
+                    </button>
+                </div>
+                <div class="absolute h-[2px] w-40 bg-slate-300 translate-y-2"></div>
+                
+                <div class="flex flex-col gap-6 max-w-[720px] mt-12">
+                    {% for item in ccm_items %}
+                    <div class="flex gap-10 items-center group">
+                        <div class="h-24 basis-24 shrink-0 text-5xl font-bold shadow-xl rounded-2xl flex items-center justify-center
+                        {% if item.ordre == 2 %}text-white bg-primary{% else %}primary bg-gray-100{% endif %}">
+                            <p>{{item.ordre}}</p>
+                        </div>
+                        <p class="text-md flex-1">
+                            <span class="text-lg font-semibold secondary">{{item.title}}</span><br>
+                            {{item.content}}
+                        </p>
+                        <div class="order-buttons opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="moveItem({{item.id}}, 'up', 'ccm', event)" 
+                                    class="btn-move" 
+                                    {% if forloop.first %}disabled{% endif %}>↑</button>
+                            <button onclick="moveItem({{item.id}}, 'down', 'ccm', event)" 
+                                    class="btn-move" 
+                                    {% if forloop.last %}disabled{% endif %}>↓</button>
+                            <button onclick="window.location.href='{% url 'devenir_hote_edit_ccm' item.id %}'" 
+                                    class="btn-move">✍</button>
+                            <button onclick="deleteItem({{item.id}}, 'ccm', event)" 
+                                    class="btn-move btn-delete">❌</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- POURQUOI DEVENIR HOTE -->
+        <section class="flex flex-col poppins py-12">
+            <div class="container max-w-[1200px] mx-auto relative flex flex-col">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl secondary font-semibold mt-5">
+                        Pourquoi devenir Hôte ParkSafe<span>?</span>
+                    </h1>
+                    <button onclick="window.location.href='{% url 'devenir_hote_add_pdh' %}'" 
+                            class="btn-add bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg transition-colors">
+                        + Ajouter une raison
+                    </button>
+                </div>
+                <div class="absolute h-[2px] w-40 bg-slate-300 translate-y-2"></div>
+
+                <div class="flex justify-evenly gap-5 flex-wrap mt-12">
+                    {% for item in pdh_items %}
+                    <div class="group flex flex-col gap-5 basis-[350px] shrink-0 mt-5 relative">
+                        <div class="order-buttons absolute -top-4 -right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="moveItem({{item.id}}, 'up', 'pdh', event)" 
+                                    class="btn-move" 
+                                    {% if forloop.first %}disabled{% endif %}>↑</button>
+                            <button onclick="moveItem({{item.id}}, 'down', 'pdh', event)" 
+                                    class="btn-move" 
+                                    {% if forloop.last %}disabled{% endif %}>↓</button>
+                            <button onclick="window.location.href='{% url 'devenir_hote_edit_pdh' item.id %}'" 
+                                    class="btn-move">✍</button>
+                            <button onclick="deleteItem({{item.id}}, 'pdh', event)" 
+                                    class="btn-move btn-delete">❌</button>
+                        </div>
+                        <h3 class="text-xl secondary font-semibold text-center">{{item.title}}</h3>
+                        <p class="text-lg text-justify">{{item.content}}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+    // Bouton SideBar
+    const button = document.getElementById('admin')
+    button.classList.add('active')
+    const section = button.closest('.link-section');
+    section.classList.add('active')
+    const link = document.getElementById('devenir_hote')
+    link.classList.add('active')
+
+    async function moveItem(itemId, direction, section, event) {
+        event.stopPropagation();
+        const url = section === 'ccm' 
+            ? "{% url 'move_devenir_hote_ccm' %}" 
+            : "{% url 'move_devenir_hote_pdh' %}";
+        
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    item_id: itemId,
+                    direction: direction
+                })
+            });
+
+            if (!response.ok) throw new Error('Erreur réseau');
+            const data = await response.json();
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Erreur lors du déplacement');
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue');
+        }
+    }
+
+    async function deleteItem(itemId, section, event) {
+        event.stopPropagation();
+        if (!confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) return;
+        
+        const url = section === 'ccm' 
+            ? "{% url 'delete_devenir_hote_ccm' %}" 
+            : "{% url 'delete_devenir_hote_pdh' %}";
+        
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    item_id: itemId
+                })
+            });
+
+            if (!response.ok) throw new Error('Erreur réseau');
+            const data = await response.json();
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(data.error || 'Erreur lors de la suppression');
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue lors de la suppression');
+        }
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,323 @@
+{% extends "main/base.html" %} 
+{% load static %} 
+{% load places_tags %}
+
+{% block extra_head %}
+{% include 'interactive_map/here_header.html' %}
+<link rel="stylesheet" href="{% static 'faq/faq_styles.css' %}">
+<link rel='stylesheet' href="{% static 'avis_styles.css' %}">
+
+<!-- PHONE STYLE -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+
+<style>
+.iti {
+}
+
+/* Cacher le dropdown par défaut du navigateur */
+select.phone-input {
+    display: none;
+}
+
+.iti__flag {
+    background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags.png");
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .iti__flag {
+        background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags@2x.png");
+    }
+}
+</style>
+{{ block.super }}
+{% endblock %}
+
+{% block content %}
+{% include 'parking_places/place_detail_section.html' %}
+<section id="formulaire" class="py-10 poppins flex flex-col">
+    <h1 class="text-center text-5xl primary font-semibold uppercase">Demande de réservation</h1>
+    <p class="text-xl font-light text-slate-600 text-center mt-5">
+        Effectuez votre demande de réservation en quelques secondes. <br>
+        Un paiement de vous sera demandé seulement si la demande est approuvée par le loueur
+    </p>
+    <form action="#formulaire" method="post" class="flex flex-col w-full max-w-[550px] mx-auto mt-12 gap-8">
+        {% csrf_token %}
+
+        <!-- ARRIVEE & DEPART -->
+        <div class="flex gap-3 flex-wrap">
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                <p class="text-lg secondary">
+                    {{form.arrivee.label}}
+                </p>
+                {{form.arrivee}}
+                {% for error in form.arrivee.errors %}
+                <p class="text-lg text-red-500">
+                    {{error}}
+                </p>
+                {% endfor %}
+            </div>
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                <p class="text-lg secondary">
+                    {{form.departure.label}}
+                </p>
+                {{form.departure}}
+                {% for error in form.departure.errors %}
+                <p class="text-lg text-red-500">
+                    {{error}}
+                </p>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- NOMBRE DE VEHICULES -->
+        <div class="flex flex-col">
+            <p class="text-lg secondary">
+                {{form.vehicules_number.label}}
+            </p>
+            {{form.vehicules_number}}
+            {% for error in form.vehicules_number.errors %}
+            <p class="text-lg text-red-500">
+                {{error}}
+            </p>
+            {% endfor %}
+        </div>
+        <!-- TYPES DE VEHICULES & MODELS -->
+        <!-- Premier véhicule - toujours visible -->
+        <div class="vehicle-fields vehicle-1 flex flex-wrap gap-3">
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                {{form.vehicule_type_1.label}}
+                {{form.vehicule_type_1}}
+                {% for error in form.vehicule_type_1.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                {{form.vehicule_model_1.label}}
+                {{form.vehicule_model_1}}
+                {% for error in form.vehicule_model_1.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Véhicule 2 -->
+        <div class="vehicle-fields vehicle-2 flex flex-wrap gap-3" style="display: none;">
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                {{form.vehicule_type_2.label}}
+                {{form.vehicule_type_2}}
+                {% for error in form.vehicule_type_2.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                {{form.vehicule_model_2.label}}
+                {{form.vehicule_model_2}}
+                {% for error in form.vehicule_model_2.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Véhicule 3 -->
+        <div class="vehicle-fields vehicle-3 flex flex-wrap gap-3" style="display: none;">
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                {{form.vehicule_type_3.label}}
+                {{form.vehicule_type_3}}
+                {% for error in form.vehicule_type_3.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                {{form.vehicule_model_3.label}}
+                {{form.vehicule_model_3}}
+                {% for error in form.vehicule_model_3.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Véhicule 4 -->
+        <div class="vehicle-fields vehicle-4 flex flex-wrap gap-3" style="display: none;">
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                {{form.vehicule_type_4.label}}
+                {{form.vehicule_type_4}}
+                {% for error in form.vehicule_type_4.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                {{form.vehicule_model_4.label}}
+                {{form.vehicule_model_4}}
+                {% for error in form.vehicule_model_4.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Véhicule 5 -->
+        <div class="vehicle-fields vehicle-5 flex flex-wrap gap-3" style="display: none;">
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                {{form.vehicule_type_5.label}}
+                {{form.vehicule_type_5}}
+                {% for error in form.vehicule_type_5.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                {{form.vehicule_model_5.label}}
+                {{form.vehicule_model_5}}
+                {% for error in form.vehicule_model_5.errors %}
+                    {{error}}
+                {% endfor %}
+            </div>
+        </div>
+        <!-- TELEPHONE & PASSAGER -->
+        <div class="flex flex-wrap gap-3">
+
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                <p class="text-lg secondary">
+                     {{form.phone.label}}
+                </p>
+                {{form.phone}}
+                {% for error in form.phone.errors %}
+                <p class="text-lg text-red-500">
+                    {{error}}
+                </p>
+                {% endfor %}
+            </div>
+            <div class="flex flex-col basis-[200px] grow shrink-0">
+                <p class="text-lg secondary">
+                     {{form.passengers.label}}
+                </p>
+                {{form.passengers}}
+                {% for error in form.passengers.errors %}
+                <p class="text-lg text-red-500">
+                    {{error}}
+                </p>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- MESSAGE -->
+        <div class="flex flex-col">
+            <p class="text-lg secondary">
+                {{form.message.label}}
+            </p>
+            {{form.message}}
+            {% for error in form.message.errors %}
+            <p class="text-lg text-red-500">
+                {{error}}
+            </p>
+            {% endfor %}
+        </div>
+
+        {% for field in form %}
+            
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <p class="text-lg text-red-500">{{ field.label_tag }} {{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        <!-- BOUTON -->
+        <button type='submit' class="px-5 py-3 w-fit mx-auto bg-primary text-white text-xl rounded-xl shadow-lg
+        hover:bg-blue-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out">
+            Envoyer ma demande
+        </button>
+    </form>
+</section>
+{% endblock %}
+
+
+{% block extra_script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.querySelector("input[name='phone']");
+    if (input) {
+        const iti = window.intlTelInput(input, {
+            initialCountry: "fr",
+            preferredCountries: ["fr", "be", "ch"],
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            separateDialCode: true,
+            formatOnDisplay: true,
+            nationalMode: true,
+            customContainer: "w-full",
+            // Pour avoir le style de l'image
+            dropdownContainer: document.body,
+            autoPlaceholder: "polite"
+        });
+
+        // Pour mettre à jour la valeur complète avec l'indicatif pays
+        input.addEventListener('blur', function() {
+            const number = iti.getNumber();
+            input.value = number;
+        });
+    }
+});
+
+// DYNAMIQUE FORM
+document.addEventListener('DOMContentLoaded', function() {
+    const vehicleNumberSelect = document.querySelector('[name="vehicules_number"]');
+    
+    function updateVehicleFields(numberOfVehicles) {
+        // Masquer/afficher les champs de véhicules
+        for(let i = 1; i <= 5; i++) {
+            const vehicleContainer = document.querySelector(`.vehicle-${i}`);
+            if(!vehicleContainer) continue;
+            
+            if(i <= numberOfVehicles) {
+                vehicleContainer.style.display = 'flex';
+                // Rendre les champs requis
+                vehicleContainer.querySelectorAll('input, select').forEach(field => {
+                    field.required = true;
+                });
+            } else {
+                vehicleContainer.style.display = 'none';
+                // Retirer required et vider les champs
+                vehicleContainer.querySelectorAll('input, select').forEach(field => {
+                    field.required = false;
+                    field.value = '';
+                });
+            }
+        }
+    }
+
+    // Initialiser l'affichage
+    updateVehicleFields(parseInt(vehicleNumberSelect.value || 1));
+
+    // Mettre à jour lors du changement
+    vehicleNumberSelect.addEventListener('change', function(e) {
+        updateVehicleFields(parseInt(e.target.value));
+    });
+
+    // Validation avant soumission
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const numberOfVehicles = parseInt(vehicleNumberSelect.value);
+        let isValid = true;
+
+        for(let i = 1; i <= numberOfVehicles; i++) {
+            const container = document.querySelector(`.vehicle-${i}`);
+            const fields = container.querySelectorAll('input, select');
+            
+            fields.forEach(field => {
+                if(!field.value) {
+                    isValid = false;
+                    field.classList.add('error');
+                }
+            });
+        }
+
+        if(!isValid) {
+            e.preventDefault();
+            alert('Veuillez remplir tous les champs requis pour chaque véhicule.');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,115 @@
+<div class="w-full relative z-[10]"> <!-- Wrapper ajouté -->
+    <section class="bg-primary flex rounded-b-2xl relative mb-5 py-2">
+        <!-- Le contenu principal (logo + nav) -->
+        <div class="flex justify-between w-full max-w-[1280px] items-center mx-auto relative z-40 px-4">
+            <!-- LOGO -->
+            <div id="navbar-brand" class="flex items-center">
+                <a href="{% url 'index' %}" alt="Retour à l'accueil">
+                    <h1 class="text-5xl md:text-7xl text-white jomhuria translate-y-1">
+                        <span class="secondary">Park</span>Safe
+                    </h1>
+                </a>
+            </div>
+
+            <!-- NAVIGATION -->
+            <nav class="hidden lg:flex text-white gap-6 poppins text-lg items-center">
+                <a href="{% url 'index' %}" class="hover:underline"><p>Accueil</p></a>
+                <a href="{% url 'a_propos' %}" class="hover:underline"><p>A Propos</p></a>
+                <a href="{% url 'search_parking_place_index' %}">
+                    <button class="button white-border-button">
+                        Rechercher une place
+                    </button>
+                </a>
+            </nav>
+
+            <!-- USER NAVIGATION -->
+            <nav class="hidden lg:flex text-white gap-3 poppins text-lg items-center">
+                <a href="{% url 'devenir_hote' %}">
+                    <button class="button white-border-button">
+                        Louer mes places
+                    </button>
+                </a>
+                <div class="relative">
+                    {% if request.user.is_authenticated %}
+                    <button class="button secondary-button" id="account_button">
+                        Mon Compte
+                    </button>
+                    <div class="absolute w-[300px] translate-y-4 top-full right-0 z-50 bg-white px-6 py-6 text-right text-lg uppercase
+                        rounded-xl shadow-lg hidden secondary" id="account_nav">
+                        <a href="{% url 'client_reservations_waiting' %}" class="block hover:underline">Mes Voyages</a>
+                        <hr class="my-2">
+                        <a href="{% url 'my_account_places' %}" class="block hover:underline">Mon Park</a>
+                        <hr class="my-2">
+                        <a href="#revenus" class="block hover:underline">Revenus</a>
+                        <hr class="my-2">
+                        <a href="{% url 'my_account' %}" class="block hover:underline">Informations du compte</a>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'login' %}">
+                        <button class="button secondary-button">
+                            Connexion
+                        </button>
+                    </a>
+                    {% endif %}
+                </div>
+            </nav>
+
+            <!-- MOBILE MENU -->
+            <div class="flex lg:hidden items-center">
+                <button id="mobile_menu_button" class="text-white text-3xl">
+                    ☰
+                </button>
+            </div>
+        </div>
+
+        <!-- MOBILE MENU DROPDOWN -->
+        <div id="mobile_menu" class="hidden flex-col gap-4 text-white text-lg poppins bg-primary rounded-b-2xl p-5 lg:hidden">
+            <a href="{% url 'index' %}" class="block hover:underline">Accueil</a>
+            <a href="{% url 'a_propos' %}" class="block hover:underline">A Propos</a>
+            <a href="{% url 'search_parking_place_index' %}">
+                <button class="button white-border-button w-full">
+                    Rechercher une place
+                </button>
+            </a>
+            <a href="{% url 'create_parking_place' %}">
+                <button class="button white-border-button w-full">
+                    Louer mes places
+                </button>
+            </a>
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'client_reservations_waiting' %}" class="block hover:underline">Mes Voyages</a>
+            <a href="{% url 'my_account_places' %}" class="block hover:underline">Mon Park</a>
+            <a href="#revenus" class="block hover:underline">Revenus</a>
+            <a href="{% url 'my_account' %}" class="block hover:underline">Informations du compte</a>
+            {% else %}
+            <a href="{% url 'login' %}" class="block hover:underline">Connexion</a>
+            {% endif %}
+        </div>
+
+        <!-- BLUE DECOR -->
+        <div class="absolute z-[-1] left-0 bottom-0 translate-y-5 bg-secondary w-full h-full rounded-b-2xl"></div>
+        <!-- GREEN DECOR -->
+        <div class="absolute z-[-2] left-0 bottom-0 translate-y-10 bg-tertiary w-full h-full rounded-b-2xl"></div>
+    </section>
+
+    <script>
+        const accountButton = document.getElementById("account_button");
+        const accountNav = document.getElementById("account_nav");
+        const mobileMenuButton = document.getElementById("mobile_menu_button");
+        const mobileMenu = document.getElementById("mobile_menu");
+
+        // Toggle account dropdown
+        if (accountButton) {
+            accountButton.addEventListener('click', function () {
+                accountNav.classList.toggle('hidden');
+            });
+        }
+
+        // Toggle mobile menu
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', function () {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    </script>
+</div>

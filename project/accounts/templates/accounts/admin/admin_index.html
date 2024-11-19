@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load session_tags %}
+
+{% block title %}Espace Administrateur | ParkSafe{% endblock %}
+
+{% block extra_head %}
+{% endblock %}
+
+
+{% block content %}
+<section class="flex py-20">
+    <div class="container mx-auto">
+        <h1 class="poppins font-bold primary text-6xl text-center">
+            Espace <span class="secondary">Administrateur</span>
+        </h1>
+        <a href="{% url 'faq_index' %}">Modifier la FAQ →</a><br>
+        <a href="{% url 'poi_index' %}">Les points d'intéret →</a>
+    </div>
+</section>
+{% endblock %}

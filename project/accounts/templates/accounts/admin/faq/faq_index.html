@@ -1,0 +1,80 @@
+{% extends 'accounts/account_base.html' %}
+{% load static %}
+{% load session_tags %}
+
+{% block title %}Ajouter / Modifier FAQ | ParkSafe{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'faq/faq_styles.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="flex min-h-screen">
+
+    {% include 'accounts/account_sidebar.html' %}
+    <main class="mx-auto">
+        <section class="flex py-20">
+            <div class="container mx-auto flex flex-col">
+
+                <h1 class="poppins font-bold primary text-6xl text-center">
+                    Apercu <span class="secondary">FAQ</span>
+                </h1>
+
+                {% if not items.exists %}
+                <p>Aucune question/reponses pour le moment</p>
+                {% else %}
+                <div class="w-full max-w-4xl mx-auto my-20">
+                    {% for item in items %}
+                    <div class="question-card flex flex-col w-full bg-slate-100 py-5 px-10 my-5 shadow-md transition-all duration-200"
+                        data-id="{{ item.id }}" data-ordre="{{ item.ordre }}" data-target="{{ item.id }}">
+                        <div class="flex w-full justify-between items-center secondary">
+                            <div class="flex items-center flex-1">
+                                {{ item.question }}
+                            </div>
+                            <div class="order-buttons">
+                                <button class="btn-move" {% if forloop.first %}disabled{% endif %}
+                                    onclick="moveItem('{{ item.id }}', 'up', event)">↑</button>
+                                <button class="btn-move" {% if forloop.last %}disabled{% endif %}
+                                    onclick="moveItem('{{ item.id }}', 'down', event)">↓</button>
+                                <a href="{% url 'change_faq_item' id=item.id %}">
+                                    <button class="btn-move btn-change">&#x270D;</button>
+                                </a>
+                                <button class="btn-move btn-delete"
+                                    onclick="deleteItem('{{ item.id }}', event)">&#x274C;</button>
+                            </div>
+                            <div class="pointer ml-4 transition-transform duration-200">></div>
+                        </div>
+                        <div id="{{ item.id }}" class="reponse">
+                            {{item.reponse}}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <a href="{% url 'create_faq_item' %}" class="mx-auto my-10">
+                    <button class="py-4 px-6 bg-blue-500 hover:bg-blue-400 text-xl text-white shadow-md hover:shadow-2xl hover:-translate-y-2
+            transition-all duration-300 ease-in-out rounded-2xl">
+                        Ajouter Question/Reponse
+                    </button>
+                </a>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="{% static 'faq/faq_script.js' %}"></script>
+<script>
+    // Bouton SideBar
+    const button = document.getElementById('admin')
+    button.classList.add('active')
+    const section = button.closest('.link-section');
+    section.classList.add('active')
+
+    const link = document.getElementById('admin_faq')
+    link.classList.add('active')
+</script>
+{% endblock %}

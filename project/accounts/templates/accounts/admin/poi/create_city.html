@@ -1,0 +1,46 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen">
+
+    {% include 'accounts/account_sidebar.html' %}
+    <main class="mx-auto">
+        <div class="w-full max-w-[720px] mx-auto px-5 my-20 poppins">
+            <h1 class="text-5xl font-bold mb-6 primay text-center uppercase primary">Ajouter une ville</h1>
+            <p class="text-xl text-slate-600 font-light uppercase text-center">
+                Ajouter un nom de ville pour les points d'intérêt (Lyon, Nantes, Nice, Marseille, ... )</p>
+            
+            <form method="POST" class="max-w-[500px] mx-auto flex flex-col">
+                {% csrf_token %}
+                {% for field in form %}
+                {% if not field.is_hidden %}
+                <div class="my-10 w-full flex flex-col">
+                    <label for="{{ field.id_for_label }}" class="block text-lg secondary font-medium mb-1">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="mt-1 text-red-600 text-sm">
+                        {{ field.errors|join:", " }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% endfor %}
+                
+                <button type="submit" class="bg-blue-500 text-white py-3 px-6 text-xl rounded-md hover:bg-blue-600 w-fit mx-auto">
+                    Créer
+                </button>
+            </form>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+
+{% endblock %}

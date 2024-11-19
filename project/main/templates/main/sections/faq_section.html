@@ -1,0 +1,22 @@
+<section class="min-h-screen shadow-lg flex flex-col py-20 px-5">
+    <div class="my-auto mx-auto">
+        <h1 class="text-4xl sm:text-5xl md:text-7xl poppins primary font-extrabold w-fit text-center mx-auto" id="faq-title">FAQ</h1>
+
+        <div class="w-full max-w-4xl mx-auto my-20">
+            {% for item in faq_items %}
+            <div class="question-card flex flex-col w-full bg-slate-100 py-5 px-10 my-5 shadow-md cursor-pointer
+            transition-all duration-200 hover:bg-slate-200" data-target="{{item.id}}">
+
+                <div class="flex w-full justify-between secondary">
+                    <p class="text-md sm:text-lg md:text-xl poppins">{{ item.question }}</p>
+                    <p class="text-md sm:text-lg md:text-xl poppins pointer transition-all duration-200">&gt;</p>
+
+                </div>
+                <p class="text-sm md:text-md poppins transition-all duration-300 ease-out reponse" id="{{item.id}}">
+                    {{item.reponse}}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

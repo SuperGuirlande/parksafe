@@ -1,0 +1,106 @@
+{% extends 'accounts/account_base.html' %}
+{% load static %}
+{% load places_tags %}
+{% load session_tags %}
+
+{% block account_title %}Réservations en attente | ParkSafe{% endblock %}
+
+{% block account_head %}
+{% endblock %}
+
+{% block account_content %}
+<div class="flex gap-20 min-h-screen poppins">
+
+    {% include 'accounts/account_sidebar.html' %}
+    <main class="basis-[1080px] shrink grow-0 mx-auto">
+        <div class="w-full max-w-[1080px] mx-auto text-center py-20">
+            <!-- MESSAGE DE SESSION -->
+            {% if request.session.message %}
+            <p class="text-xl my-5 text-green-600 font-bold text-center mx-auto">
+                {{ request.session.message }}
+            </p>
+            {% del_session_message %}
+            {% endif %}
+
+            <!-- TITLE -->
+            <h1 class="text-5xl primary text-center font-semibold">
+                Réservations à traiter
+            </h1>
+            <p class="text-xl font-light text-slate-600 my-5">
+                Dans cette section, vous trouverez les demandes de réservations en attente d'un acceptation de votre part
+            </p>
+        </div>
+        <div class="flex flex-col">
+            {% if not reservations.exists %}
+            <p class="text-2xl secondary text-center">
+                Pas de demande à traiter pour le moment
+            </p>
+            {% else %}
+            <!-- LISTE -->
+            <div class="flex flex-col gap-5">
+                {% for res in reservations %}
+                    <!-- RESERVATION -->
+                    <div class="bg-slate-100 shadow-xl py-10 px-12 flex gap-6">
+                        <!-- MINIATURE -->
+                        <div class="w-64 h-64 overflow-hidden">
+                            <img src="{{ res.place.thumbnail.url }}" alt="" class="object-cover object-center">
+                        </div>
+                        <!-- TEXT -->
+                        <div class="flex flex-col gap-5">
+                            <h2 class="secondary text-3xl font-normal">
+                                Demande de <span class="font-semibold">{{ res.name }}</span>
+                            </h2>
+                            <p class="text-xl text-slate-800">
+                                <b>Départ:</b> {{ res.arrivee|date:"d/m/Y"}} à {{ res.arrivee|date:"H:i"}} |
+                                <b>Retour:</b> {{ res.departure|date:"d/m/Y"}} à {{ res.departure|date:"H:i"}}
+
+                            </p>
+                            <p class="text-md">
+                                {{res.message}}
+                            </p>
+        
+                            <div class="space-y-2 text-gray-700 text-md">
+                                <p><b>Durée : </b>{{ res.days }} jours</p>
+                                <p><b>Nb de véhicules : </b>{{ res.vehicules_number }}</p>
+                                <p><b>Nb de passagers : </b>{{ res.passengers }}</p>
+                                <p><b>Prix total :</b> {{ res.price }} €</p>
+                            </div>
+
+                            <div class="flex gap-5 ml-auto">
+                                <a href="{% url 'parker_cancel_reservation' res.token %}" class="ml-auto">
+                                    <button class="py-2 px-5 uppercase text-white bg-red-500 rounded-xl hover:bg-red-700
+                                        shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
+                                        Refuser la demande
+                                    </button>
+                                </a>
+                                <a href="{% url 'parker_accept_reservation' res.token %}" class="ml-auto">
+                                    <button class="py-2 px-5 uppercase text-white bg-green-500 rounded-xl hover:bg-green-700
+                                        shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out text-lg">
+                                        Accepter la réservation
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block account_script %}
+<script>
+    window.onload = function () {
+        // Bouton SideBar
+        const button = document.getElementById('my_announcements');
+        button.classList.add('active');
+        const section = button.closest('.link-section');
+        section.classList.add('active');
+
+        const link = document.getElementById('reservation_waiting');
+        link.classList.add('active');
+    }
+</script>
+{% endblock %}

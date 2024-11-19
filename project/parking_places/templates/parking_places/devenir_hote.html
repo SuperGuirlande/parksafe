@@ -1,0 +1,64 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Proposer ma place de parking | ParkSafe{% endblock %}
+
+{% block extra_head %}
+<style>
+    #comment-title {
+        position: relative;
+    }
+
+    #comment-title span {
+        position: absolute;
+        font-size: 50px;
+        transform: translate(10px, -35px) rotate(30deg);
+    }
+
+    #comment-title span::before {
+        content: "?";
+        position: absolute;
+        font-size: 35px;
+        color: rgb(85, 103, 165);
+        transform: translate(-15px, 10px) rotate(-30deg);
+    }
+    
+    #comment-title span::after {
+        content: "?";
+        position: absolute;
+        font-size: 35px;
+        color: rgb(85, 103, 165);
+        transform: translate(-5px, 10px) rotate(20deg);
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<!-- TITLE -->
+<section class="py-16 poppins flex flex-col">
+    <h1 class="text-4xl secondary font-semibold text-center mt-5">
+        Devenir Hôte ParkSafe
+    </h1>
+    <p class="text-center px-5 text-lg font-light mt-6">
+        Vous avez une place de parking inutilisée ? <br>
+        Transformez-la en une source de revenus en rejoignant notre communauté d'hôtes.
+    </p>
+    <a href="{% url 'create_parking_place' %}" class="text-center mx-auto my-12">
+        <button class="py-4 px-10 text-2xl text-white bg-secondary rounded-xl shadow-md
+        hover:bg-blue-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out">
+            Créer mon annonce
+        </button>
+    </a>
+</section>
+
+<!-- COMMENT CA MARCHE -->
+{% include 'parking_places/sections/ccm_devenir_hote_section.html' %}
+
+<!-- POURQUOI DEVENIR HOTE -->
+{% include 'parking_places/sections/pdh_devenir_hote_section.html' %}
+
+{% endblock %}
+
+
+{% block extra_script %}{% endblock %}

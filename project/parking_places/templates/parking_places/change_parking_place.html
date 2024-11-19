@@ -1,0 +1,271 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Proposer ma place de parking | ParkSafe{% endblock %}
+
+{% block extra_head %}
+{% include 'interactive_map/here_header.html' %}
+
+<style>
+    #suggestions {
+        border: 1px solid #ccc;
+        max-height: 200px;
+        overflow-y: auto;
+        position: absolute;
+        background-color: white;
+        z-index: 1000;
+        width: 100%;
+    }
+
+    .suggestion-item {
+        padding: 5px;
+        cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+        background-color: #f0f0f0;
+    }
+
+    .custom-file-upload {
+        display: inline-block;
+        padding: 10px 18px;
+        cursor: pointer;
+        background-color: #3B82F6;
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        transition: all 0.2s ease-in-out;
+        width: fit-content;
+    }
+
+    .custom-file-upload:hover {
+        background-color: #2563EB;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="my-auto mx-auto poppins py-12 w-full max-w-[720px]">
+    <h1 class="primary text-8xl mt-10 drop-shadow-lg text-center jomhuria" id="proposer-une-place">
+        <span class="secondary">Park</span>Safe
+    </h1>
+    <h2 class="text-2xl font-medium secondary text-center uppercase -mt-5">
+        Modifier mon annonce
+    </h2>
+
+    <form method="post" enctype="multipart/form-data" class="w-full max-w-[500px] mx-auto">
+        {% csrf_token %}
+        
+        {% comment %} PRIX {% endcomment %}
+        <div class="flex flex-col mt-8 text-lg w-fit gap-2">
+            <p>{{ form.price.label }}</p>
+            <div class="w-fit">
+                {{ form.price }}
+            </div>
+            {% for error in form.price.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} NOMBRE DE PLACES {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg w-fit gap-2">
+            <p>{{ form.places.label }}</p>
+            <div class="w-fit">
+                {{ form.places }}
+            </div>
+            {% for error in form.places.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} ADRESSE COMPLETE {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.address.label }}</p>
+            {{ form.address }}
+            <div class="relative">
+                <div id="suggestions" class="absolute z-10 w-full bg-white border border-gray-300 mt-1"></div>
+            </div>
+            {% for error in form.address.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} DESCRIPTION {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.description.label }}</p>
+            {{ form.description }}
+            {% for error in form.description.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} MINIATURE {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.thumbnail.label }}</p>
+            <p class='text-sm text-slate-500 -mt-2'>
+                Vous pourrez ajouter d'autres photos par la suite
+            </p>
+            {{ form.thumbnail }}
+            {% for error in form.thumbnail.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} TYPES DE VEHICULES {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.vehicles_types.label }}</p>
+            {{ form.vehicles_types }}
+            {% for error in form.vehicles_types.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} DISTANCE A PIED {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.distance_to_transport.label }}</p>
+            {{ form.distance_to_transport }}
+            {% for error in form.distance_to_transport.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} NAVETTE {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.navette_possible.label }}</p>
+            {{ form.navette_possible }}
+            {% for error in form.navette_possible.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} PRIX NAVETTE {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-fit">
+            <p>{{ form.navette_price.label }}</p>
+            <div class="w-fit">{{ form.navette_price }}</div>
+            {% for error in form.navette_price.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} NAVETTE NOCTURNE {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.navette_nocturne_possible.label }}</p>
+            {{ form.navette_nocturne_possible }}
+            {% for error in form.navette_nocturne_possible.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} PRIX NAVETTE NOCTURNE {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-fit">
+            <p>{{ form.navette_nocturne_price.label }}</p>
+            <div class="w-fit">{{ form.navette_nocturne_price }}</div>
+            {% for error in form.navette_nocturne_price.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} ACCES HANDICAPE {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.handicaped_place.label }}</p>
+            {{ form.handicaped_place }}
+            {% for error in form.handicaped_place.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} ELECTRIQUE {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.electric_vehicle.label }}</p>
+            <p class='text-sm text-slate-600'>(3,30 m de largeur 5 m de longueur au minimum)</p>
+            {{ form.electric_vehicle }}
+            {% for error in form.electric_vehicle.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} DUREE MINIMALE {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.minimal_time.label }}</p>
+            <p class='w-fit'>{{ form.minimal_time }}</p>
+            {% for error in form.minimal_time.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% comment %} TELEPHONE {% endcomment %}
+        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+            <p>{{ form.phone.label }}</p>
+            {{ form.phone }}
+            {% for error in form.phone.errors %}
+            <p class='text-red-500'>{{ error }}</p>
+            {% endfor %}
+        </div>        
+
+        <button type="submit" class="mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Sauvegarder
+        </button>
+    </form>
+</div>
+
+{% endblock %}
+{% block extra_script %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fonction de debounce
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Initialisation de la plateforme HERE
+        const platform = new H.service.Platform({
+            apikey: '{{ here_api_key }}'  // Utilisation de la clé API passée depuis Django
+        });
+
+        // Fonction d'autocomplétion
+        function autocomplete(inputElement, suggestionsElement, callback) {
+            const service = platform.getSearchService();
+            service.autosuggest({
+                q: inputElement.value,
+                at: '46.1677,-1.1494',  // Coordonnées de La Rochelle
+                limit: 5
+            }, (result) => {
+                suggestionsElement.innerHTML = '';
+                result.items.forEach(item => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.textContent = item.title;
+                    suggestionItem.classList.add('suggestion-item', 'p-2', 'hover:bg-gray-100', 'cursor-pointer');
+                    suggestionItem.addEventListener('click', function () {
+                        callback(item.title);
+                    });
+                    suggestionsElement.appendChild(suggestionItem);
+                });
+            }, (error) => {
+                console.error('Erreur lors de la récupération des suggestions:', error);
+            });
+        }
+
+        // Sélection des éléments du DOM
+        const inputElement = document.querySelector('input[name="address"]');
+        const suggestionsElement = document.getElementById('suggestions');
+
+        if (!inputElement || !suggestionsElement) {
+            console.error("Les éléments nécessaires n'ont pas été trouvés");
+            return;
+        }
+
+        // Ajout de l'écouteur d'événements
+        inputElement.addEventListener('input', debounce(function () {
+            console.log("Input détecté:", inputElement.value);
+            if (inputElement.value.length > 2) {
+                autocomplete(inputElement, suggestionsElement, function (selectedAddress) {
+                    inputElement.value = selectedAddress;
+                    suggestionsElement.innerHTML = '';
+                });
+            } else {
+                suggestionsElement.innerHTML = '';
+            }
+        }, 300));
+
+        console.log("Écouteur d'événements ajouté à:", inputElement);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'accounts/account_base.html' %}
+{% load static %}
+{% load places_tags %}
+{% load session_tags %}
+
+{% block account_title %}Réservations en attente | ParkSafe{% endblock %}
+
+{% block account_head %}
+{% endblock %}
+
+{% block account_content %}
+<div class="flex gap-20 min-h-screen poppins">
+
+    {% include 'accounts/account_sidebar.html' %}
+    <main class="basis-[1080px] shrink grow-0 mx-auto">
+        <div class="w-full max-w-[1080px] mx-auto text-center py-20">
+            <!-- MESSAGE DE SESSION -->
+            {% if request.session.message %}
+            <p class="text-xl my-5 text-green-600 font-bold text-center mx-auto">
+                {{ request.session.message }}
+            </p>
+            {% del_session_message %}
+            {% endif %}
+
+            <!-- TITLE -->
+            <h1 class="text-5xl primary text-center font-semibold">
+                Réservations en attente
+            </h1>
+            <p class="text-xl font-light text-slate-600 my-5">
+                Ces demandes de reservations sont en attente d'une valisation de la par de l'hôte. <br>
+                N'hésitez pas à faire plusieurs demandes de réservations pour maximiser vos chances.
+            </p>
+        </div>
+        <div class="flex flex-col">
+            {% if not reservations.exists %}
+            <p class="text-2xl secondary text-center">
+                Vous n'avez aucune demande de réservations en attente
+            </p>
+            <a href="{% url 'search_parking_place_index' %}" class=" my-6 mx-auto">
+                <button class="py-2 px-5 rounded-xl shadow-lg text-white bg-secondary text-xl uppercase hover:bg-blue-800
+                hover:shadow-xl">
+                    Rechercher une place
+                </button>
+            </a>
+            {% else %}
+            <!-- LISTE -->
+            <div class="flex flex-col gap-5">
+                {% for res in reservations %}
+                    <!-- RESERVATION -->
+                    <div class="bg-slate-100 shadow-xl py-10 px-12 flex gap-6">
+                        <!-- MINIATURE -->
+                        <div class="w-64 h-64 overflow-hidden">
+                            <img src="{{ res.place.thumbnail.url }}" alt="" class="object-cover object-center">
+                        </div>
+                        <!-- TEXT -->
+                        <div class="flex flex-col gap-5">
+                            <h2 class="secondary text-3xl font-semibold">
+                                {{ res.place|simple_format_title }}
+                            </h2>
+                            <p class="text-xl text-slate-800">
+                                <b>Départ:</b> {{ res.arrivee|date:"d/m/Y"}} à {{ res.arrivee|date:"H:i"}} |
+                                <b>Retour:</b> {{ res.departure|date:"d/m/Y"}} à {{ res.departure|date:"H:i"}}
+
+                            </p>
+                            <p class="text-md">
+                                {{res.place.description}}
+                            </p>
+        
+                            <div class="space-y-2 text-gray-700 text-md">
+                                <p><b>Durée : </b>{{ res.days }} jours</p>
+                                <p><b>Nb de véhicules : </b>{{ res.vehicules_number }}</p>
+                                <p><b>Nb de passagers : </b>{{ res.passengers }}</p>
+                                <p><b>Prix total :</b> {{ res.price }} €</p>
+                            </div>
+
+                            <a href="{% url 'client_cancel_reservation' res.token %}" class="ml-auto">
+                                <button class="py-2 px-5 uppercase text-white bg-red-500 rounded-xl hover:bg-red-700
+                                shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
+                                    Annuler la reservation
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block account_script %}
+<script>
+    window.onload = function () {
+        // Bouton SideBar
+        const button = document.getElementById('client');
+        button.classList.add('active');
+        const section = button.closest('.link-section');
+        section.classList.add('active');
+
+        const link = document.getElementById('client_waiting');
+        link.classList.add('active');
+    }
+</script>
+{% endblock %}

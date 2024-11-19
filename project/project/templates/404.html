@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class='min-h-screen py-20 flex flex-col'>
+    <div class='mx-auto container text-center poppins'>
+        <h1 class='text-6xl'>Page 404</h1>
+        <p class='text-xl font-light text-slate-600'>
+            La page que vous cherchez n'éxiste pas. <br>
+            <a href="{% url 'index' %}">Retourner à l'accueil</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

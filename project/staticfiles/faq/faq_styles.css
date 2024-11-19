@@ -1,0 +1,43 @@
+.pointer.active {
+    transform: rotate(90deg);
+}
+.question-card {
+    overflow: hidden;
+}
+.reponse {
+max-height: 0;
+overflow: hidden;
+transition: all 0.3s ease-out;
+margin-top: 0; 
+opacity: 0; 
+}
+.reponse.visible {
+    max-height: 500px;
+    margin-top: 2.5rem;
+    opacity: 1;
+}
+
+.order-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+.btn-move {
+    padding: 0.25rem 0.5rem;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-move:hover:not(:disabled) {
+    background-color: #e2e8f0;
+}
+.btn-move:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.btn-delete:hover:not(:disabled) {
+    background-color: #fee2e2;  /* Rouge très clair */
+    border-color: #fecaca;      /* Rouge clair */
+}

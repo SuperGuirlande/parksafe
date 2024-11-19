@@ -1,0 +1,73 @@
+{% extends 'accounts/account_base.html' %}
+{% load static %}
+{% load places_tags %}
+{% load session_tags %}
+
+{% block account_title %}Réservations en attente | ParkSafe{% endblock %}
+
+{% block account_head %}
+{% endblock %}
+
+{% block account_content %}
+<div class="flex gap-20 min-h-screen poppins">
+    {% include 'accounts/account_sidebar.html' %}
+    <main class="basis-[1080px] shrink grow-0 mx-auto">
+        <div class="w-full max-w-[1080px] mx-auto text-center py-20">
+            <h1 class="text-4xl primary font-bold">Mes Revenus</h1>
+            
+            {% if not has_stripe_account %}
+            <div class="mt-10 p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl mb-4">Configuration de vos paiements</h2>
+                <p class="text-gray-600 mb-6">
+                    Pour recevoir vos revenus, vous devez configurer votre compte de paiement Stripe.
+                    Cela ne prendra que quelques minutes.
+                </p>
+                <a href="{% url 'create_stripe_account' %}" 
+                   class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    Configurer mes paiements
+                </a>
+            </div>
+            {% elif not is_stripe_completed %}
+            <div class="mt-10 p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl mb-4">Finalisation requise</h2>
+                <p class="text-gray-600 mb-6">
+                    Votre compte Stripe a été créé mais nécessite des informations supplémentaires.
+                    Veuillez compléter votre profil pour commencer à recevoir des paiements.
+                </p>
+                <a href="{% url 'complete_stripe_account' %}" 
+                   class="inline-block px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors">
+                    Compléter mon profil
+                </a>
+            </div>
+            {% else %}
+            <!-- Ici, vous pouvez afficher les revenus une fois que le compte est configuré -->
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <h3 class="text-xl mb-2">Revenus du mois</h3>
+                    <!-- Ajoutez ici la logique pour afficher les revenus -->
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <h3 class="text-xl mb-2">Revenus en attente</h3>
+                    <!-- Ajoutez ici la logique pour afficher les revenus en attente -->
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block account_script %}
+<script>
+    window.onload = function () {
+        // Bouton SideBar
+        const button = document.getElementById('my_announcements');
+        button.classList.add('active');
+        const section = button.closest('.link-section');
+        section.classList.add('active');
+
+        const link = document.getElementById('parker_my_gains');
+        link.classList.add('active');
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_head %}{% endblock %}
+
+
+{% block content %}
+<section class="my-20 py-24 bg-slate-100 shadow-xl poppins text-center">
+    <div class='flex flex-col w-full max-w-[650px] mx-auto gap-10'>
+        <img src="{% static 'images/marks/check.png' %}" class="w-24 mx-auto">
+        <h1 class="text-3xl secondary font-medium">
+            Votre annonce a bien été créée
+        </h1>
+        <p class="text-xl font-light text-slate-700">
+            Votre annonce va être traitée rapidement par notre équipe.
+            <br><br>
+            Vous recevrez une notification par email/sms une fois votre annonce acceptée 
+        </p>
+        <a href="{% url 'my_account' %}">
+            <button class='bg-secondary py-2 px-6 uppercase text-white rounded-xl text-lg shadow-lg
+            hover:bg-blue-700 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 ease-in-out'>
+                Voir mon compte
+            </button>
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_script %}{% endblock %}
