@@ -28,4 +28,5 @@ def new_avis_client_parker(request, token):
         'parker': parker,
         'client': client,
         'form': form,
+        'place': place,
     })

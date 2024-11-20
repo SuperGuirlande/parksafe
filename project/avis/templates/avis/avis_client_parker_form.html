@@ -1,6 +1,6 @@
 {% extends "main/base.html" %}
 {% load static %}
-
+{% load places_tags %}
 {% block extra_head %}
 <style>
     .star-rating {
@@ -8,7 +8,12 @@
         gap: 8px;
         font-size: 2rem;
         justify-content: center;
+        align-items: center;
         margin: 20px 0;
+    }
+
+    .star-rating h4 {
+        font-size: 1.5rem;
     }
     
     .star {
@@ -44,10 +49,13 @@
             N'hésitez pas à laisser un avis construit sur votre experience avec l'utilisateur de ParkSafe©
         </p>
 
-        <form method="POST">
+        
+        <form method="POST" class="w-full max-w-[500px] mx-auto flex flex-col">
+            <h3 class='font-semibold secondary text-center text-xl mt-5'>{{ place|simple_format_title }}</p>
             {% csrf_token %}
             
             <div class="star-rating" id="star-container">
+                <h4 class='text-md'>Note :</h4>
                 <span class="star" data-rating="1">★</span>
                 <span class="star" data-rating="2">★</span>
                 <span class="star" data-rating="3">★</span>
@@ -56,7 +64,7 @@
             </div>
             {{ form.stars }}
             
-            <div class="mt-4">
+            <div class="mt-4 mx-auto">
                 {{ form.avis }}
             </div>
 

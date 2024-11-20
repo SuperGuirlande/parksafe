@@ -32,7 +32,7 @@ class ParkingPlace(models.Model):
     address = models.CharField(verbose_name="Adresse complète*", max_length=255)
     description = models.TextField(verbose_name="Description détaillée*")
     price = models.DecimalField(verbose_name="Prix journalier par véhicule* (en €)", max_digits=5, decimal_places=2)
-    thumbnail = models.ImageField(verbose_name="Photo pour miniature")
+    thumbnail = models.ImageField(verbose_name="Photo pour miniature", upload_to="places/thumbnail", default="places/thumbnail/default.png", blank=True, null=True)
 
     vehicles_types = models.CharField(
         verbose_name="Type(s) de véhicule(s) accepté(s)*",

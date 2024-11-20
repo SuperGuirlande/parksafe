@@ -72,10 +72,10 @@
                                 <p><b>Prix total :</b> {{ res.total_price }} €</p>
                             </div>
 
-                            <a href="{% url 'client_cancel_reservation' res.token %}" class="ml-auto">
-                                <button class="py-2 px-5 uppercase text-white bg-red-500 rounded-xl hover:bg-red-700
-                                shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
-                                    Annuler la reservation
+                            <a href="{% url 'new_avis_client_parker' res.place.token %}" class="ml-auto">
+                                <button class="py-4 px-8 uppercase text-white bg-green-500 rounded-xl hover:bg-green-400
+                                shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out text-xl">
+                                    Laisser un avis
                                 </button>
                             </a>
                         </div>
