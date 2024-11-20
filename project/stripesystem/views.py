@@ -2,11 +2,12 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from .models import StripeConnectAccount
+from .models import StripeConnectAccount, ReservationPayement
 import stripe
 from django.conf import settings
 from django.contrib import messages
 from reservations.models import Reservation
+
 
 @login_required
 def create_stripe_account(request):
@@ -55,15 +56,11 @@ def stripe_return(request, account_id):
     return redirect('parker_my_gains')  # ou toute autre page de votre choix
 
 
-
 @login_required
 def create_checkout_session(request, reservation_token):
     try:
         # Récupérer la réservation
         reservation = get_object_or_404(Reservation, token=reservation_token)
-        time = reservation.departure - reservation.arrivee
-        reservation.days = time.days + 1
-        reservation.price = reservation.days * reservation.place.price
         reservation.name = f"{reservation.client.first_name} {reservation.client.last_name}"
         
         stripe.api_key = settings.STRIPE_SECRET_KEY.strip()
@@ -74,10 +71,11 @@ def create_checkout_session(request, reservation_token):
             line_items=[{
                 'price_data': {
                     'currency': 'eur',
-                    'unit_amount': int(reservation.price * 100),  # Stripe utilise les centimes
+                    'unit_amount': int(reservation.total_price * 100),  # Stripe utilise les centimes
                     'product_data': {
                         'name': f'Réservation parking - {reservation.name}',
-                        'description': f'Place\nDu {reservation.arrivee.strftime("%d/%m/%Y")} au {reservation.departure.strftime("%d/%m/%Y")}',
+                        'description': f"""Réservation du {reservation.arrivee.strftime("%d/%m/%Y")} au {reservation.departure.strftime("%d/%m/%Y")}
+                                         | Adresse: {reservation.place.address}""",
                     },
                 },
                 'quantity': 1,
@@ -103,7 +101,20 @@ def payment_success(request):
     if reservation_token:
         try:
             reservation = get_object_or_404(Reservation, token=reservation_token)
-            reservation.payed = True  # Assurez-vous d'avoir ce statut dans vos choix
+
+            # Créer l'objet payement
+            pay = ReservationPayement.objects.create(
+                client = reservation.client,
+                parker = reservation.parker,
+                reservation = reservation,
+                price = reservation.price,
+                commission = reservation.commission,
+                total_price = reservation.total_price
+            )
+
+            pay.client_payed = True
+            pay.save()
+            reservation.payed = True
             reservation.save()
             messages.success(request, "Votre paiement a été effectué avec succès !")
         except Exception as e:

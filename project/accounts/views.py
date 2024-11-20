@@ -1,6 +1,7 @@
 import hashlib
 import time
 import json
+from decimal import Decimal
 from django.conf import settings
 from django.db import IntegrityError
 from django.http import JsonResponse
@@ -23,6 +24,7 @@ from faq.forms import FaqItemForm
 from django.db.models import Max, F
 
 from reservations.models import Reservation
+from stripesystem.models import ReservationPayement
 
 
 
@@ -72,16 +74,11 @@ def user_logout(request):
     return redirect('index')
 
 ### CLIENT ###
-# Reservations en attente
+# Reservations en attente d'acceptation
 @login_required
 def client_reservations_waiting(request):
     user = request.user
-    reservations = Reservation.objects.filter(client=user, accepted=False, canceled=False).order_by('-id')
-
-    for res in reservations:
-        time = res.departure - res.arrivee
-        res.days = time.days + 1
-        res.price = res.days * res.place.price
+    reservations = Reservation.objects.filter(client=user, accepted=False, canceled=False, payed=False, finished=False).order_by('-id')
 
     context={
         'reservations': reservations,
@@ -90,16 +87,11 @@ def client_reservations_waiting(request):
 
     return TemplateResponse(request, 'accounts/user/client/waiting_reservations.html', context)
 
-# Reservations en attente
+# Reservations en attente de paiement
 @login_required
 def client_reservations_waiting_paiement(request):
     user = request.user
-    reservations = Reservation.objects.filter(client=user, accepted=True, payed=False, canceled=False).order_by('-id')
-
-    for res in reservations:
-        time = res.departure - res.arrivee
-        res.days = time.days + 1
-        res.price = res.days * res.place.price
+    reservations = Reservation.objects.filter(client=user, accepted=True, payed=False, finished=False, canceled=False).order_by('-id')
 
     context={
         'reservations': reservations,
@@ -108,14 +100,36 @@ def client_reservations_waiting_paiement(request):
 
     return TemplateResponse(request, 'accounts/user/client/waiting_paiement_reservations.html', context)
 
+# Reservation a venir / en cours
+@login_required
+def client_current_reservations(request):
+    user = request.user
+    reservations = Reservation.objects.filter(client=user, accepted=True, payed=True, canceled=False, finished=False).order_by('-id')
+    print(reservations)
+    context={
+        'reservations': reservations,
+        'user': user,
+    }
+
+    return TemplateResponse(request, 'accounts/user/client/current_reservations.html', context)  
+
+# Reservation terminées
+@login_required
+def client_finished_reservations(request):
+    user = request.user
+    reservations = Reservation.objects.filter(client=user, accepted=True, payed=True, canceled=False, finished=True).order_by('-id')
+    print(reservations)
+    context={
+        'reservations': reservations,
+        'user': user,
+    }
+
+    return TemplateResponse(request, 'accounts/user/client/finished_reservations.html', context)   
+
 # Annuler la reservation
 @login_required
 def client_cancel_reservation(request, token):
     reservation = get_object_or_404(Reservation, token=token)
-
-    time = reservation.departure - reservation.arrivee
-    reservation.days = time.days + 1
-    reservation.price = reservation.days * reservation.place.price
 
     context={
         'reservation': reservation,
@@ -158,9 +172,6 @@ def parker_reservation_waiting(request):
     for res in reservations:
         client = res.client
         res.name = f"{client.first_name} {client.last_name}"
-        time = res.departure - res.arrivee
-        res.days = time.days + 1
-        res.price = res.days * res.place.price
 
     context={
         'reservations': reservations,
@@ -172,10 +183,6 @@ def parker_reservation_waiting(request):
 @login_required
 def parker_cancel_reservation(request, token):
     reservation = get_object_or_404(Reservation, token=token)
-
-    time = reservation.departure - reservation.arrivee
-    reservation.days = time.days + 1
-    reservation.price = reservation.days * reservation.place.price
     reservation.name = f"{reservation.client.first_name} {reservation.client.last_name}"
 
     context={
@@ -183,7 +190,6 @@ def parker_cancel_reservation(request, token):
     }
 
     return TemplateResponse(request, 'accounts/user/parker/cancel_reservation.html', context)
-
 
 @login_required
 def parker_confirm_cancel(request, token):
@@ -206,9 +212,6 @@ def parker_accept_reservation(request, token):
     if reservation.parker != user:
         return redirect('parker_reservation_waiting')
     
-    time = reservation.departure - reservation.arrivee
-    reservation.days = time.days + 1
-    reservation.price = reservation.days * reservation.place.price
     reservation.name = f"{reservation.client.first_name} {reservation.client.last_name}"
 
     context={
@@ -216,7 +219,6 @@ def parker_accept_reservation(request, token):
     }
 
     return TemplateResponse(request, 'accounts/user/parker/accept_reservation.html', context)
-
 
 @login_required
 def parker_confirm_accept(request, token):
@@ -230,12 +232,38 @@ def parker_confirm_accept(request, token):
 
     return redirect('parker_reservation_waiting')
 
+# Mes reservations
+@login_required
+def parker_my_reservations(request):
+    user = request.user
 
+    waiting_paiements = Reservation.objects.filter(parker=user, accepted=True, payed=False, canceled=False, finished=False).order_by('arrivee')
+    current_reservations = Reservation.objects.filter(parker=user, accepted=True, payed=True, canceled=False, finished=False).order_by('arrivee')
+
+    context = {
+        'current_reservations': current_reservations,
+        'waiting_paiements': waiting_paiements,
+    }
+
+    return TemplateResponse(request, 'accounts/user/parker/my_reservations.html', context)
+
+# Mes revenus
 @login_required
 def parker_my_gains(request):
     user = request.user
+    payements = ReservationPayement.objects.filter(parker=user)
+
+    total_gains = Decimal("0.00")
+    waiting_gains = Decimal("0.00")
+
+    for pay in payements:
+        if pay.reservation.finished:
+            if pay.client_payed:
+                total_gains += pay.price
+
+            if not pay.parker_payed:
+                waiting_gains += pay.price
     
-    # Vérifie si l'utilisateur a un compte Stripe Connect
     try:
         stripe_account = user.stripe_account
         has_stripe_account = True
@@ -246,7 +274,9 @@ def parker_my_gains(request):
 
     return TemplateResponse(request, "accounts/user/parker/my_gains.html", context={
         'has_stripe_account': has_stripe_account,
-        'is_stripe_completed': is_stripe_completed
+        'is_stripe_completed': is_stripe_completed,
+        'total_gains': total_gains,
+        'waiting_gains': waiting_gains,
     })
 
 ### GENERAL ###
@@ -255,10 +285,6 @@ def parker_my_gains(request):
 def my_account(request):
     user = request.user
     user_places = ParkingPlace.objects.filter(user=user)
-    
-    # Générer une clé temporaire pour l'API HERE
-    timestamp = int(time.time())
-    temp_key = hashlib.sha256(f"{settings.HERE_API_KEY}{timestamp}".encode()).hexdigest()[:16]
     
     context = {
         'user': user,

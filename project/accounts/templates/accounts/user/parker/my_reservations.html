@@ -1,0 +1,175 @@
+{% extends 'accounts/account_base.html' %}
+{% load static %}
+{% load places_tags %}
+{% load session_tags %}
+
+{% block account_title %}Réservations en attente | ParkSafe{% endblock %}
+
+{% block account_head %}
+<style>
+    td, th {
+        padding: 10px 20px;
+    }
+    td {
+        border: solid 1px gray;
+    }
+</style>
+{% endblock %}
+
+{% block account_content %}
+<div class="flex gap-20 min-h-screen poppins">
+    {% include 'accounts/account_sidebar.html' %}
+    <main class="basis-[1080px] shrink grow-0 mx-auto">
+        <div class="w-full max-w-[1080px] mx-auto py-20">
+            <h1 class="text-4xl primary font-bold text-center">Mes Réservations</h1>
+            <p class="text-xl font-light my-5 text-center">
+                Vous trouverez ici toutes vos réservations en cours, à venir, et terminées
+            </p>
+
+            <!-- EN COURS -->
+            <div class='my-12'>
+                <h2 class="secondary text-2xl font-semibold">
+                    Réservations en cours / à venir
+                </h2>
+                {% if not current_reservations.exists %}
+                    <p class='text-lg mt-5'>
+                        Aucune réservation pour le moment
+                    </p>
+                {% else %}
+                    <table class="rounded-xl mt-10">
+                        <thead class="bg-secondary text-left text-white font-semibold rounded-t-xl">
+                            <tr class="rounded-t-xl">
+                                <th class="rounded-tl-xl">Client</th>
+                                <th>Place</th>
+                                <th>Arrivée</th>
+                                <th>Départ</th>
+                                <th>Revenus</th>
+                                <th class="rounded-tr-xl"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for res in current_reservations %}
+                            <tr>
+                                <td class="text-nowrap">{{res.client.first_name}} {{res.client.last_name.0}}.</td>
+                                <td class="text-wrap">{{res.place.address}}</td>
+                                <td class="text-nowrap">{{res.arrivee}}</td>
+                                <td class="text-nowrap">{{res.departure}}</td>
+                                <td class="text-nowrap">{{res.price}}€</td>
+                                <td class="text-nowrap">
+                                    <a href="">
+                                        <button class="py-2 px-4 text-md uppercase text-white bg-secondary hover:bg-blue-600 rounded-xl">
+                                            Détails
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+
+            <!-- EN ATTENTE DE PAIEMENT -->
+            <div class='my-12'>
+                <h2 class="secondary text-2xl font-semibold">
+                    Réservations en attente de paiement de la part du client
+                </h2>
+                {% if not waiting_paiements.exists %}
+                    <p class='text-lg mt-5'>
+                        Aucune réservation pour le moment
+                    </p>
+                {% else %}
+                    <table class="rounded-xl mt-10">
+                        <thead class="bg-secondary text-left text-white font-semibold rounded-t-xl">
+                            <tr class="rounded-t-xl">
+                                <th class="rounded-tl-xl">Client</th>
+                                <th>Place</th>
+                                <th>Arrivée</th>
+                                <th>Départ</th>
+                                <th>Revenus</th>
+                                <th class="rounded-tr-xl"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for res in waiting_paiements %}
+                            <tr>
+                                <td class="text-nowrap">{{res.client.first_name}} {{res.client.last_name.0}}.</td>
+                                <td class="text-wrap">{{res.place.address}}</td>
+                                <td class="text-nowrap">{{res.arrivee}}</td>
+                                <td class="text-nowrap">{{res.departure}}</td>
+                                <td class="text-nowrap">{{res.price}}€</td>
+                                <td class="text-nowrap">
+                                    <a href="">
+                                        <button class="py-2 px-4 text-md uppercase text-white bg-secondary hover:bg-blue-600 rounded-xl">
+                                            Détails
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+
+            <!-- TERMINEES -->
+            <div class='my-12'>
+                <h2 class="secondary text-2xl font-semibold mt-5">
+                    Réservations terminées
+                </h2>
+                {% if not finished_reservations.exists %}
+                    <p class='text-lg my-6'>
+                        Aucune réservation terminée pour le moment
+                    </p>
+                {% else %}
+                    <table class="rounded-xl mt-10">
+                        <thead class="bg-secondary text-left text-white font-semibold rounded-t-xl">
+                            <tr class="rounded-t-xl">
+                                <th class="rounded-tl-xl">Client</th>
+                                <th>Place</th>
+                                <th>Arrivée</th>
+                                <th>Départ</th>
+                                <th>Revenus</th>
+                                <th class="rounded-tr-xl"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for res in current_reservations %}
+                            <tr>
+                                <td class="text-nowrap">{{res.client.first_name}} {{res.client.last_name.0}}.</td>
+                                <td class="text-wrap">{{res.place.address}}</td>
+                                <td class="text-nowrap">{{res.arrivee}}</td>
+                                <td class="text-nowrap">{{res.departure}}</td>
+                                <td class="text-nowrap">{{res.price}}€</td>
+                                <td class="text-nowrap">
+                                    <a href="">
+                                        <button class="py-2 px-4 text-md uppercase text-white bg-secondary hover:bg-blue-600 rounded-xl">
+                                            Détails
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block account_script %}
+<script>
+    window.onload = function () {
+        // Bouton SideBar
+        const button = document.getElementById('my_announcements');
+        button.classList.add('active');
+        const section = button.closest('.link-section');
+        section.classList.add('active');
+
+        const link = document.getElementById('parker_my_reservations');
+        link.classList.add('active');
+    }
+</script>
+{% endblock %}

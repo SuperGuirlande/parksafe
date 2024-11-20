@@ -98,6 +98,9 @@ def place_created_confirm(request):
 
 def search_parking_place_index(request):
     all_places = ParkingPlace.objects.all().order_by("-created_on")
+
+    for place in all_places:
+        place.total_price = place.price + (place.price * 20 / 100)
     
     poi_category = request.GET.get('category')
     poi_city = request.GET.get('city')
@@ -160,6 +163,7 @@ def parking_place_detail(request, token):
     faq_items = FaqItem.objects.all()
     avis_recus = place.user.avis_recus.all().order_by('-id')
     
+    place.total_price = place.price + ( place.price * 20 / 100 )
 
     context = {
         'place': place,

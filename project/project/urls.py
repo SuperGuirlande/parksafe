@@ -6,7 +6,6 @@ from faq.views import move_faq_item, delete_faq_item
 from accounts.views import move_devenir_hote_ccm, move_devenir_hote_pdh, delete_devenir_hote_ccm, delete_devenir_hote_pdh
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('compte/', include('accounts.urls')),

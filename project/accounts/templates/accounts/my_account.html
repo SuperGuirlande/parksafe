@@ -34,8 +34,8 @@
                 <div class='w-fit h-fit items-center justify-center'>
                     <a href="{% url 'change_profil_pic' %}" alt="Changer d'image de profil utilisateur">
                         <div id="account-pp"
-                            class="mx-auto overflow-hidden w-32 h-32 relative z-10
-                        after:absolute after:w-full after:h-full after:left-0 after:top-0 after:z-20 after:bg-slate-50 after:bg-opacity-0 hover:after:bg-opacity-30">
+                            class="mx-auto overflow-hidden w-32 h-32 relative z-[1]
+                        after:absolute after:w-full after:h-full after:left-0 after:top-0 after:z-[2] after:bg-slate-50 after:bg-opacity-0 hover:after:bg-opacity-30">
                             <img src="{{ user.profil_pic.url }}"
                                 alt="Photo de profil de {{user.first_name}} {{user.last_name}}" class="rounded-full">
                         </div>

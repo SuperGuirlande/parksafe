@@ -70,7 +70,7 @@
                                 <p><b>Durée : </b>{{ res.days }} jours</p>
                                 <p><b>Nb de véhicules : </b>{{ res.vehicules_number }}</p>
                                 <p><b>Nb de passagers : </b>{{ res.passengers }}</p>
-                                <p><b>Prix total :</b> {{ res.price }} €</p>
+                                <p><b>Prix total :</b> {{ res.total_price }} €</p>
                             </div>
 
                             <a href="{% url 'client_cancel_reservation' res.token %}" class="ml-auto">

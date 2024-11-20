@@ -3,7 +3,7 @@
 {% load places_tags %}
 {% load session_tags %}
 
-{% block account_title %}Réservations en attente | ParkSafe{% endblock %}
+{% block account_title %}Réservations terminées | ParkSafe{% endblock %}
 
 {% block account_head %}
 {% endblock %}
@@ -24,17 +24,16 @@
 
             <!-- TITLE -->
             <h1 class="text-5xl primary text-center font-semibold">
-                En attente de paiement
+                Réservations terminées
             </h1>
             <p class="text-xl font-light text-slate-600 my-5">
-                Ces réservations ont été acceptées par les hôtes <br>
-                Il ne vous reste plus qu'à régler le prix total pour valider la reservation
+                La liste de vos voyages passés
             </p>
         </div>
         <div class="flex flex-col">
             {% if not reservations.exists %}
             <p class="text-2xl secondary text-center">
-                Aucune demande de paiement pour le moment
+                Aucun voyage effectué pour le moment
             </p>
             <a href="{% url 'search_parking_place_index' %}" class=" my-6 mx-auto">
                 <button class="py-2 px-5 rounded-xl shadow-lg text-white bg-secondary text-xl uppercase hover:bg-blue-800
@@ -73,21 +72,12 @@
                                 <p><b>Prix total :</b> {{ res.total_price }} €</p>
                             </div>
 
-                            <div class="flex gap-5 ml-auto items-center">
-                                <a href="{% url 'client_cancel_reservation' res.token %}" class="ml-auto">
-                                    <button class="py-2 px-5 uppercase text-white bg-red-500 rounded-xl hover:bg-red-700
-                                        shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
-                                        Annuler la reservation
-                                    </button>
-                                </a>
-                                <!-- ACCEPTER ET PAYER -->
-                                <a href="{% url 'create_checkout_session' res.token %}" class="ml-auto">
-                                    <button class="py-2 px-5 uppercase text-white bg-green-500 rounded-xl hover:bg-green-600
-                                        shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out text-2xl hover:-translate-y-1">
-                                        Accepter & Payer
-                                    </button>
-                                </a>
-                            </div>
+                            <a href="{% url 'client_cancel_reservation' res.token %}" class="ml-auto">
+                                <button class="py-2 px-5 uppercase text-white bg-red-500 rounded-xl hover:bg-red-700
+                                shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
+                                    Annuler la reservation
+                                </button>
+                            </a>
                         </div>
                     </div>
                 {% endfor %}
@@ -107,7 +97,7 @@
         const section = button.closest('.link-section');
         section.classList.add('active');
 
-        const link = document.getElementById('client_waiting_paiement');
+        const link = document.getElementById('client_finished_reservations');
         link.classList.add('active');
     }
 </script>

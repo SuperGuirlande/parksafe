@@ -4,10 +4,10 @@
 {% block content %}
 <section class='min-h-screen py-20 flex flex-col'>
     <div class='mx-auto container text-center poppins'>
-        <h1 class='text-6xl'>Page 404</h1>
-        <p class='text-xl font-light text-slate-600'>
+        <h1 class='text-3xl sm:text-4xl md:text-5xl lg:text-6xl secondary font-semibold'>Erreur 404</h1>
+        <p class='text-xl font-light text-slate-600 mt-10'>
             La page que vous cherchez n'éxiste pas. <br>
-            <a href="{% url 'index' %}">Retourner à l'accueil</a>
+            <a href="{% url 'index' %}" class="mt-10 py-3 px-5 bg-primary text-xl text-white uppercase rounded-xl">Retourner à l'accueil</a>
         </p>
     </div>
 </section>

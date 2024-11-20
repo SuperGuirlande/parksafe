@@ -29,6 +29,12 @@ class Reservation(models.Model):
     place = models.ForeignKey(ParkingPlace, on_delete=models.SET_NULL, null=True,
                               related_name="reservations", verbose_name="Place de parking")
     token = models.CharField(max_length=16, verbose_name="Token d'identification", unique=True)
+
+    days = models.IntegerField(verbose_name="Durée en jours", null=True, blank=True)
+    price = models.DecimalField(verbose_name="Prix de l'hôte (en €)", max_digits=5, decimal_places=2, blank=True, null=True)
+    commission = models.IntegerField(verbose_name="Commission ParkSafe", default=20)
+    total_price = models.DecimalField(verbose_name="Prix de total (en €)", max_digits=5, decimal_places=2, blank=True, null=True)
+
     accepted = models.BooleanField(default=False, verbose_name="Acceptée par le loueur")
     payed = models.BooleanField(default=False, verbose_name="Payée par le client")
     finished = models.BooleanField(default=False, verbose_name="Réservation terminée")
@@ -92,6 +98,16 @@ class Reservation(models.Model):
             while Reservation.objects.filter(token=test).exists():
                 test = get_random_string(length=16)
             self.token = test
+        # DAYS
+        if not self.days:
+            time = self.departure - self.arrivee
+            self.days = time.days + 1
+        # PRICE
+        if not self.price:
+            self.price = self.days * self.place.price
+
+        if not self.total_price:
+            self.total_price = self.price + (self.price * self.commission / 100)
         # SAVE
         super().save(*args, **kwargs)
 

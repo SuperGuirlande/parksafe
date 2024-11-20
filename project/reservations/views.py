@@ -13,9 +13,15 @@ def make_reservation(request, place_token):
         form = ReservationForm(request.POST)
         if form.is_valid():
             reserv = form.save(commit=False)
+            # Users & place
             reserv.client = request.user
             reserv.place = place
             reserv.parker = place.user
+            # Total price   
+            time = reserv.departure - reserv.arrivee
+            reserv.days = time.days + 1
+            reserv.price = reserv.days * place.price
+            # Save
             reserv.save()
             return redirect('reservation_confirm')
     else:

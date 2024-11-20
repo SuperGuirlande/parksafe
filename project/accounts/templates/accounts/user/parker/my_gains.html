@@ -3,7 +3,7 @@
 {% load places_tags %}
 {% load session_tags %}
 
-{% block account_title %}Réservations en attente | ParkSafe{% endblock %}
+{% block account_title %}Revenus du compte | ParkSafe{% endblock %}
 
 {% block account_head %}
 {% endblock %}
@@ -43,11 +43,23 @@
             <!-- Ici, vous pouvez afficher les revenus une fois que le compte est configuré -->
             <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="p-6 bg-white rounded-lg shadow-md">
-                    <h3 class="text-xl mb-2">Revenus du mois</h3>
+                    <h3 class="text-xl mb-2 font-semibold secondary">Total du compte</h3>
+                    <p class="text-md font-light my-5">
+                        Total des revenus générés par le compte
+                    </p>
+                    <p class="text-2xl primary">
+                        {{total_gains}}€
+                    </p>
                     <!-- Ajoutez ici la logique pour afficher les revenus -->
                 </div>
                 <div class="p-6 bg-white rounded-lg shadow-md">
-                    <h3 class="text-xl mb-2">Revenus en attente</h3>
+                    <h3 class="text-xl mb-2 font-semibold secondary">Revenus en attente</h3>
+                    <p class="text-md font-light my-5">
+                        Paiements en attente de crédit sur votre compte Stripe Connect
+                    </p>
+                    <p class="text-2xl primary">
+                        {{waiting_gains}}€
+                    </p>
                     <!-- Ajoutez ici la logique pour afficher les revenus en attente -->
                 </div>
             </div>
