@@ -72,13 +72,356 @@
                 <p class="text-2xl primary">
                     {{waiting_gains}}€
                 </p>
-                <!-- Ajoutez ici la logique pour afficher les revenus en attente -->
+                {% if waiting_gains > 0 %}
+                <a href="{% url 'transfer_earnings' %}" class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors mt-5">
+                    Transférer mes gains ({{waiting_gains}}€)
+                </a>
+                {% endif %}
             </div>
         </div>
         {% endif %}
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-4 border-b border-gray-200">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <h2 class="text-lg font-semibold">Calendrier des gains</h2>
+                <div class="flex items-center space-x-4">
+                    <select id="period-select" class="rounded-lg border border-gray-300 px-3 py-2 text-sm pr-10">
+                        <option value="week">Semaine</option>
+                        <option value="month">Mois</option>
+                        <option value="quarter">Trimestre</option>
+                    </select>
+                    <div class="flex items-center space-x-2">
+                        <button id="prev-period" class="p-2 hover:bg-gray-100 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <span id="current-period" class="text-sm font-medium"></span>
+                        <button id="next-period" class="p-2 hover:bg-gray-100 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4">
+            <div id="earnings-chart" class="w-full h-64 relative"></div>
+        </div>
     </div>
 </main>
 {% endblock %}
 
 {% block account_script %}
+<div class="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="p-4 border-b border-gray-200">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <h2 class="text-lg font-semibold">Calendrier des gains</h2>
+            <div class="flex items-center space-x-4">
+                <select id="period-select" class="rounded-lg border border-gray-300 px-3 py-2 text-sm">
+                    <option value="week">Semaine</option>
+                    <option value="month">Mois</option>
+                    <option value="quarter">Trimestre</option>
+                </select>
+                <div class="flex items-center space-x-2">
+                    <button id="prev-period" class="p-2 hover:bg-gray-100 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <span id="current-period" class="text-sm font-medium"></span>
+                    <button id="next-period" class="p-2 hover:bg-gray-100 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-4">
+        <div id="earnings-chart" class="w-full h-64 relative"></div>
+    </div>
+</div>
+
+<script>
+class EarningsChart {
+    constructor(selector) {
+        this.container = document.querySelector(selector);
+        this.margin = { top: 20, right: 20, bottom: 50, left: 40 };
+        this.width = this.container.clientWidth - this.margin.left - this.margin.right;
+        this.height = this.container.clientHeight - this.margin.top - this.margin.bottom;
+        
+        this.allData = {{ gains_data|safe }};
+        this.currentPeriod = 'week';
+        this.currentOffset = 0;
+        
+        this.init();
+        this.setupControls();
+        this.handleResize();
+    };
+
+    init() {
+        this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        this.svg.setAttribute('width', '100%');
+        this.svg.setAttribute('height', '100%');
+        this.svg.setAttribute('viewBox', `0 0 ${this.container.clientWidth} ${this.container.clientHeight}`);
+        this.container.appendChild(this.svg);
+        
+        this.updateChart();
+    };
+
+    setupControls() {
+        document.getElementById('period-select').addEventListener('change', (e) => {
+            this.currentPeriod = e.target.value;
+            this.currentOffset = 0;
+            this.updateChart();
+        });
+
+        document.getElementById('prev-period').addEventListener('click', () => {
+            this.currentOffset -= 1;
+            this.updateChart();
+        });
+
+        document.getElementById('next-period').addEventListener('click', () => {
+            this.currentOffset += 1;
+            this.updateChart();
+        });
+
+        window.addEventListener('resize', () => this.handleResize());
+    };
+
+    handleResize() {
+        this.width = this.container.clientWidth - this.margin.left - this.margin.right;
+        this.svg.setAttribute('viewBox', `0 0 ${this.container.clientWidth} ${this.container.clientHeight}`);
+        this.updateChart();
+    };
+
+        formatDate(date) {
+        switch(this.currentPeriod) {
+            case 'week':
+                return date.getDate();  // Juste le numéro du jour
+            case 'month':
+                return `S${Math.ceil(date.getDate() / 7)}`;
+            case 'quarter':
+                const months = ['jan.', 'fév.', 'mar.', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sep.', 'oct.', 'nov.', 'déc.'];
+                return months[date.getMonth()];
+            default:
+                return date.toLocaleDateString('fr-FR');
+        }
+    }
+
+    getPeriodDates() {
+        const now = new Date();
+        let startDate, endDate, periodLabel;
+
+        switch(this.currentPeriod) {
+            case 'week':
+                startDate = new Date(now);
+                startDate.setDate(now.getDate() - (now.getDay() || 7) + 1 + (this.currentOffset * 7));
+                endDate = new Date(startDate);
+                endDate.setDate(startDate.getDate() + 6);
+                periodLabel = `Semaine du ${startDate.toLocaleDateString('fr-FR')}`;
+                break;
+
+            case 'month':
+                startDate = new Date(now.getFullYear(), now.getMonth() + this.currentOffset, 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + this.currentOffset + 1, 0);
+                periodLabel = startDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+                break;
+
+            case 'quarter':
+                const quarter = Math.floor(now.getMonth() / 3) + this.currentOffset;
+                startDate = new Date(now.getFullYear(), quarter * 3, 1);
+                endDate = new Date(now.getFullYear(), (quarter + 1) * 3 - 1, 1);
+                const quarterNum = Math.floor(startDate.getMonth() / 3) + 1;
+                periodLabel = `${quarterNum}e trimestre ${startDate.getFullYear()}`;
+                break;
+        }
+
+        return { startDate, endDate, periodLabel };
+    };
+
+    getDataForPeriod() {
+        const { startDate, endDate, periodLabel } = this.getPeriodDates();
+        document.getElementById('current-period').textContent = periodLabel;
+
+        let data = [];
+        
+        switch(this.currentPeriod) {
+            case 'week':
+                for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                    data.push({
+                        date: new Date(d),
+                        gains: 0
+                    });
+                }
+                break;
+
+            case 'month':
+                for (let week = 1; week <= 6; week++) {
+                    const weekStart = new Date(startDate);
+                    weekStart.setDate((week - 1) * 7 + 1);
+                    if (weekStart <= endDate) {
+                        data.push({
+                            date: new Date(weekStart),
+                            gains: 0
+                        });
+                    }
+                }
+                break;
+
+            case 'quarter':
+                for (let month = 0; month < 3; month++) {
+                    const monthDate = new Date(startDate);
+                    monthDate.setMonth(startDate.getMonth() + month);
+                    data.push({
+                        date: new Date(monthDate),
+                        gains: 0
+                    });
+                }
+                break;
+        }
+
+        // Fusionner avec les données réelles
+        this.allData.forEach(gainData => {
+            const [day, month] = gainData.date.split('/');
+            const gainDate = new Date(new Date().getFullYear(), parseInt(month) - 1, parseInt(day));
+
+            if (gainDate >= startDate && gainDate <= endDate) {
+                let targetItem;
+
+                switch(this.currentPeriod) {
+                    case 'week':
+                        targetItem = data.find(d => 
+                            d.date.getDate() === gainDate.getDate() && 
+                            d.date.getMonth() === gainDate.getMonth()
+                        );
+                        break;
+
+                    case 'month':
+                        const weekNum = Math.ceil(gainDate.getDate() / 7);
+                        targetItem = data[weekNum - 1];
+                        break;
+
+                    case 'quarter':
+                        targetItem = data.find(d => 
+                            d.date.getMonth() === gainDate.getMonth()
+                        );
+                        break;
+                }
+
+                if (targetItem) {
+                    targetItem.gains += gainData.gains;
+                }
+            }
+        });
+
+        return data;
+    }
+
+    updateChart() {
+        this.svg.innerHTML = '';
+        const data = this.getDataForPeriod();
+        
+        if (data.length === 0) {
+            this.drawNoData();
+            return;
+        }
+
+        const maxGain = Math.max(...data.map(d => d.gains));
+        const barWidth = Math.min(this.width / data.length * 0.8, 60);
+        const barSpacing = this.width / data.length;
+
+        data.forEach((d, i) => {
+            const barHeight = maxGain > 0 ? (d.gains / maxGain) * this.height : 0;
+            const x = this.margin.left + (i * barSpacing) + (barSpacing - barWidth) / 2;
+            const y = this.height - barHeight + this.margin.top;
+
+            // Barre
+            const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            bar.setAttribute('x', x);
+            bar.setAttribute('y', y);
+            bar.setAttribute('width', barWidth);
+            bar.setAttribute('height', barHeight || 0);
+            bar.setAttribute('fill', '#3B82F6');
+            bar.setAttribute('rx', '4');
+
+            bar.addEventListener('mouseenter', (e) => this.showTooltip(e, d));
+            bar.addEventListener('mouseleave', () => this.hideTooltip());
+
+            this.svg.appendChild(bar);
+
+            // Label de date
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', x + barWidth / 2);
+            text.setAttribute('y', this.height + this.margin.top + 20);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('fill', '#6B7280');
+            text.setAttribute('font-size', '12');
+            
+            if (this.currentPeriod === 'month') {
+                text.setAttribute('transform', `rotate(-45, ${x + barWidth / 2}, ${this.height + this.margin.top + 20})`);
+            }
+            
+            text.textContent = this.formatDate(d.date);
+            this.svg.appendChild(text);
+
+            // Valeur au-dessus de la barre si > 0
+            if (d.gains > 0) {
+                const valueText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                valueText.setAttribute('x', x + barWidth / 2);
+                valueText.setAttribute('y', y - 5);
+                valueText.setAttribute('text-anchor', 'middle');
+                valueText.setAttribute('fill', '#6B7280');
+                valueText.setAttribute('font-size', '12');
+                valueText.textContent = `${d.gains}€`;
+                this.svg.appendChild(valueText);
+            }
+        });
+    }
+
+    showTooltip(event, data) {
+        // Supprimer tout tooltip existant d'abord
+        this.hideTooltip();
+        
+        const tooltip = document.createElement('div');
+        tooltip.id = 'earnings-tooltip'; // Ajouter un ID unique
+        tooltip.className = 'absolute bg-black text-white px-2 py-1 rounded text-sm z-50';
+        tooltip.style.left = `${event.pageX}px`;
+        tooltip.style.top = `${event.pageY - 30}px`;
+        tooltip.textContent = `${this.formatDate(data.date)}: ${data.gains}€`;
+        document.body.appendChild(tooltip);
+        
+        event.target.setAttribute('fill', '#2563EB');
+    }
+
+    hideTooltip() {
+        const tooltip = document.getElementById('earnings-tooltip');
+        if (tooltip) {
+            tooltip.remove();
+        }
+        document.querySelectorAll('rect').forEach(rect => {
+            rect.setAttribute('fill', '#3B82F6');
+        });
+    }
+
+    drawNoData() {
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', this.width / 2);
+        text.setAttribute('y', this.height / 2);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('fill', '#6B7280');
+        text.textContent = 'Aucun gain sur cette période';
+        this.svg.appendChild(text);
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    new EarningsChart('#earnings-chart');
+});
+</script>
 {% endblock %}

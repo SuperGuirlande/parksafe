@@ -25,7 +25,8 @@ from django.db.models import Max, F
 from avis.models import AvisClientParker
 from reservations.models import Reservation
 from stripesystem.models import ReservationPayement
-
+from django.db.models import Sum
+from django.db.models.functions import TruncDate
 
 
 # General redirection
@@ -165,6 +166,8 @@ def parker_confirm_accept(request, token):
 # Mes reservations
 @login_required
 def parker_my_reservations(request):
+    import json
+    from django.core.serializers.json import DjangoJSONEncoder
     user = request.user
 
     all_reservation = Reservation.objects.filter(parker=user, finished=False, canceled=False)
@@ -180,14 +183,30 @@ def parker_my_reservations(request):
     user_places = ParkingPlace.objects.filter(user=user)
     avis = AvisClientParker.objects.filter(parker=user)
 
+    reservations_data = []
+    for res in current_reservations:
+        reservations_data.append({
+            'client': {
+                'first_name': res.client.first_name,
+                'last_name': res.client.last_name
+            },
+            'place': {
+                'address': res.place.address
+            },
+            'arrivee': res.arrivee.strftime('%Y-%m-%dT%H:%M'),
+            'departure': res.departure.strftime('%Y-%m-%dT%H:%M'),
+            'price': str(res.price)
+        })
+
     context = {
         'waiting_accept': waiting_accept,
-        'current_reservations': current_reservations,
+        'current_reservations': current_reservations,  # Pour l'affichage du tableau
         'waiting_paiements': waiting_paiements,
         'finished_reservations': finished_reservations,
         'user_places': user_places,
         'api_key': settings.HERE_API_KEY,
         'avis': avis,
+        'calendar_data': json.dumps(reservations_data, cls=DjangoJSONEncoder),  # Pour le calendrier
     }
 
     return TemplateResponse(request, 'accounts/user/parker/my_reservations.html', context)
@@ -195,8 +214,33 @@ def parker_my_reservations(request):
 # Mes revenus
 @login_required
 def parker_my_gains(request):
+    from django.db.models import Sum
+    from decimal import Decimal
+    from datetime import datetime
+
     user = request.user
     payements = ReservationPayement.objects.filter(parker=user)
+
+    # Calcul des gains par jour en utilisant la date directement
+    daily_gains = (
+        payements
+        .filter(
+            reservation__finished=True,
+            client_payed=True
+        )
+        .values('created_on')  # Utilisez created_on directement au lieu de TruncDate
+        .annotate(gains=Sum('price'))
+        .order_by('created_on')
+    )
+
+    # Formatage des données pour le graphique
+    gains_data = [
+        {
+            'date': datetime.strftime(gain['created_on'], '%d/%m'),
+            'gains': float(gain['gains'])
+        }
+        for gain in daily_gains
+    ]
 
     total_gains = Decimal("0.00")
     waiting_gains = Decimal("0.00")
@@ -222,6 +266,7 @@ def parker_my_gains(request):
         'is_stripe_completed': is_stripe_completed,
         'total_gains': total_gains,
         'waiting_gains': waiting_gains,
+        'gains_data': gains_data,
     })
 
 

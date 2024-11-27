@@ -13,7 +13,7 @@ if (avisContainer && cards.length > 0) {
     }
 
     function getCardWidth() {
-        return window.innerWidth >= 1280 ? 450 : window.innerWidth * 0.9;
+        return window.innerWidth >= 1280 ? 400 : window.innerWidth * 0.9;
     }
 
     function updateSlidePosition() {

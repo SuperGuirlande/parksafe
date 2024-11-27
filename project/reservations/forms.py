@@ -137,6 +137,17 @@ class ReservationForm(forms.ModelForm):
             'message',
         ]
 
+    def clean(self):
+        cleaned_data = super().clean()
+        arrivee = cleaned_data.get('arrivee')
+        departure = cleaned_data.get('departure')
+
+        if arrivee and departure and departure <= arrivee:
+            self.add_error('departure', 
+                "La date de départ doit être ultérieure à la date d'arrivée.")
+
+        return cleaned_data
+
 
 class AcceptMessageForm(forms.ModelForm):
     message = forms.CharField(
