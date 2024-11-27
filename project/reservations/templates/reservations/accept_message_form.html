@@ -1,0 +1,79 @@
+{% extends 'accounts/account_base.html' %}
+{% load static %}
+{% load places_tags %}
+
+{% block account_title %}Réservations en attente | ParkSafe{% endblock %}
+
+{% block account_head %}
+<style>
+    form p {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    form p label {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block account_content %}
+<main class="flex flex-col poppins">
+    <div class="w-full max-w-[850px] mx-auto py-20 flex flex-col">
+        <h1 class="text-5xl primary text-center font-semibold">
+            Accepter la réservation
+        </h1>
+        <p class="text-xl font-light text-slate-600 my-5 text-center">
+            Après acceptation de votre part, le client sera invité à payer la réservation.
+        </p>
+
+        <div class="bg-gray-200 shadow-xl py-6 px-8 flex gap-8 mt-12 items-center rounded-2xl">
+            <!-- MINIATURE -->
+            <div class="w-64 h-64 overflow-hidden rounded-xl">
+                <img src="{{ reservation.place.thumbnail.url }}" alt="" class="object-cover object-center h-full w-full">
+            </div>
+            <!-- TEXT -->
+            <div class="flex flex-col gap-5">
+                <h2 class="secondary text-3xl font-normal">
+                    Demande de <span class="font-semibold">{{ reservation.client.first_name }} {{ reservation.client.last_name.0 }}.</span>
+                </h2>
+                <p class="text-xl text-slate-800">
+                    <b>Départ:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}} |
+                    <b>Retour:</b> {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}
+
+                </p>
+                <p class="text-md">
+                    {{reservation.message}}
+                </p>
+
+                <div class="space-y-2 text-gray-700 text-md">
+                    <p><b>Durée : </b>{{ reservation.days }} jours</p>
+                    <p><b>Nb de véhicules : </b>{{ reservation.vehicules_number }}</p>
+                    <p><b>Nb de passagers : </b>{{ reservation.passengers }}</p>
+                    <p><b>Revenus :</b> {{ reservation.price }} €</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORM -->
+        <form action="" method="POST" class="mx-auto w-full px-3 max-w-[500px] my-10 flex flex-col">
+            {% csrf_token %}
+            {{form.as_p}}
+            <div class="flex mx-auto gap-8 items-center mt-5">
+                <a href="{% url 'parker_index' %}" class="py-2 px-3 bg-secondary hover:bg-blue-700 uppercase text-white text-xl
+                    shadow-lg hover:shadow-2xl rounded-lg transition-all duration-300 ease-in-out text-center">
+                    Retour
+                </a>
+                <button type="submit" class="py-2 px-3 bg-green-500 hover:bg-green-600 uppercase text-white
+                    shadow-lg hover:shadow-2xl rounded-lg transition-all duration-300 ease-in-out text-2xl">
+                    Accepter
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
+
+{% block account_script %}
+{% endblock %}

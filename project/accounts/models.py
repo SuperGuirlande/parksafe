@@ -35,6 +35,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(_('staff status'), default=False)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
 
+    waiting_gains = models.DecimalField(_('Total des gains'), decimal_places=2, max_digits=10, default=0.00, blank=True)
+    total_gains = models.DecimalField(_('Total des gains'), decimal_places=2, max_digits=10, default=0.00, blank=True)
+
     # AJOUT ULTERIEUR
     phone = models.CharField(_('phone number'), max_length=16, blank=True, null=True, unique=True)
     profil_pic = models.ImageField(_('Profile Picture'), upload_to="user/profilpics/", default="user/profilpics/default-avatar.png")

@@ -1,5 +1,5 @@
 <!-- COMMENT CA MARCHE -->
-<section class="flex flex-col poppins pb-12">
+<section class="flex flex-col poppins pb-12 bg-gray-200 py-16 relative z-30">
     <div class="container max-w-[1200px] mx-auto relative">
         <h1 class="text-4xl secondary font-semibold mt-5" id="comment-title">
             Comment ça marche
@@ -11,15 +11,31 @@
             {% for item in ccm_items %}
             <div class="flex gap-10 items-center">
                 <div class="h-24 basis-24 shrink-0 text-5xl font-bold shadow-xl rounded-2xl flex items-center justify-center
-                {% if item.ordre == 2 %}text-white bg-primary{% else %}primary bg-gray-100{% endif %}">
+                {% if item.ordre == 2 %}text-white bg-primary{% else %}primary bg-gray-100{% endif %} relative">
                     <p class="">{{item.ordre}}</p>
+                    {% if item.ordre == 2 %}
+                    <div class="absolute z-[-1] top-1/2 -left-[25%] w-[150%] h-[2px] bg-gray-300"></div>
+                    <div class="absolute z-[-1] top-0 left-[125%] w-[2px] h-full bg-gray-300"></div>
+                    {% endif %}
                 </div>
                 <p class="text-md">
                     <span class="text-lg font-semibold secondary">{{item.title}}</span> <br>
-                    {{item.content}}
+                    {{item.content}} 
+                    {% if item.ordre == 1 %}
+                    <a href="{% url 'create_parking_place' %}" class="text-blue-600">[Créer mon annonce]</a>
+                    {% endif %}
                 </p>
             </div>
             {% endfor %}
+
+            <div class="h-[2px] w-full max-w-[500px] bg-gray-400 relative z-50 mt-10"></div>
+            <p class="text-md max-w-[450px]">
+                <span class="text-lg font-semibold secondary">
+                    Inscription <u>simple</u> et <u>rapide</u> : 
+                </span> 
+                <br>
+                Rejoindre notre plateforme est facile. Créez votre annonce en quelques secondes et commencez à génerer des revenus rapidement 
+            </p>
         </div>
     </div>
 </section>

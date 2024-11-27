@@ -37,108 +37,96 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex min-h-screen">
-    {% include 'accounts/account_sidebar.html' %}
-    
-    <main class="mx-auto max-w-[1080px] poppins py-12">
-        <h1 class="text-5xl font-bold primary">Modifier le contenu de la page Devenir Hôte</h1>
-        <p class="text-xl font-light mt-6 mb-12">
-            Dans cette section, vous avez un aperçu des sections de la page devenir hôte, et vous pouvez en changer l'ordre et le contenu.
-        </p>
+<main class="mx-auto max-w-[1080px] poppins py-12">
+    <h1 class="text-5xl font-bold primary">Modifier le contenu de la page Devenir Hôte</h1>
+    <p class="text-xl font-light mt-6 mb-12">
+        Dans cette section, vous avez un aperçu des sections de la page devenir hôte, et vous pouvez en changer l'ordre et le contenu.
+    </p>
 
-        <!-- COMMENT CA MARCHE -->
-        <section class="flex flex-col poppins pb-12">
-            <div class="container max-w-[1200px] mx-auto relative">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-4xl secondary font-semibold mt-5">
-                        Comment ça marche<span>?</span>
-                    </h1>
-                    <button onclick="window.location.href='{% url 'devenir_hote_add_ccm' %}'" 
-                            class="btn-add bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg transition-colors">
-                        + Ajouter une étape
-                    </button>
-                </div>
-                <div class="absolute h-[2px] w-40 bg-slate-300 translate-y-2"></div>
-                
-                <div class="flex flex-col gap-6 max-w-[720px] mt-12">
-                    {% for item in ccm_items %}
-                    <div class="flex gap-10 items-center group">
-                        <div class="h-24 basis-24 shrink-0 text-5xl font-bold shadow-xl rounded-2xl flex items-center justify-center
-                        {% if item.ordre == 2 %}text-white bg-primary{% else %}primary bg-gray-100{% endif %}">
-                            <p>{{item.ordre}}</p>
-                        </div>
-                        <p class="text-md flex-1">
-                            <span class="text-lg font-semibold secondary">{{item.title}}</span><br>
-                            {{item.content}}
-                        </p>
-                        <div class="order-buttons opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onclick="moveItem({{item.id}}, 'up', 'ccm', event)" 
-                                    class="btn-move" 
-                                    {% if forloop.first %}disabled{% endif %}>↑</button>
-                            <button onclick="moveItem({{item.id}}, 'down', 'ccm', event)" 
-                                    class="btn-move" 
-                                    {% if forloop.last %}disabled{% endif %}>↓</button>
-                            <button onclick="window.location.href='{% url 'devenir_hote_edit_ccm' item.id %}'" 
-                                    class="btn-move">✍</button>
-                            <button onclick="deleteItem({{item.id}}, 'ccm', event)" 
-                                    class="btn-move btn-delete">❌</button>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+    <!-- COMMENT CA MARCHE -->
+    <section class="flex flex-col poppins pb-12">
+        <div class="container max-w-[1200px] mx-auto relative">
+            <div class="flex justify-between items-center">
+                <h1 class="text-4xl secondary font-semibold mt-5">
+                    Comment ça marche<span>?</span>
+                </h1>
+                <button onclick="window.location.href='{% url 'devenir_hote_add_ccm' %}'" 
+                        class="btn-add bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg transition-colors">
+                    + Ajouter une étape
+                </button>
             </div>
-        </section>
-
-        <!-- POURQUOI DEVENIR HOTE -->
-        <section class="flex flex-col poppins py-12">
-            <div class="container max-w-[1200px] mx-auto relative flex flex-col">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-4xl secondary font-semibold mt-5">
-                        Pourquoi devenir Hôte ParkSafe<span>?</span>
-                    </h1>
-                    <button onclick="window.location.href='{% url 'devenir_hote_add_pdh' %}'" 
-                            class="btn-add bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg transition-colors">
-                        + Ajouter une raison
-                    </button>
-                </div>
-                <div class="absolute h-[2px] w-40 bg-slate-300 translate-y-2"></div>
-
-                <div class="flex justify-evenly gap-5 flex-wrap mt-12">
-                    {% for item in pdh_items %}
-                    <div class="group flex flex-col gap-5 basis-[350px] shrink-0 mt-5 relative">
-                        <div class="order-buttons absolute -top-4 -right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onclick="moveItem({{item.id}}, 'up', 'pdh', event)" 
-                                    class="btn-move" 
-                                    {% if forloop.first %}disabled{% endif %}>↑</button>
-                            <button onclick="moveItem({{item.id}}, 'down', 'pdh', event)" 
-                                    class="btn-move" 
-                                    {% if forloop.last %}disabled{% endif %}>↓</button>
-                            <button onclick="window.location.href='{% url 'devenir_hote_edit_pdh' item.id %}'" 
-                                    class="btn-move">✍</button>
-                            <button onclick="deleteItem({{item.id}}, 'pdh', event)" 
-                                    class="btn-move btn-delete">❌</button>
-                        </div>
-                        <h3 class="text-xl secondary font-semibold text-center">{{item.title}}</h3>
-                        <p class="text-lg text-justify">{{item.content}}</p>
+            <div class="absolute h-[2px] w-40 bg-slate-300 translate-y-2"></div>
+            
+            <div class="flex flex-col gap-6 max-w-[720px] mt-12">
+                {% for item in ccm_items %}
+                <div class="flex gap-10 items-center group">
+                    <div class="h-24 basis-24 shrink-0 text-5xl font-bold shadow-xl rounded-2xl flex items-center justify-center
+                    {% if item.ordre == 2 %}text-white bg-primary{% else %}primary bg-gray-100{% endif %}">
+                        <p>{{item.ordre}}</p>
                     </div>
-                    {% endfor %}
+                    <p class="text-md flex-1">
+                        <span class="text-lg font-semibold secondary">{{item.title}}</span><br>
+                        {{item.content}}
+                    </p>
+                    <div class="order-buttons opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick="moveItem({{item.id}}, 'up', 'ccm', event)" 
+                                class="btn-move" 
+                                {% if forloop.first %}disabled{% endif %}>↑</button>
+                        <button onclick="moveItem({{item.id}}, 'down', 'ccm', event)" 
+                                class="btn-move" 
+                                {% if forloop.last %}disabled{% endif %}>↓</button>
+                        <button onclick="window.location.href='{% url 'devenir_hote_edit_ccm' item.id %}'" 
+                                class="btn-move">✍</button>
+                        <button onclick="deleteItem({{item.id}}, 'ccm', event)" 
+                                class="btn-move btn-delete">❌</button>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-        </section>
-    </main>
-</div>
+        </div>
+    </section>
+
+    <!-- POURQUOI DEVENIR HOTE -->
+    <section class="flex flex-col poppins py-12">
+        <div class="container max-w-[1200px] mx-auto relative flex flex-col">
+            <div class="flex justify-between items-center">
+                <h1 class="text-4xl secondary font-semibold mt-5">
+                    Pourquoi devenir Hôte ParkSafe<span>?</span>
+                </h1>
+                <button onclick="window.location.href='{% url 'devenir_hote_add_pdh' %}'" 
+                        class="btn-add bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg transition-colors">
+                    + Ajouter une raison
+                </button>
+            </div>
+            <div class="absolute h-[2px] w-40 bg-slate-300 translate-y-2"></div>
+
+            <div class="flex justify-evenly gap-5 flex-wrap mt-12">
+                {% for item in pdh_items %}
+                <div class="group flex flex-col gap-5 basis-[350px] shrink-0 mt-5 relative">
+                    <div class="order-buttons absolute -top-4 -right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick="moveItem({{item.id}}, 'up', 'pdh', event)" 
+                                class="btn-move" 
+                                {% if forloop.first %}disabled{% endif %}>↑</button>
+                        <button onclick="moveItem({{item.id}}, 'down', 'pdh', event)" 
+                                class="btn-move" 
+                                {% if forloop.last %}disabled{% endif %}>↓</button>
+                        <button onclick="window.location.href='{% url 'devenir_hote_edit_pdh' item.id %}'" 
+                                class="btn-move">✍</button>
+                        <button onclick="deleteItem({{item.id}}, 'pdh', event)" 
+                                class="btn-move btn-delete">❌</button>
+                    </div>
+                    <h3 class="text-xl secondary font-semibold text-center">{{item.title}}</h3>
+                    <p class="text-lg text-justify">{{item.content}}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock %}
 
 {% block extra_script %}
 <script>
-    // Bouton SideBar
-    const button = document.getElementById('admin')
-    button.classList.add('active')
-    const section = button.closest('.link-section');
-    section.classList.add('active')
-    const link = document.getElementById('devenir_hote')
-    link.classList.add('active')
-
     async function moveItem(itemId, direction, section, event) {
         event.stopPropagation();
         const url = section === 'ccm' 

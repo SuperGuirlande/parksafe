@@ -52,24 +52,42 @@
         border-radius: 50%;
     }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+
+<style>
+/* Cacher le dropdown par défaut du navigateur */
+select.phone-input {
+    display: none;
+}
+
+.iti__flag {
+    background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags.png");
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .iti__flag {
+        background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags@2x.png");
+    }
+}
+</style>
 {% endblock %}
 
 {% block content %}
 
 <div class="my-auto mx-auto poppins py-12 w-full max-w-[720px]">
-    <h1 class="primary text-8xl mt-10 drop-shadow-lg text-center jomhuria" id="proposer-une-place">
+    <h1 class="primary text-9xl mt-10 drop-shadow-lg text-center jomhuria" id="proposer-une-place">
         <span class="secondary">Park</span>Safe
     </h1>
-    <h2 class="text-2xl font-medium secondary text-center uppercase -mt-5">
+    <h2 class="text-4xl font-medium secondary text-center uppercase -mt-5">
         Louer mes places de parking
     </h2>
 
-    <form method="post" enctype="multipart/form-data" class="w-full max-w-[500px] mx-auto">
+    <form method="post" enctype="multipart/form-data" class="w-full max-w-[500px] mx-auto flex flex-col">
         {% csrf_token %}
         
         {% comment %} PRIX {% endcomment %}
         <div class="flex flex-col mt-8 text-lg w-fit gap-2">
-            <p>{{ form.price.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.price.label }}</p>
             <div class="w-fit">
                 {{ form.price }}
             </div>
@@ -79,7 +97,7 @@
         </div>
         {% comment %} NOMBRE DE PLACES {% endcomment %}
         <div class="flex flex-col mt-5 text-lg w-fit gap-2">
-            <p>{{ form.places.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.places.label }}</p>
             <div class="w-fit">
                 {{ form.places }}
             </div>
@@ -89,7 +107,7 @@
         </div>
         {% comment %} ADRESSE COMPLETE {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
-            <p>{{ form.address.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.address.label }}</p>
             {{ form.address }}
             <div class="relative">
                 <div id="suggestions" class="absolute z-10 w-full bg-white border border-gray-300 mt-1"></div>
@@ -100,7 +118,7 @@
         </div>
         {% comment %} DESCRIPTION {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
-            <p>{{ form.description.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.description.label }}</p>
             {{ form.description }}
             {% for error in form.description.errors %}
             <p class='text-red-500'>{{ error }}</p>
@@ -108,7 +126,7 @@
         </div>
         {% comment %} MINIATURE {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
-            <p>{{ form.thumbnail.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.thumbnail.label }}</p>
             <p class='text-sm text-slate-500 -mt-2'>
                 Vous pourrez ajouter d'autres photos par la suite
             </p>
@@ -119,7 +137,7 @@
         </div>
         {% comment %} TYPES DE VEHICULES {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
-            <p>{{ form.vehicles_types.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.vehicles_types.label }}</p>
             {{ form.vehicles_types }}
             {% for error in form.vehicles_types.errors %}
             <p class='text-red-500'>{{ error }}</p>
@@ -127,7 +145,7 @@
         </div>
         {% comment %} DISTANCE A PIED {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
-            <p>{{ form.distance_to_transport.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.distance_to_transport.label }}</p>
             {{ form.distance_to_transport }}
             {% for error in form.distance_to_transport.errors %}
             <p class='text-red-500'>{{ error }}</p>
@@ -136,7 +154,7 @@
         {% comment %} NAVETTE {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
             <div class='flex gap-5 flex-row-reverse items-center'>
-                <p>{{ form.navette_possible.label }}</p>
+                <p class="font-semibold secondary mt-5">{{ form.navette_possible.label }}</p>
                 {{ form.navette_possible }}
             </div>
             {% for error in form.navette_possible.errors %}
@@ -145,7 +163,7 @@
         </div>
         {% comment %} PRIX NAVETTE {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-fit">
-            <p>{{ form.navette_price.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.navette_price.label }}</p>
             <div class="w-fit">{{ form.navette_price }}</div>
             {% for error in form.navette_price.errors %}
             <p class='text-red-500'>{{ error }}</p>
@@ -154,7 +172,7 @@
         {% comment %} NAVETTE NOCTURNE {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
             <div class='flex gap-5 flex-row-reverse items-center'>
-                <p>{{ form.navette_nocturne_possible.label }}</p>
+                <p class="font-semibold secondary mt-5">{{ form.navette_nocturne_possible.label }}</p>
                 {{ form.navette_nocturne_possible }}
             </div>
             {% for error in form.navette_nocturne_possible.errors %}
@@ -163,7 +181,7 @@
         </div>
         {% comment %} PRIX NAVETTE NOCTURNE {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-fit">
-            <p>{{ form.navette_nocturne_price.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.navette_nocturne_price.label }}</p>
             <div class="w-fit">{{ form.navette_nocturne_price }}</div>
             {% for error in form.navette_nocturne_price.errors %}
             <p class='text-red-500'>{{ error }}</p>
@@ -171,9 +189,12 @@
         </div>
         {% comment %} ACCES HANDICAPE {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
-            <div class='flex gap-5 flex-row-reverse items-center'>
-                <p>{{ form.handicaped_place.label }}</p>
+            <div class='flex gap-5 flex-row items-center'>
                 {{ form.handicaped_place }}
+                <div class='flex flex-col'>
+                    <p class="font-semibold secondary mt-5">{{ form.handicaped_place.label }}</p>
+                    <p class='text-sm text-slate-600'>(3,30 m de largeur 5 m de longueur au minimum)</p>
+                </div>
             </div>
             {% for error in form.handicaped_place.errors %}
             <p class='text-red-500'>{{ error }}</p>
@@ -182,10 +203,7 @@
         {% comment %} ELECTRIQUE {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
             <div class='flex gap-5 flex-row-reverse items-center'>
-                <div class='flex flex-col'>
-                    <p>{{ form.electric_vehicle.label }}</p>
-                    <p class='text-sm text-slate-600'>(3,30 m de largeur 5 m de longueur au minimum)</p>
-                </div>
+                <p class="font-semibold secondary mt-5">{{ form.electric_vehicle.label }}</p>
                 {{ form.electric_vehicle }}
             </div>
             {% for error in form.electric_vehicle.errors %}
@@ -194,7 +212,7 @@
         </div>
         {% comment %} DUREE MINIMALE {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
-            <p>{{ form.minimal_time.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.minimal_time.label }}</p>
             <p class='w-fit'>{{ form.minimal_time }}</p>
             {% for error in form.minimal_time.errors %}
             <p class='text-red-500'>{{ error }}</p>
@@ -202,14 +220,14 @@
         </div>
         {% comment %} TELEPHONE {% endcomment %}
         <div class="flex flex-col mt-5 text-lg gap-2 w-full">
-            <p>{{ form.phone.label }}</p>
+            <p class="font-semibold secondary mt-5">{{ form.phone.label }}</p>
             {{ form.phone }}
             {% for error in form.phone.errors %}
             <p class='text-red-500'>{{ error }}</p>
             {% endfor %}
         </div>        
 
-        <button type="submit" class="mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button type="submit" class="my-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-5 text-xl rounded-2xl mx-auto">
             Proposer la place
         </button>
     </form>
@@ -217,9 +235,36 @@
 
 {% endblock %}
 {% block extra_script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // PHONE
+        const input = document.querySelector("input[name='phone']");
+        if (input) {
+            const iti = window.intlTelInput(input, {
+                initialCountry: "fr",
+                preferredCountries: ["fr", "be", "ch"],
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                separateDialCode: true,
+                formatOnDisplay: true,
+                nationalMode: true,
+                customContainer: "w-full",
+                // Pour avoir le style de l'image
+                dropdownContainer: document.body,
+                autoPlaceholder: "polite"
+            });
+
+            // Pour mettre à jour la valeur complète avec l'indicatif pays
+            input.addEventListener('blur', function() {
+                const number = iti.getNumber();
+                input.value = number;
+            });
+        }
+
+
+
         // Fonction de debounce
         function debounce(func, wait) {
             let timeout;

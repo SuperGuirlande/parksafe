@@ -9,46 +9,32 @@
 
 
 {% block content %}
-<div class="flex min-h-screen">
+<main class="mx-auto">
+    <section class="flex py-20">
+        <div class="container mx-auto">
+            <h1 class="poppins font-bold primary text-6xl text-center">
+                Ajouter / Modifier Q&R
+            </h1>
 
-    {% include 'accounts/account_sidebar.html' %}
-    <main class="mx-auto">
-        <section class="flex py-20">
-            <div class="container mx-auto">
-                <h1 class="poppins font-bold primary text-6xl text-center">
-                    Ajouter / Modifier Q&R
-                </h1>
+            <form action="#" method="post" class="max-w-xl mx-auto my-20 flex flex-col">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class='flex flex-col mb-3'>
+                    <p class="text-xl poppins">{{ field.label }}</p>
+                    {{ field }}
+                    <p class="text-lg font-semibold text-red-500 poppins">{{ field.errors }}</p>
 
-                <form action="#" method="post" class="max-w-xl mx-auto my-20 flex flex-col">
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class='flex flex-col mb-3'>
-                        <p class="text-xl poppins">{{ field.label }}</p>
-                        {{ field }}
-                        <p class="text-lg font-semibold text-red-500 poppins">{{ field.errors }}</p>
-
-                    </div>
-                    {% endfor %}
-                    <button type="submit" class="py-3 px-8 text-xl bg-blue-500 w-fit mx-auto text-white my-5 shadow-lg rounded-lg
-            hover:-translate-y-1 hover:shadow-2xl hover:bg-blue-400 transition-all duration-300 ease-in-out">
-                        POSTER
-                    </button>
-                </form>
-            </div>
-        </section>
-    </main>
-</div>
+                </div>
+                {% endfor %}
+                <button type="submit" class="py-3 px-8 text-xl bg-blue-500 w-fit mx-auto text-white my-5 shadow-lg rounded-lg
+        hover:-translate-y-1 hover:shadow-2xl hover:bg-blue-400 transition-all duration-300 ease-in-out">
+                    POSTER
+                </button>
+            </form>
+        </div>
+    </section>
+</main>
 {% endblock %}
 
 {% block extra_script %}
-<script>
-    // Bouton SideBar
-    const button = document.getElementById('admin')
-    button.classList.add('active')
-    const section = button.closest('.link-section');
-    section.classList.add('active')
-
-    const link = document.getElementById('admin_faq')
-    link.classList.add('active')
-</script>
 {% endblock %}

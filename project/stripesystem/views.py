@@ -22,7 +22,7 @@ def create_stripe_account(request):
         
         return redirect(stripe_account.get_onboarding_link())
     except Exception as e:
-        messages.error(request, str(e))
+        request.session['alert'] = str(e)
         return redirect('parker_my_gains')
 
 @login_required
@@ -31,7 +31,7 @@ def complete_stripe_account(request):
         stripe_account = request.user.stripe_account
         return redirect(stripe_account.get_onboarding_link())
     except Exception as e:
-        messages.error(request, str(e))
+        request.session['alert'] = str(e)
         return redirect('parker_my_gains')
     
 
@@ -46,15 +46,12 @@ def stripe_return(request, account_id):
     """Vue appelée quand l'onboarding est terminé"""
     stripe_account = StripeConnectAccount.objects.get(stripe_account_id=account_id)
     
-    # Vérifiez le statut du compte
     if stripe_account.check_account_status():
-        messages.success(request, "Votre compte Stripe a été configuré avec succès !")
+        request.session['message'] = "Votre compte Stripe a été configuré avec succès !"
     else:
-        messages.warning(request, "La configuration de votre compte Stripe n'est pas encore terminée.")
+        request.session['alert'] = "La configuration de votre compte Stripe n'est pas encore terminée."
     
-    # Redirigez vers la page de votre choix
-    return redirect('parker_my_gains')  # ou toute autre page de votre choix
-
+    return redirect('parker_my_gains')  
 
 @login_required
 def create_checkout_session(request, reservation_token):
@@ -93,7 +90,7 @@ def create_checkout_session(request, reservation_token):
         
     except Exception as e:
         messages.error(request, f"Erreur lors de la création du paiement: {str(e)}")
-        return redirect('client_reservations_waiting_paiement')
+        return redirect('client_index')
 
 @login_required
 def payment_success(request):
@@ -114,14 +111,16 @@ def payment_success(request):
 
             pay.client_payed = True
             pay.save()
+
             reservation.payed = True
             reservation.save()
-            messages.success(request, "Votre paiement a été effectué avec succès !")
+
+            request.session['message'] = "Votre paiement a été effectué avec succès ! Vous pouvez consulter votre réservation dans la section 'En cours / à venir"
         except Exception as e:
             messages.error(request, str(e))
-    return redirect('client_reservations_waiting_paiement')
+    return redirect('client_index')
 
 @login_required
 def payment_cancel(request):
-    messages.warning(request, "Le paiement a été annulé.")
-    return redirect('client_reservations_waiting_paiement')
+    request.session['alert'] = "Le paiement a été annulé."
+    return redirect('client_index')

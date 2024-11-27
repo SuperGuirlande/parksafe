@@ -1,0 +1,335 @@
+{% extends 'accounts/account_base.html' %}
+{% load static %}
+{% load places_tags %}
+{% load session_tags %}
+
+{% block account_title %}Réservations en attente | ParkSafe{% endblock %}
+
+{% block account_head %}
+{% endblock %}
+
+{% block account_content %}
+<main class="w-full flex flex-col poppins">
+    <!-- TITLE -->
+    <h1 class="primary text-9xl mt-10 drop-shadow-lg text-center jomhuria" id="proposer-une-place">
+        <span class="secondary">Park</span>Safe
+    </h1>
+    <h2 class="text-4xl font-medium secondary text-center uppercase -mt-5">
+        Mes Voyages & Réservations
+    </h2>
+
+    <!-- MESSAGE DE SESSION -->
+    {% if request.session.message %}
+    <p class="text-3xl my-5 text-green-600 font-bold text-center mx-auto">
+        {{ request.session.message }}
+    </p>
+    {% del_session_message %}
+    {% endif %}
+    {% if request.session.alert %}
+    <p class="text-3xl my-5 text-red-500 font-bold text-center mx-auto">
+        {{ request.session.alert }}
+    </p>
+    {% del_session_message %}
+    {% endif %}
+    
+    <!-- EN ATTENTE DE PAIEMENT -->
+    <section class="flex bg-gray-200 mt-10 shadow-lg relative z-50">
+        <div class="w-full max-w-[1080px] mx-auto py-20">
+            <div class="text-left pb-10">
+                <!-- TITLE -->
+                <h1 class="text-3xl secondary font-semibold">
+                    En attente de paiement
+                </h1>
+                <p class="text-xl font-light text-slate-600 my-5">
+                    Ces réservations ont été acceptées par les hôtes <br>
+                    Il ne vous reste plus qu'à régler le prix total pour valider la reservation
+                </p>
+            </div>
+            <div class="flex flex-col">
+                {% if not waiting_paiement_reservations.exists %}
+                <p class="text-2xl secondary text-center">
+                    Aucune demande de paiement pour le moment
+                </p>
+                <a href="{% url 'search_parking_place_index' %}" class=" my-6 mx-auto">
+                    <button class="py-2 px-5 rounded-xl shadow-lg text-white bg-secondary text-xl uppercase hover:bg-blue-800
+                    hover:shadow-xl">
+                        Rechercher une place
+                    </button>
+                </a>
+                {% else %}
+                <!-- LISTE -->
+                <div class="flex flex-col gap-5">
+                    {% for res in waiting_paiement_reservations %}
+                        <!-- RESERVATION -->
+                        <div class="bg-slate-100 shadow-xl py-10 px-12 flex gap-6 rounded-2xl items-center">
+                            <!-- MINIATURE -->
+                            <div class="w-64 h-64 overflow-hidden rounded-xl">
+                                <img src="{{ res.place.thumbnail.url }}" alt="" class="object-cover object-center h-full w-full">
+                            </div>
+                            <!-- TEXT -->
+                            <div class="flex flex-col gap-5">
+                                <h2 class="secondary text-3xl font-semibold">
+                                    {{ res.place|simple_format_title }}
+                                </h2>
+                                <p class="text-xl text-slate-800">
+                                    <b class="secondary">Départ:</b> {{ res.arrivee|date:"d/m/Y"}} à {{ res.arrivee|date:"H:i"}} |
+                                    <b class="secondary">Retour:</b> {{ res.departure|date:"d/m/Y"}} à {{ res.departure|date:"H:i"}}
+
+                                </p>
+                                <p class="text-md">
+                                    {{res.place.description}}
+                                </p>
+            
+                                <div class="space-y-2 text-gray-700 text-md">
+                                    <p><b class="secondary">Nb de véhicules : </b>{{ res.vehicules_number }} |
+                                    <b class="secondary">Nb de passagers : </b>{{ res.passengers }}</p>
+                                    <p><b class="secondary">Durée : </b>{{ res.days }} jours |
+                                    <b class="secondary">Prix total :</b> {{ res.total_price }} €</p>
+                                    {% if res.accept_messages.exists %}
+                                    <br><br>
+                                    <p>
+                                        <b class="secondary">Message de l'hôte :</b> {{res.accept_messages.last}}
+                                    </p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="flex gap-5 ml-auto items-center">
+                                    <a href="{% url 'client_cancel_reservation' res.token %}" class="ml-auto">
+                                        <button class="py-2 px-5 uppercase text-white bg-red-500 rounded-xl hover:bg-red-700
+                                            shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
+                                            Annuler la reservation
+                                        </button>
+                                    </a>
+                                    <!-- ACCEPTER ET PAYER -->
+                                    <a href="{% url 'create_checkout_session' res.token %}" class="ml-auto">
+                                        <button class="py-2 px-5 uppercase text-white bg-green-500 rounded-xl hover:bg-green-600
+                                            shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out text-2xl hover:-translate-y-1">
+                                            Accepter & Payer
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+
+    <!-- EN ATTENTE D'ACCEPTATION -->
+    <section class="flex bg-gray-50 shadow-lg relative z-40">
+        <div class="w-full max-w-[1080px] mx-auto py-20">
+            <div class="text-left pb-10 mt-6">
+                <!-- TITLE -->
+                <h1 class="text-3xl secondary font-semibold">
+                    Réservations en attente
+                </h1>
+                <p class="text-xl font-light text-slate-600 my-5">
+                    Ces demandes de reservations sont en attente d'une validation de la part de l'hôte. <br>
+                    N'hésitez pas à faire plusieurs demandes de réservations pour maximiser vos chances.
+                </p>
+            </div>
+            <div class="flex flex-col">
+                {% if not waiting_accept_reservations.exists %}
+                <p class="text-2xl secondary text-center">
+                    Vous n'avez aucune demande de réservations en attente
+                </p>
+                <a href="{% url 'search_parking_place_index' %}" class=" my-6 mx-auto">
+                    <button class="py-2 px-5 rounded-xl shadow-lg text-white bg-secondary text-xl uppercase hover:bg-blue-800
+                    hover:shadow-xl">
+                        Rechercher une place
+                    </button>
+                </a>
+                {% else %}
+                <!-- LISTE -->
+                <div class="flex flex-col gap-5">
+                    {% for res in waiting_accept_reservations %}
+                        <!-- RESERVATION -->
+                        <div class="bg-gray-100 shadow-2xl rounded-2xl py-10 px-12 flex gap-6 items-center">
+                            <!-- MINIATURE -->
+                            <div class="w-64 h-64 overflow-hidden rounded-xl">
+                                <img src="{{ res.place.thumbnail.url }}" alt="" class="object-cover object-center w-full h-full">
+                            </div>
+                            <!-- TEXT -->
+                            <div class="flex flex-col gap-5">
+                                <h2 class="secondary text-3xl font-semibold">
+                                    {{ res.place|simple_format_title }}
+                                </h2>
+                                <p class="text-xl text-slate-800">
+                                    <b>Départ:</b> {{ res.arrivee|date:"d/m/Y"}} à {{ res.arrivee|date:"H:i"}} |
+                                    <b>Retour:</b> {{ res.departure|date:"d/m/Y"}} à {{ res.departure|date:"H:i"}}
+
+                                </p>
+                                <p class="text-md">
+                                    {{res.place.description}}
+                                </p>
+            
+                                <div class="space-y-2 text-gray-700 text-md">
+                                    <p><b>Nb de véhicules : </b>{{ res.vehicules_number }} | <b>Nb de passagers : </b>{{ res.passengers }}</p>
+                                    <p><b>Durée : </b>{{ res.days }} jours | <b>Prix total :</b> {{ res.total_price }} €</p>
+                                </div>
+
+                                <a href="{% url 'client_cancel_reservation' res.token %}" class="ml-auto">
+                                    <button class="py-2 px-5 uppercase text-white bg-red-500 rounded-xl hover:bg-red-700
+                                    shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
+                                        Annuler la reservation
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+
+    <!-- EN COURS ET A VENIR -->
+    <section class="flex bg-gray-200 shadow-lg relative z-30">
+        <div class="w-full max-w-[1080px] mx-auto py-20">
+            <div class="text-left pb-10 mt-6">
+                <!-- TITLE -->
+                <h1 class="text-3xl secondary font-semibold">
+                    Réservations en cours / à venir
+                </h1>
+                <p class="text-xl font-light text-slate-600 my-5">
+                    Ces réservations ont été acceptée et payées.
+                </p>
+            </div>
+            <div class="flex flex-col">
+                {% if not current_reservations.exists %}
+                <p class="text-2xl secondary text-center">
+                    Vous n'avez aucune demande de réservations en cours
+                </p>
+                <a href="{% url 'search_parking_place_index' %}" class=" my-6 mx-auto">
+                    <button class="py-2 px-5 rounded-xl shadow-lg text-white bg-secondary text-xl uppercase hover:bg-blue-800
+                    hover:shadow-xl">
+                        Rechercher une place
+                    </button>
+                </a>
+                {% else %}
+                <!-- LISTE -->
+                <div class="flex flex-col gap-5">
+                    {% for res in current_reservations %}
+                        <!-- RESERVATION -->
+                        <div class="bg-white shadow-xl py-10 px-10 flex gap-10 rounded-xl items-center">
+                            <!-- MINIATURE -->
+                            <div class="w-64 h-648 overflow-hidden rounded-xl">
+                                <img src="{{ res.place.thumbnail.url }}" alt="" class="object-cover object-center">
+                            </div>
+                            <!-- TEXT -->
+                            <div class="flex flex-col gap-5">
+                                <h2 class="secondary text-3xl font-semibold">
+                                    {{ res.place|simple_format_title }}
+                                </h2>
+                                <p class="text-xl text-slate-800">
+                                    <b>Départ:</b> {{ res.arrivee|date:"d/m/Y"}} à {{ res.arrivee|date:"H:i"}} |
+                                    <b>Retour:</b> {{ res.departure|date:"d/m/Y"}} à {{ res.departure|date:"H:i"}}
+
+                                </p>
+                                <p class="text-md">
+                                    {{res.place.description}}
+                                </p>
+            
+                                <div class="space-y-2 text-gray-700 text-md">
+                                    <p><b>Nb de véhicules : </b>{{ res.vehicules_number }} | <b>Nb de passagers : </b>{{ res.passengers }}</p>
+                                    <p><b>Durée : </b>{{ res.days }} jours | <b>Prix total :</b> {{ res.total_price }} €</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- TERMINEES -->
+    <section class="flex bg-white shadow-lg relative z-20">
+        <div class="w-full max-w-[1080px] mx-auto py-20">
+            <div class="text-left pb-10 mt-6">
+                <!-- TITLE -->
+                <h1 class="text-3xl secondary font-semibold">
+                    Réservations terminées
+                </h1>
+                <p class="text-xl font-light text-slate-600 my-5">
+                    Liste de vos réservations passées. <br>
+                    N'oubliez pas de laisser un avis à votre hôte.
+                </p>
+            </div>
+            <div class="flex flex-col">
+                {% if not finished_reservations.exists %}
+                <p class="text-2xl secondary text-center">
+                    Vous n'avez pas encore effectué de réservations sur ParkSafe&copy;
+                </p>
+                <a href="{% url 'search_parking_place_index' %}" class=" my-6 mx-auto">
+                    <button class="py-2 px-5 rounded-xl shadow-lg text-white bg-secondary text-xl uppercase hover:bg-blue-800
+                    hover:shadow-xl">
+                        Rechercher une place
+                    </button>
+                </a>
+                {% else %}
+                <!-- LISTE -->
+                <div class="flex flex-col gap-5">
+                    {% for res in finished_reservations %}
+                        <!-- RESERVATION -->
+                        <div class="bg-white shadow-xl py-10 px-10 flex gap-10 rounded-xl items-center">
+                            <!-- MINIATURE -->
+                            <div class="w-64 h-648 overflow-hidden rounded-xl">
+                                <img src="{{ res.place.thumbnail.url }}" alt="" class="object-cover object-center">
+                            </div>
+                            <!-- TEXT -->
+                            <div class="flex flex-col gap-5">
+                                <h2 class="secondary text-3xl font-semibold">
+                                    {{ res.place|simple_format_title }}
+                                </h2>
+                                <p class="text-xl text-slate-800">
+                                    <b>Départ:</b> {{ res.arrivee|date:"d/m/Y"}} à {{ res.arrivee|date:"H:i"}} |
+                                    <b>Retour:</b> {{ res.departure|date:"d/m/Y"}} à {{ res.departure|date:"H:i"}}
+
+                                </p>
+                                <p class="text-md">
+                                    {{res.place.description}}
+                                </p>
+            
+                                <div class="space-y-2 text-gray-700 text-md">
+                                    <p><b>Nb de véhicules : </b>{{ res.vehicules_number }} | <b>Nb de passagers : </b>{{ res.passengers }}</p>
+                                    <p><b>Durée : </b>{{ res.days }} jours | <b>Prix total :</b> {{ res.total_price }} €</p>
+                                </div>
+
+                                <!-- AVIS -->
+                                <!-- Laisser un avis -->
+                                {% if not res.avis.exists %}
+                                    <a href="{% url 'new_avis_client_parker' res.token %}" class="ml-auto text-right">
+                                        <button class="bg-primary text-white py-3 px-8 text-lg rounded-lg shadow-lg">
+                                            Laisser un Avis
+                                        </button>
+                                    </a>
+                                {% else %}
+                                <h3 class="text-xl secondary font-semibold uppercase mt-5">Votre avis :</h3>
+                                <div class="flex gap-1 xl:gap-2 -my-4">
+                                    {% for i in '12345'|make_list %}
+                                        <span class="text-2xl xl:text-4xl {% if res.avis.first.stars >= i|add:'0' %}text-amber-400{% else %}text-gray-200{% endif %}">★</span>
+                                    {% endfor %}
+                                </div>
+                                <p class="text-lg font-light text-slate-800">
+                                    {{res.avis.first.avis}}
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block account_script %}
+
+{% endblock %}

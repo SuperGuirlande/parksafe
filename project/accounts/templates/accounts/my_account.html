@@ -10,227 +10,121 @@
 {% endblock %}
 
 {% block account_content %}
-<div class="flex min-h-screen">
-
-    {% include 'accounts/account_sidebar.html' %}
-    <main class="mx-auto">
-        <div class="container mx-auto mt-10">
-            <!-- HEADER -->
-            <div class="flex flex-wrap w-full max-w-[1280px] mx-auto justify-center my-10 gap-12">
-                <!-- LEFT -->
-                <div class='w-fit items-center justify-center my-auto'>
-                    <!-- Nom -->
-                    <h1 class='text-center text-4xl font-extrabold text-blue-500'>
-                        {{ user.first_name }} {{ user.last_name }}
-                    </h1>
-                    <!-- Logout -->
-                    <a href="{% url 'logout' %}" alt="Se déconnecter">
-                        <p class="text-xl underline text-center decoration-1 underline-offset-4 mt-3 text-slate-700">
-                            Se déconnecter
-                        </p>
-                    </a>
-                </div>
-                <!-- RIGHT -->
-                <div class='w-fit h-fit items-center justify-center'>
-                    <a href="{% url 'change_profil_pic' %}" alt="Changer d'image de profil utilisateur">
-                        <div id="account-pp"
-                            class="mx-auto overflow-hidden w-32 h-32 relative z-[1]
-                        after:absolute after:w-full after:h-full after:left-0 after:top-0 after:z-[2] after:bg-slate-50 after:bg-opacity-0 hover:after:bg-opacity-30">
-                            <img src="{{ user.profil_pic.url }}"
-                                alt="Photo de profil de {{user.first_name}} {{user.last_name}}" class="rounded-full">
-                        </div>
-                    </a>
-                </div>
+<main class="w-full flex flex-col poppins">
+    <div class="container mx-auto mt-10">
+        <!-- HEADER -->
+        <div class="flex flex-wrap w-full max-w-[1280px] mx-auto justify-center my-10 gap-12">
+            <!-- LEFT -->
+            <div class='w-fit items-center justify-center my-auto'>
+                <!-- Nom -->
+                <h1 class='text-center text-4xl font-extrabold text-blue-500'>
+                    {{ user.first_name }} {{ user.last_name }}
+                </h1>
+                <!-- Logout -->
+                <a href="{% url 'logout' %}" alt="Se déconnecter">
+                    <p class="text-xl underline text-center decoration-1 underline-offset-4 mt-3 text-slate-700">
+                        Se déconnecter
+                    </p>
+                </a>
             </div>
-            {% if request.session.message %}
-            <!-- PHOTO DE PROFIL MISE A JOUR SUCCESS -->
-            <p class="text-xl my-5 text-green-600 font-bold text-center mx-auto">
-                {{ request.session.message }}
-            </p>
-            {% del_session_message %}
-            {% endif %}
-
-
-            <!-- GRID -->
-            <div class="flex flex-wrap mt-20">
-                <!-- INFOS PERSOS -->
-                <div class='flex flex-col basis-[700px] grow-0 shrink border shadow-md p-12'>
-                    <h1 class='text-blue-500 font-bold underline text-2xl text-center drop-shadow-lg'>
-                        Informations personnelles
-                    </h1>
-                    <hr class='my-12'>
-
-                    <div class="flex justify-between text-xl leading-loose">
-                        <!-- LEFT -->
-                        <div class='text-left'>
-                            <p>Nom / Prénom :</p>
-                            <p>Adresse e-mail :</p>
-                            <p>Téléphone :</p>
-                            <p>Image de profil :</p>
-                            <p>Mot de passe :</p>
-                        </div>
-                        <!-- RIGHT -->
-                        <div class='text-right'>
-                            <p>{{ user.first_name }} {{ user.last_name }}</p>
-                            <p>{{ user.email }}</p>
-                            <p>{% if not user.phone %}
-                                <a class="text-blue-500 hover:text-blue-400" href="{% url 'change_mobile_number' %}">
-                                    Ajouter un numéro de téléphone
-                                </a>
-                                {% else %}
-                                {{ user.phone }}
-                                <a class="text-blue-600 hover:text-blue-500 underline underline-offset-2 decoration-1"
-                                    href="{% url 'change_mobile_number' %}">
-                                    Changer →
-                                </a>
-                                {% endif %}
-                            </p>
-                            <p>
-                                <a href="{% url 'change_profil_pic' %}" alt="Changer l'image de prifl utilisateur"
-                                    class="text-blue-600 hover:text-blue-500 underline underline-offset-2 decoration-1">
-                                    <p>Changer l'image de profil</p>
-                                </a>
-                            </p>
-                            <p>
-                                <a href="{% url 'change_password' %}" alt="Changer de mot de passe"
-                                    class="text-blue-600 hover:text-blue-500 underline underline-offset-2 decoration-1">
-                                    <p>Changer de mot de passe</p>
-                                </a>
-                            </p>
-
-                        </div>
+            <!-- RIGHT -->
+            <div class='w-fit h-fit items-center justify-center'>
+                <a href="{% url 'change_profil_pic' %}" alt="Changer d'image de profil utilisateur">
+                    <div id="account-pp"
+                        class="mx-auto overflow-hidden w-32 h-32 relative z-[1]
+                    after:absolute after:w-full after:h-full after:left-0 after:top-0 after:z-[2] after:bg-slate-50 after:bg-opacity-0 hover:after:bg-opacity-30">
+                        <img src="{{ user.profil_pic.url }}"
+                            alt="Photo de profil de {{user.first_name}} {{user.last_name}}" class="rounded-full">
                     </div>
-
-
-                </div>
-                <!-- CARTE -->
-                <div class="flex flex-col basis-[700px] grow-0 shrink border shadow-md p-12 mt-8">
-                    <h2 class="text-blue-500 font-bold underline text-2xl text-center drop-shadow-lg">Carte des points
-                        enregistrés</h2>
-                    <div id="mapContainer" style="width: 100%; height: 400px;"></div>
-                </div>
-                <!-- END GRID -->
+                </a>
             </div>
         </div>
-    </main>
-</div>
+        <!-- MESSAGE DE SESSION -->
+        {% if request.session.message %}
+        <p class="text-3xl my-5 text-green-600 font-bold text-center mx-auto">
+            {{ request.session.message }}
+        </p>
+        {% del_session_message %}
+        {% endif %}
+        {% if request.session.alert %}
+        <p class="text-3xl my-5 text-red-500 font-bold text-center mx-auto">
+            {{ request.session.alert }}
+        </p>
+        {% del_session_message %}
+        {% endif %}
+    </div>
+
+
+    <!-- INFORMATiONS -->
+    <section class="bg-gray-200 py-20 flex flex-col">
+            <!-- INFOS PERSOS -->
+            <div class='flex flex-col gap-6 w-full max-w-[500px] mx-auto'>
+                <h1 class='secondary font-bold text-2xl md:text-3xl lg:text-4xl text-left drop-shadow-lg'>
+                    Informations personnelles
+                </h1>
+                <hr class='my-6'>
+
+                
+                <!-- NOM -->
+                <div class="flex justify-between text-xl leading-loose">
+                    <p class="secondary font-semibold">Nom :</p><p>{{user.last_name}}</p>
+                </div>
+                <!-- PRENOM -->
+                <div class="flex justify-between text-xl leading-loose">
+                    <p class="secondary font-semibold">Prénom(s) :</p><p>{{user.first_name}}</p>
+                </div>
+                <!-- EMAIL -->
+                <div class="flex justify-between text-xl leading-loose">
+                    <p class="secondary font-semibold">Email :</p><p>{{user.email}}</p>
+                </div>
+                <!-- TELEPHONE -->
+                <div class="flex justify-between text-xl leading-loose">
+                    <p class="secondary font-semibold">N° de téléphone :</p>
+                    
+                    {% if user.phone %}
+                    <div class="text-right">
+                        <p>{{user.phone}}</p>
+                        <a href="{% url 'change_mobile_number' %}">
+                            <p class="underline text-blue-500">Changer le numéro</p>
+                        </a>
+                    </div>
+                    {% else %}
+                        <a href="{% url 'change_mobile_number' %}">
+                            <p class="underline text-blue-500">Renseigner un numéro</p>
+                        </a>
+                    {% endif %}
+                </div>
+                <!-- NAISSANCE -->
+                <div class="flex justify-between text-xl leading-loose">
+                    <p class="secondary font-semibold">Date de naissance :</p><p>{{user.birth_date}}</p>
+                </div>
+                <!-- PROFILPIC -->
+                <div class="flex flex-wrap justify-between text-xl leading-loose">
+                    <p class="secondary font-semibold">Photo de profil :</p>
+
+                    {% if user.profil_pic %}
+                    <div class="flex flex-col justify-end">
+
+                        <div class="ml-auto h-24 w-24 overflow-hidden rounded-full">
+                            <img src="{{user.profil_pic.url}}" alt="" class="w-full h-full object-cover object-center">
+                        </div>
+                        <a href="{% url 'change_profil_pic' %}">
+                            <p class="underline text-blue-500">Changer photo de profil</p>
+                        </a>
+                    </div>
+                    {% else %}
+                        <a href="{% url 'change_profil_pic' %}">
+                            <p class="underline text-blue-500">Uploader une photo de profil</p>
+                        </a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock %}
 
 {% block account_script %}
-<script>
-window.onload = function () {
-    // Rendre actif le bouton adequat
-    const button = document.getElementById('account_info');
-    button.classList.add('active')
 
-    // Configuration initiale de la plateforme HERE
-    const platform = new H.service.Platform({
-        apikey: "{{ api_key }}"
-    });
-
-    // Configuration du moteur de rendu HARP et du style de carte
-    const engineType = H.Map.EngineType["HARP"];
-    const omvService = platform.getOMVService({
-        path: "v2/vectortiles/core/mc",
-        queryParams: {
-            content: "default,transit,advanced_pois"
-        },
-    });
-
-    // Configuration du style de carte Oslo avec support multilingue
-    const baseUrl = `https://js.api.here.com/v3/3.1/styles/harp/oslo`;
-    const style = new H.map.render.harp.Style(`${baseUrl}/tko.normal.day.json`);
-    style.setEnabledFeatures([{
-        type: 'default',
-        min_zoom: 4,
-        max_zoom: 22
-    }]);
-
-    // Configuration du provider OMV avec support en français
-    const omvProvider = new H.service.omv.Provider(omvService, style, {
-        engineType,
-        lg: "fr"
-    });
-    const omvlayer = new H.map.layer.TileLayer(omvProvider, { max: 22 });
-
-    // Liste des lieux fournie par Django
-    var places = [
-        {% for place in user_places %}
-        {
-            lat: {{ place.latitude|stringformat:".6f"|safe }},
-            lng: {{ place.longitude|stringformat:".6f"|safe }},
-            title: "{{ place|simple_format_title }}"
-        },
-        {% endfor %}
-        ];
-
-    // Coordonnées du centre de la France
-    const FRANCE_CENTER = { lat: 46.603354, lng: 1.888334 };
-
-    // Initialisation de la carte centrée sur la France
-    const map = new H.Map(
-        document.getElementById('mapContainer'),
-        omvlayer,
-        {
-            zoom: 5.5,
-            center: FRANCE_CENTER,
-            engineType,
-            pixelRatio: window.devicePixelRatio || 1
-        }
-    );
-
-    // Activation des contrôles de la carte (zoom molette et déplacement)
-    const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map), {
-        enabled: H.mapevents.Behavior.WHEELZOOM | H.mapevents.Behavior.DRAGGING |
-            H.mapevents.Behavior.DBLTAPZOOM
-    });
-
-    // Création du groupe de marqueurs avec info-bulles
-    const group = new H.map.Group();
-    places.forEach(place => {
-        const marker = new H.map.Marker({ lat: place.lat, lng: place.lng });
-
-        // Création de l'info-bulle
-        marker.setData(`<div class="info-bubble">
-                    <h3 class="text-lg font-bold text-blue-600">${place.title}</h3>
-                </div>`);
-
-        group.addObject(marker);
-    });
-
-    // Ajout des événements sur les marqueurs
-    group.addEventListener('tap', (evt) => {
-        const bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
-            content: evt.target.getData()
-        });
-        ui.addBubble(bubble);
-    });
-
-    map.addObject(group);
-
-    // Interface utilisateur et contrôles
-    const ui = H.ui.UI.createDefault(map, omvlayer);
-
-    // Ajustement automatique de la vue si plusieurs marqueurs
-    if (places.length > 1) {
-        const bounds = group.getBoundingBox();
-        map.getViewModel().setLookAtData({
-            bounds: bounds,
-            padding: { top: 50, right: 50, bottom: 50, left: 50 }
-        });
-    } else if (places.length === 1) {
-        map.setCenter({ lat: places[0].lat, lng: places[0].lng });
-        map.setZoom(14);
-    } else {
-        // Si aucun marqueur, centrer sur la France avec un zoom approprié
-        map.setCenter(FRANCE_CENTER);
-        map.setZoom(6);
-    }
-
-    // Gestion du redimensionnement
-    window.addEventListener('resize', () => {
-        map.getViewPort().resize();
-    });
-};
-</script>
 {% endblock %}

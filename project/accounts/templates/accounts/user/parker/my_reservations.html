@@ -14,162 +14,536 @@
         border: solid 1px gray;
     }
 </style>
+{% include 'interactive_map/here_header.html' %}
 {% endblock %}
 
 {% block account_content %}
-<div class="flex gap-20 min-h-screen poppins">
-    {% include 'accounts/account_sidebar.html' %}
-    <main class="basis-[1080px] shrink grow-0 mx-auto">
-        <div class="w-full max-w-[1080px] mx-auto py-20">
-            <h1 class="text-4xl primary font-bold text-center">Mes Réservations</h1>
-            <p class="text-xl font-light my-5 text-center">
+<main class="w-full poppins">
+    <!-- TITLE -->
+    <h1 class="primary text-9xl mt-10 drop-shadow-lg text-center jomhuria" id="proposer-une-place">
+        <span class="secondary">Park</span>Safe
+    </h1>
+    <h2 class="text-4xl font-medium secondary text-center uppercase -mt-5">
+        Gérer mon park
+    </h2>
+
+    <!-- MESSAGE DE SESSION -->
+    {% if request.session.message %}
+    <p class="text-3xl my-5 text-green-600 font-bold text-center mx-auto">
+        {{ request.session.message }}
+    </p>
+    {% del_session_message %}
+    {% endif %}
+    {% if request.session.alert %}
+    <p class="text-3xl my-5 text-red-500 font-bold text-center mx-auto">
+        {{ request.session.alert }}
+    </p>
+    {% del_session_message %}
+    {% endif %}
+    
+    <!-- Section Demandes à traiter -->
+    <section class="w-full flex flex-col px-4 sm:px-6 lg:px-8 bg-gray-200 mt-10">
+        <div class="w-full max-w-[1080px] mx-auto py-10 sm:py-20">
+            <h1 class="text-3xl sm:text-4xl primary font-bold text-center">Demandes à traiter</h1>
+            <p class="text-lg sm:text-xl font-light my-3 sm:my-5 text-center">
+                Vous trouverez ici toutes vos réservations en cours, à venir, et terminées
+            </p>
+            
+            <div class="flex flex-col my-5 sm:my-10">
+                {% if not waiting_accept.exists %}
+                <p class="text-xl sm:text-2xl secondary text-center font-semibold">
+                    Pas de demande à traiter pour le moment
+                </p>
+                {% else %}
+                <div class="flex flex-col gap-4 sm:gap-5">
+                    {% for res in waiting_accept %}
+                    <div class="bg-gray-100 rounded-lg sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6 lg:p-8">
+                        <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                            <!-- Image -->
+                            <div class="w-full sm:w-64 h-48 sm:h-64 overflow-hidden rounded-lg sm:rounded-xl">
+                                <img src="{{ res.place.thumbnail.url }}" alt="" class="h-full w-full object-cover object-center">
+                            </div>
+                            <!-- Informations -->
+                            <div class="flex flex-col gap-3 sm:gap-5 flex-1">
+                                <h2 class="secondary text-xl sm:text-2xl font-normal">
+                                    Demande de <span class="font-semibold">{{res.client.first_name}} {{res.client.last_name}}</span>
+                                </h2>
+                                <p class="text-base sm:text-lg text-slate-800 flex flex-col sm:flex-row sm:items-center gap-2">
+                                    <span><b>Départ:</b> {{ res.arrivee|date:"d/m/Y"}} à {{ res.arrivee|date:"H:i"}}</span>
+                                    <span class="hidden sm:inline">|</span>
+                                    <span><b>Retour:</b> {{ res.departure|date:"d/m/Y"}} à {{ res.departure|date:"H:i"}}</span>
+                                </p>
+                                
+                                <div class="space-y-2 text-gray-700 text-sm sm:text-md">
+                                    <p><b>Place : </b> {{res.place.address}}</p>
+                                    <p>
+                                        <span class="block sm:inline"><b>Nb de véhicules : </b>{{ res.vehicules_number }}</span>
+                                        <span class="hidden sm:inline">|</span>
+                                        <span class="block sm:inline"><b>Nb de passagers : </b>{{ res.passengers }}</span>
+                                    </p>
+                                    <p>
+                                        <span class="block sm:inline"><b>Durée : </b>{{ res.days }} jours</span>
+                                        <span class="hidden sm:inline">|</span>
+                                        <span class="block sm:inline"><b>Revenus : </b><span class="text-lg sm:text-xl">{{ res.price }} €</span></span>
+                                    </p>
+                                </div>
+                                
+                                <div class="mt-2">
+                                    <p class="text-sm sm:text-md">
+                                        <b>Message :</b><br>
+                                        {{res.message}}
+                                    </p>
+                                </div>
+                                
+                                <div class="flex flex-col sm:flex-row gap-3 sm:gap-5 sm:ml-auto mt-4">
+                                    <a href="{% url 'parker_cancel_reservation' res.token %}" class="w-full sm:w-auto">
+                                        <button class="w-full sm:w-auto py-2 px-4 sm:px-5 text-sm sm:text-base uppercase text-white bg-red-500 rounded-xl hover:bg-red-700
+                                            shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
+                                            Refuser la demande
+                                        </button>
+                                    </a>
+                                    <a href="{% url 'parker_accept_reservation' res.token %}" class="w-full sm:w-auto">
+                                        <button class="w-full sm:w-auto py-2 px-4 sm:px-5 text-sm sm:text-base uppercase text-white bg-green-500 rounded-xl hover:bg-green-700
+                                            shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
+                                            Accepter la réservation
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Réservations -->
+    <section class="w-full flex flex-col bg-gray-100 px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-[1080px] mx-auto py-10 sm:py-20">
+            <h1 class="text-3xl sm:text-5xl primary font-bold text-center">Mes Réservations</h1>
+            <p class="text-lg sm:text-xl font-light my-3 sm:my-5 text-center">
                 Vous trouverez ici toutes vos réservations en cours, à venir, et terminées
             </p>
 
             <!-- EN COURS -->
-            <div class='my-12'>
-                <h2 class="secondary text-2xl font-semibold">
+            <div class="my-8 sm:my-12 overflow-x-auto">
+                <h2 class="secondary text-xl sm:text-2xl font-semibold">
                     Réservations en cours / à venir
                 </h2>
                 {% if not current_reservations.exists %}
-                    <p class='text-lg mt-5'>
-                        Aucune réservation pour le moment
+                    <p class="text-base sm:text-lg mt-3 sm:mt-5">
+                        Aucune réservation terminée pour le moment
                     </p>
                 {% else %}
-                    <table class="rounded-xl mt-10">
-                        <thead class="bg-secondary text-left text-white font-semibold rounded-t-xl">
-                            <tr class="rounded-t-xl">
-                                <th class="rounded-tl-xl">Client</th>
-                                <th>Place</th>
-                                <th>Arrivée</th>
-                                <th>Départ</th>
-                                <th>Revenus</th>
-                                <th class="rounded-tr-xl"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <div class="w-full">
+                    <!-- Version desktop -->
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="w-full rounded-xl mt-5 sm:mt-10">
+                            <thead class="bg-secondary text-left text-white font-semibold rounded-t-xl">
+                                <tr>
+                                    <th class="py-3 px-4 rounded-tl-xl">Client</th>
+                                    <th class="py-3 px-4">Téléphone</th>
+                                    <th class="py-3 px-4">Arrivée</th>
+                                    <th class="py-3 px-4">Départ</th>
+                                    <th class="py-3 px-4 rounded-tr-xl">Revenus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for res in current_reservations %}
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4">{{res.client.first_name}} {{res.client.last_name.0}}.</td>
+                                    <td class="py-3 px-4">{{res.phone}}</td>
+                                    <td class="py-3 px-4">{{res.arrivee}}</td>
+                                    <td class="py-3 px-4">{{res.departure}}</td>
+                                    <td class="py-3 px-4">{{res.price}}€</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                
+                    <!-- Version mobile -->
+                    <div class="md:hidden space-y-4 mt-5">
                         {% for res in current_reservations %}
-                            <tr>
-                                <td class="text-nowrap">{{res.client.first_name}} {{res.client.last_name.0}}.</td>
-                                <td class="text-wrap">{{res.place.address}}</td>
-                                <td class="text-nowrap">{{res.arrivee}}</td>
-                                <td class="text-nowrap">{{res.departure}}</td>
-                                <td class="text-nowrap">{{res.price}}€</td>
-                                <td class="text-nowrap">
-                                    <a href="">
-                                        <button class="py-2 px-4 text-md uppercase text-white bg-secondary hover:bg-blue-600 rounded-xl">
-                                            Détails
-                                        </button>
-                                    </a>
-                                </td>
-                            </tr>
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                    <span class="font-medium">{{res.client.first_name}} {{res.client.last_name.0}}.</span>
+                                    <span class="text-primary font-semibold">{{res.price}}€</span>
+                                </div>
+                                <div class="space-y-1 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Téléphone</span>
+                                        <span>{{res.phone}}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Arrivée</span>
+                                        <span>{{res.arrivee}}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Départ</span>
+                                        <span>{{res.departure}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         {% endfor %}
-                        </tbody>
-                    </table>
+                    </div>
+                </div>
                 {% endif %}
             </div>
 
             <!-- EN ATTENTE DE PAIEMENT -->
-            <div class='my-12'>
-                <h2 class="secondary text-2xl font-semibold">
+            <div class="my-8 sm:my-12 overflow-x-auto">
+                <h2 class="secondary text-xl sm:text-2xl font-semibold">
                     Réservations en attente de paiement de la part du client
                 </h2>
                 {% if not waiting_paiements.exists %}
-                    <p class='text-lg mt-5'>
-                        Aucune réservation pour le moment
+                    <p class="text-base sm:text-lg mt-3 sm:mt-5">
+                        Aucune réservation terminée pour le moment
                     </p>
                 {% else %}
-                    <table class="rounded-xl mt-10">
-                        <thead class="bg-secondary text-left text-white font-semibold rounded-t-xl">
-                            <tr class="rounded-t-xl">
-                                <th class="rounded-tl-xl">Client</th>
-                                <th>Place</th>
-                                <th>Arrivée</th>
-                                <th>Départ</th>
-                                <th>Revenus</th>
-                                <th class="rounded-tr-xl"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <div class="w-full">
+                    <!-- Version desktop -->
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="w-full rounded-xl mt-5 sm:mt-10">
+                            <thead class="bg-secondary text-left text-white font-semibold rounded-t-xl">
+                                <tr>
+                                    <th class="py-3 px-4 rounded-tl-xl">Client</th>
+                                    <th class="py-3 px-4">Téléphone</th>
+                                    <th class="py-3 px-4">Arrivée</th>
+                                    <th class="py-3 px-4">Départ</th>
+                                    <th class="py-3 px-4 rounded-tr-xl">Revenus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for res in waiting_paiements %}
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4">{{res.client.first_name}} {{res.client.last_name.0}}.</td>
+                                    <td class="py-3 px-4">{{res.phone}}</td>
+                                    <td class="py-3 px-4">{{res.arrivee}}</td>
+                                    <td class="py-3 px-4">{{res.departure}}</td>
+                                    <td class="py-3 px-4">{{res.price}}€</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                
+                    <!-- Version mobile -->
+                    <div class="md:hidden space-y-4 mt-5">
                         {% for res in waiting_paiements %}
-                            <tr>
-                                <td class="text-nowrap">{{res.client.first_name}} {{res.client.last_name.0}}.</td>
-                                <td class="text-wrap">{{res.place.address}}</td>
-                                <td class="text-nowrap">{{res.arrivee}}</td>
-                                <td class="text-nowrap">{{res.departure}}</td>
-                                <td class="text-nowrap">{{res.price}}€</td>
-                                <td class="text-nowrap">
-                                    <a href="">
-                                        <button class="py-2 px-4 text-md uppercase text-white bg-secondary hover:bg-blue-600 rounded-xl">
-                                            Détails
-                                        </button>
-                                    </a>
-                                </td>
-                            </tr>
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                    <span class="font-medium">{{res.client.first_name}} {{res.client.last_name.0}}.</span>
+                                    <span class="text-primary font-semibold">{{res.price}}€</span>
+                                </div>
+                                <div class="space-y-1 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Téléphone</span>
+                                        <span>{{res.phone}}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Arrivée</span>
+                                        <span>{{res.arrivee}}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Départ</span>
+                                        <span>{{res.departure}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         {% endfor %}
-                        </tbody>
-                    </table>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+
+            <!-- TERMINEES -->
+            <div class="my-8 sm:my-12 overflow-x-auto">
+                <h2 class="secondary text-xl sm:text-2xl font-semibold">
+                    Réservations terminées
+                </h2>
+                {% if not finished_reservations.exists %}
+                    <p class="text-base sm:text-lg mt-3 sm:mt-5">
+                        Aucune réservation terminée pour le moment
+                    </p>
+                {% else %}
+                <div class="w-full">
+                    <!-- Version desktop -->
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="w-full rounded-xl mt-5 sm:mt-10">
+                            <thead class="bg-secondary text-left text-white font-semibold rounded-t-xl">
+                                <tr>
+                                    <th class="py-3 px-4 rounded-tl-xl">Client</th>
+                                    <th class="py-3 px-4">Téléphone</th>
+                                    <th class="py-3 px-4">Arrivée</th>
+                                    <th class="py-3 px-4">Départ</th>
+                                    <th class="py-3 px-4 rounded-tr-xl">Revenus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for res in finished_reservations %}
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-3 px-4">{{res.client.first_name}} {{res.client.last_name.0}}.</td>
+                                    <td class="py-3 px-4">{{res.phone}}</td>
+                                    <td class="py-3 px-4">{{res.arrivee}}</td>
+                                    <td class="py-3 px-4">{{res.departure}}</td>
+                                    <td class="py-3 px-4">{{res.price}}€</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                
+                    <!-- Version mobile -->
+                    <div class="md:hidden space-y-4 mt-5">
+                        {% for res in finished_reservations %}
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                    <span class="font-medium">{{res.client.first_name}} {{res.client.last_name.0}}.</span>
+                                    <span class="text-primary font-semibold">{{res.price}}€</span>
+                                </div>
+                                <div class="space-y-1 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Téléphone</span>
+                                        <span>{{res.phone}}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Arrivée</span>
+                                        <span>{{res.arrivee}}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Départ</span>
+                                        <span>{{res.departure}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
                 {% endif %}
             </div>
 
             <!-- TERMINEES -->
-            <div class='my-12'>
-                <h2 class="secondary text-2xl font-semibold mt-5">
-                    Réservations terminées
+            <div class="my-8 sm:my-12 overflow-x-auto">
+                <h2 class="secondary text-xl sm:text-2xl font-semibold">
+                    Avis recus
                 </h2>
-                {% if not finished_reservations.exists %}
-                    <p class='text-lg my-6'>
-                        Aucune réservation terminée pour le moment
+                {% if not avis.exists %}
+                    <p class="text-base sm:text-lg mt-3 sm:mt-5">
+                        Aucun avis reçu pour le moment
                     </p>
                 {% else %}
-                    <table class="rounded-xl mt-10">
-                        <thead class="bg-secondary text-left text-white font-semibold rounded-t-xl">
-                            <tr class="rounded-t-xl">
-                                <th class="rounded-tl-xl">Client</th>
-                                <th>Place</th>
-                                <th>Arrivée</th>
-                                <th>Départ</th>
-                                <th>Revenus</th>
-                                <th class="rounded-tr-xl"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for res in current_reservations %}
-                            <tr>
-                                <td class="text-nowrap">{{res.client.first_name}} {{res.client.last_name.0}}.</td>
-                                <td class="text-wrap">{{res.place.address}}</td>
-                                <td class="text-nowrap">{{res.arrivee}}</td>
-                                <td class="text-nowrap">{{res.departure}}</td>
-                                <td class="text-nowrap">{{res.price}}€</td>
-                                <td class="text-nowrap">
-                                    <a href="">
-                                        <button class="py-2 px-4 text-md uppercase text-white bg-secondary hover:bg-blue-600 rounded-xl">
-                                            Détails
-                                        </button>
-                                    </a>
-                                </td>
-                            </tr>
+                    <div class="flex flex-col gap-5 mt-10">
+                        {% for av in avis %}
+                            <div class="bg-white w-full py-5 px-10 rounded-xl shadow-md flex flex-col">
+                                <div class="flex flex-wrap gap-5 items-center">
+                                    <h3 class="secondary text-xl">{{av.client.first_name}} {{av.client.last_name.0}}.</h3>
+                                    <div class="flex gap-1 xl:gap-2 my-3 sm:my-4 xl:my-5">
+                                        {% for i in '12345'|make_list %}
+                                            <span class="text-xl sm:text-2xl {% if av.stars >= i|add:'0' %}text-amber-400{% else %}text-gray-200{% endif %}">★</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <p class="text-slate-600">{{av.created_on}}</p>
+                                <p class="text-slate-800 my-5">{{av.avis}}</p>
+                                {% if not av.reponse.exists %}
+                                <a href="{% url 'new_avis_reponse' av.id %}" class="text-right ml-auto">
+                                    <button class="my-3 py-2 px-6 bg-secondary text-white rounded-xl hover:bg-blue-500 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200">
+                                        Rédiger une réponse
+                                    </button>
+                                </a>
+                                {% else %}
+                                <p class="text-slate-800 my-5">
+                                    <span class="secondary font-semibold">Votre réponse :</span>
+                                    {{av.reponse.first.reponse}}
+                                </p>
+                                {% endif %}
+                            </div>
                         {% endfor %}
-                        </tbody>
-                    </table>
+                    </div>
                 {% endif %}
             </div>
         </div>
-    </main>
-</div>
+    </section>
+
+    <!-- Section Places de parking -->
+    <section class="w-full flex flex-col px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-[1080px] mx-auto py-10 sm:py-20">
+            <h1 class="text-3xl sm:text-5xl primary text-center font-semibold">
+                Mes places de parking
+            </h1>
+            
+            {% if not user_places.exists %}
+            <div class="text-center">
+                <p class="my-4 sm:my-6 text-slate-600 text-xl sm:text-2xl font-light">
+                    Vous n'avez pas encore mis de place de parking à disposition
+                </p>
+                <a href="">
+                    <button class="py-2 sm:py-3 px-4 sm:px-6 text-lg sm:text-xl text-white bg-primary rounded-xl shadow-lg my-3 sm:my-5
+                        hover:bg-blue-400 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-in-out">
+                        Proposer ma place
+                    </button>
+                </a>
+            </div>
+            {% else %}
+            <div class="flex flex-col gap-3 pt-6 sm:pt-12">
+                {% for place in user_places %}
+                <div class="py-4 sm:py-5 px-6 sm:px-10 bg-primary text-white rounded-xl sm:rounded-2xl">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <h3 class="text-lg sm:text-xl">{{place.address}}</h3>
+                        <div class="flex flex-col sm:flex-row gap-3 sm:gap-5">
+                            <a href="{% url 'parking_place_detail' place.token %}" class="w-full sm:w-auto">
+                                <button class="w-full sm:w-auto py-2 px-4 sm:px-5 bg-white rounded-xl primary uppercase text-sm font-medium
+                                hover:bg-blue-200 transition-colors">
+                                    Voir l'annonce
+                                </button>
+                            </a>
+                            <a href="{% url 'change_parking_place' place.token %}" class="w-full sm:w-auto">
+                                <button class="w-full sm:w-auto py-2 px-4 sm:px-5 bg-secondary rounded-xl text-white uppercase text-sm font-medium
+                                hover:bg-blue-700 transition-colors">
+                                    Modifier
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Carte -->
+            <div class="flex flex-col max-w-[700px] border shadow-md p-6 sm:p-12 mt-8 mx-auto rounded-xl">
+                <h2 class="text-blue-500 font-bold underline text-xl sm:text-2xl text-center drop-shadow-lg my-3">
+                    Carte des points enregistrés
+                </h2>
+                <div id="mapContainer" class="w-full h-[300px] sm:h-[400px] rounded-lg"></div>
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock %}
 
 {% block account_script %}
 <script>
     window.onload = function () {
-        // Bouton SideBar
-        const button = document.getElementById('my_announcements');
-        button.classList.add('active');
-        const section = button.closest('.link-section');
-        section.classList.add('active');
-
-        const link = document.getElementById('parker_my_reservations');
-        link.classList.add('active');
+        
+        // Configuration initiale de la plateforme HERE
+        const platform = new H.service.Platform({
+            apikey: "{{ api_key }}"
+        });
+    
+        // Configuration du moteur de rendu HARP et du style de carte
+        const engineType = H.Map.EngineType["HARP"];
+        const omvService = platform.getOMVService({
+            path: "v2/vectortiles/core/mc",
+            queryParams: {
+                content: "default,transit,advanced_pois"
+            },
+        });
+    
+        // Configuration du style de carte Oslo avec support multilingue
+        const baseUrl = `https://js.api.here.com/v3/3.1/styles/harp/oslo`;
+        const style = new H.map.render.harp.Style(`${baseUrl}/tko.normal.day.json`);
+        style.setEnabledFeatures([{
+            type: 'default',
+            min_zoom: 4,
+            max_zoom: 22
+        }]);
+    
+        // Configuration du provider OMV avec support en français
+        const omvProvider = new H.service.omv.Provider(omvService, style, {
+            engineType,
+            lg: "fr"
+        });
+        const omvlayer = new H.map.layer.TileLayer(omvProvider, { max: 22 });
+    
+        // Liste des lieux fournie par Django
+        var places = [
+            {% for place in user_places %}
+            {
+                lat: {{place.latitude|stringformat:".6f"|safe }},
+                lng: {{place.longitude|stringformat:".6f"|safe }},
+                title: "{{ place|simple_format_title }}"
+            },
+            {% endfor %}
+        ];
+    
+    // Coordonnées du centre de la France
+    const FRANCE_CENTER = { lat: 46.603354, lng: 1.888334 };
+    
+    // Initialisation de la carte centrée sur la France
+    const map = new H.Map(
+        document.getElementById('mapContainer'),
+        omvlayer,
+        {
+            zoom: 5.5,
+            center: FRANCE_CENTER,
+            engineType,
+            pixelRatio: window.devicePixelRatio || 1
+        }
+    );
+    
+    // Activation des contrôles de la carte (zoom molette et déplacement)
+    const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map), {
+        enabled: H.mapevents.Behavior.WHEELZOOM | H.mapevents.Behavior.DRAGGING |
+            H.mapevents.Behavior.DBLTAPZOOM
+    });
+    
+    // Création du groupe de marqueurs avec info-bulles
+    const group = new H.map.Group();
+    places.forEach(place => {
+        const marker = new H.map.Marker({ lat: place.lat, lng: place.lng });
+    
+        // Création de l'info-bulle
+        marker.setData(`<div class="info-bubble">
+                <h3 class="text-lg font-bold text-blue-600">${place.title}</h3>
+            </div>`);
+    
+        group.addObject(marker);
+    });
+    
+    // Ajout des événements sur les marqueurs
+    group.addEventListener('tap', (evt) => {
+        const bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
+            content: evt.target.getData()
+        });
+        ui.addBubble(bubble);
+    });
+    
+    map.addObject(group);
+    
+    // Interface utilisateur et contrôles
+    const ui = H.ui.UI.createDefault(map, omvlayer);
+    
+    // Ajustement automatique de la vue si plusieurs marqueurs
+    if (places.length > 1) {
+        const bounds = group.getBoundingBox();
+        map.getViewModel().setLookAtData({
+            bounds: bounds,
+            padding: { top: 50, right: 50, bottom: 50, left: 50 }
+        });
+    } else if (places.length === 1) {
+        map.setCenter({ lat: places[0].lat, lng: places[0].lng });
+        map.setZoom(14);
+    } else {
+        // Si aucun marqueur, centrer sur la France avec un zoom approprié
+        map.setCenter(FRANCE_CENTER);
+        map.setZoom(6);
     }
+    
+    // Gestion du redimensionnement
+    window.addEventListener('resize', () => {
+        map.getViewPort().resize();
+    });
+    };
 </script>
 {% endblock %}

@@ -1,9 +1,8 @@
 from django.urls import path
 from .views import change_password, register, user_login, user_logout, my_account, general_redirect, change_mobile_number
-from .views import change_profil_pic, admin_index, faq_index, faq_item_form, my_account_places, client_reservations_waiting
-from .views import client_cancel_reservation, client_confirm_cancel, client_reservations_waiting_paiement
-from .views import parker_reservation_waiting, parker_cancel_reservation, parker_confirm_cancel, parker_accept_reservation, parker_confirm_accept
-from .views import devenir_hote_index, parker_my_gains, client_current_reservations, parker_my_reservations, client_finished_reservations
+from .views import change_profil_pic, admin_index, faq_index, faq_item_form, client_cancel_reservation, client_confirm_cancel, client_index
+from .views import parker_cancel_reservation, parker_confirm_cancel, parker_confirm_accept, devenir_hote_index, parker_my_gains, parker_my_reservations
+from reservations.views import accept_message
 from interactive_map.views import create_poi, create_poi_category, create_poi_city, poi_index
 from faq.views import move_faq_item
 from django.contrib.auth import views as auth_views
@@ -20,20 +19,15 @@ urlpatterns = [
     path('mon-compte/', my_account, name='my_account'),
 
     # CLIENT
-    path('reservations-en-attente/', client_reservations_waiting, name='client_reservations_waiting'),
+    path('mes-reservations/', client_index, name='client_index'),
     path('annuler-ma-reservation/<str:token>/', client_cancel_reservation, name='client_cancel_reservation'),
     path('confirmer-l-annulation/<str:token>/', client_confirm_cancel, name='client_confirm_cancel'),
-    path('reservations-en-attente-de-paiement/', client_reservations_waiting_paiement, name='client_reservations_waiting_paiement'),
-    path('reservations-en-cours/', client_current_reservations, name='client_current_reservations'),
-    path('reservations-terminees/', client_finished_reservations, name='client_finished_reservations'),
 
     # HOTE
-    path('mes-places/', my_account_places, name='my_account_places'),
-    path('mes-reservations/', parker_my_reservations, name='parker_my_reservations'),
-    path('reservations-a-traiter/', parker_reservation_waiting, name='parker_reservation_waiting'),
+    path('hote/mes-reservations/', parker_my_reservations, name='parker_index'),
     path('refuser-la-reservation/<str:token>/', parker_cancel_reservation, name='parker_cancel_reservation'),
     path('confirmer-le-refus/<str:token>/', parker_confirm_cancel, name='parker_confirm_cancel'),
-    path('accepter-la-reservation/<str:token>/', parker_accept_reservation, name='parker_accept_reservation'),
+    path('accepter-la-reservation/<str:token>/', accept_message, name='parker_accept_reservation'),
     path('confirmer-l-acceptation/<str:token>/', parker_confirm_accept, name='parker_confirm_accept'),
     path('mes-revenus/', parker_my_gains, name='parker_my_gains'),
 

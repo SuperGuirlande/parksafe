@@ -31,9 +31,9 @@
     </section>
 
     <!-- Section des dernières places -->
-    <section class="bg-slate-100 py-20 relative z-[1]">
+    <section class="bg-gray-200 py-20 relative z-[1] poppins">
         <div class="container mx-auto px-4">
-            <h2 class="text-5xl text-blue-500 font-extrabold text-center mb-12">
+            <h2 class="text-5xl secondary font-bold text-center mb-12">
                 Dernières places ajoutées
             </h2>
 
@@ -43,7 +43,7 @@
                 <a href="{% url 'parking_place_detail' token=place.token %}" 
                    class="block transition-transform hover:-translate-y-1">
                     <article class="bg-white rounded-3xl shadow-md overflow-hidden">
-                        <div class="p-6 flex gap-8">
+                        <div class="p-4 pb-8 flex gap-8">
                             <!-- Image et prix -->
                             <div class="w-80 flex flex-col gap-4">
                                 <div class="h-48 w-full">
@@ -51,43 +51,72 @@
                                          class="h-full w-full object-cover rounded-xl"
                                          alt="Photo de la place">
                                 </div>
-                                <div class="text-center">
+                                <div class="text-left ml-6 mt-auto">
                                     <p class='text-2xl secondary font-bold'>
                                         Chez {{place.user.first_name}} {{place.user.last_name|slice:"1"}}.
                                     </p>
                                 </div>
-                                <div class="text-center">
+                                <div class="text-left ml-6">
                                     <span class="inline-block py-3 px-6 bg-secondary text-white rounded-lg font-bold text-2xl">
                                         {{place.total_price}}€/jour
                                     </span>
                                 </div>
                             </div>
 
-                            <div class="w-px bg-gray-200"></div>
+                            <div class="w-[2px] bg-gray-200"></div>
 
                             <!-- Informations -->
                             <div class="flex-1 flex flex-col pr-5">
-                                <h3 class="font-extrabold text-2xl secondary mb-4">
-                                    {{place|simple_format_title}}
-                                </h3>
-                                <div class="space-y-2 text-gray-700 text-lg">
-                                    <p>&#128663; {{place.get_vehicles_types_display}}</p>
-                                    <p>&#x2708; {{place.get_distance_to_transport_display}} des transports</p>
-                                    {% if place.electric_vehicle %}
-                                        <p>&#x1F50C; Recharge de véhicules éléctriques</p>
-                                    {% else %}
-                                        <p>&#x1F50C; Pas de recharge de véhicules éléctriques</p>
-                                    {% endif %}
-                                    {% if place.handicaped_place %}
-                                        <p>&#x1F9BD; Accès aux personnes à mobilité réduite</p>
-                                    {% else %}
-                                        <p>&#x1F9BD; Pas d'accès aux personnes à mobilité réduite</p>
-                                    {% endif %}
+                                <div class="flex gap-5 items-center my-5">
+                                    <div class="overflow-hidden h-16 w-16">
+                                        <img src="{{place.user.profil_pic.url}}" alt="" class="w-full h-full object-cover object-center">
 
+                                    </div>
+                                    <h3 class="font-bold text-3xl secondary">
+                                        Chez {{place.user.first_name}} {{place.user.last_name|slice:"1"}}.
+                                    </h3>
                                 </div>
-                                <p class="mt-4 text-gray-700">{{place.description}}</p>
+                                <div class="space-y-2 text-gray-700 text-lg">
+                                    <p class="secondary text-xl font-semibold">DESCRIPTION</p>
+                                    <p class="mt-4 text-gray-700">{{place.description}}</p>
+                                </div>
+
+                                <div class="w-full h-[2px] bg-gray-200 my-5"></div>
+
+                                <div class="flex gap-10">
+                                    <div>
+                                        <p class="secondary text-xl font-semibold uppercase">Caractéristiques</p>
+                                        <div class="flex gap-4 mt-5">
+                                            <!-- Bus -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 512 512" fill="currentColor" class="{% if place.navette_possible %}primary{% else %}text-gray-300{% endif %}" aria-label="Navette">
+                                                <path d="M256 0C390.4 0 480 35.2 480 80V96l0 32c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32l0 160c0 17.7-14.3 32-32 32v32c0 17.7-14.3 32-32 32H384c-17.7 0-32-14.3-32-32V448H160v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V416c-17.7 0-32-14.3-32-32l0-160c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32V96 80C32 35.2 121.6 0 256 0zM96 160v96c0 17.7 14.3 32 32 32H240c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32H128c-17.7 0-32 14.3-32 32zM272 288H384c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32H272c-17.7 0-32 14.3-32 32v96c0 17.7 14.3 32 32 32zM112 400a32 32 0 1 0 0-64 32 32 0 1 0 0 64zm288 0a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+                                            </svg>
+                                        
+                                            <!-- Lune -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 384 512" fill="currentColor" class="{% if place.navette_nocturne_possible %}primary{% else %}text-gray-300{% endif %}" aria-label="Navette nocturne">
+                                                <path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"/>
+                                            </svg>
+                                        
+                                            <!-- Fauteuil roulant -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 512 512" fill="currentColor" class="{% if place.handicaped_place %}primary{% else %}text-gray-300{% endif %}" aria-label="Accès PMR">
+                                                <path d="M192 96a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM120.5 247.2c12.4-4.7 18.7-18.5 14-30.9s-18.5-18.7-30.9-14C43.1 225.1 0 283.5 0 352c0 88.4 71.6 160 160 160c61.2 0 114.3-34.3 141.2-84.7c6.2-11.7 1.8-26.2-9.9-32.5s-26.2-1.8-32.5 9.9C240 440.7 203.1 464 160 464C98.1 464 48 413.9 48 352c0-47.9 27.6-89.1 72.5-104.8zM259.8 176l-1.9-9.7c-4.5-22.3-24-38.3-46.8-38.3c-30.1 0-52.7 27.5-46.8 57l23.1 115.5c6 29.9 32.2 51.4 62.8 51.4h5.1c.4 0 .8 0 1.3 0h94.1c6.7 0 12.6 4.1 15 10.4L402 459.2c6 16.1 23.8 24.6 40.1 19.1l48-16c16.8-5.6 25.8-23.7 20.2-40.5s-23.7-25.8-40.5-20.2l-18.7 6.2-25.5-68c-11.7-31.2-41.6-51.9-74.9-51.9H282.2l-9.6-48H336c17.7 0 32-14.3 32-32s-14.3-32-32-32H259.8z"/>
+                                            </svg>
+                                        
+                                            <!-- Prise électrique -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 384 512" fill="currentColor" class="{% if place.electric_vehicle %}primary{% else %}text-gray-300{% endif %}" aria-label="Recharge électrique">
+                                                <path d="M96 0C78.3 0 64 14.3 64 32v96h64V32c0-17.7-14.3-32-32-32zM288 0c-17.7 0-32 14.3-32 32v96h64V32c0-17.7-14.3-32-32-32zM32 160c-17.7 0-32 14.3-32 32s14.3 32 32 32v32c0 77.4 55 142 128 156.8V480c0 17.7 14.3 32 32 32s32-14.3 32-32V412.8C297 398 352 333.4 352 288V224c17.7 0 32-14.3 32-32s-14.3-32-32-32H32z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <p class="secondary text-xl font-semibold uppercase">Véhicules acceptés</p>
+                                        <p class="text-xl mt-3">{{place.get_vehicles_types_display}}</p>
+                                    </div>
+                                </div>
                                 
-                                <div class="mt-auto ml-auto">
+                                
+                                <div class="mt-6 ml-auto">
                                     <button class="px-6 py-2 bg-secondary text-white rounded-lg text-lg uppercase hover:bg-blue-500 transition-colors">
                                         Voir l'annonce
                                     </button>

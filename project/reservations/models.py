@@ -115,3 +115,11 @@ class Reservation(models.Model):
         formatted_arrivee = self.arrivee.strftime('%d/%m/%Y à %Hh%M')
         formatted_departure = self.departure.strftime('%d/%m/%Y à %Hh%M')
         return f"Réservation de {self.client.first_name} {self.client.last_name[0]}. vers {self.parker.first_name} {self.parker.last_name[0]}. | Début: {formatted_arrivee} -- Fin: {formatted_departure}"
+
+
+class AcceptMessage(models.Model):
+    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="accept_messages")
+    message = models.TextField(verbose_name="Message")
+
+    def __str__(self):
+        return self.message

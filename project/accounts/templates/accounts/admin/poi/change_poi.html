@@ -6,45 +6,41 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex min-h-screen">
+<main class="mx-auto">
 
-    {% include 'accounts/account_sidebar.html' %}
-    <main class="mx-auto">
-
-        <div class="w-full max-w-[720px] poppins mx-auto px-4 my-20">
-            <h1 class="text-5xl primary font-bold mb-6 text-center">Ajouter un point d'intérêt</h1>
+    <div class="w-full max-w-[720px] poppins mx-auto px-4 my-20">
+        <h1 class="text-5xl primary font-bold mb-6 text-center">Ajouter un point d'intérêt</h1>
+        
+        <form method="POST" class="max-w-[500px] mx-auto flex flex-col">
+            {% csrf_token %}
+            {{ form.latitude }}
+            {{ form.longitude }}
             
-            <form method="POST" class="max-w-[500px] mx-auto flex flex-col">
-                {% csrf_token %}
-                {{ form.latitude }}
-                {{ form.longitude }}
-                
-                {% for field in form %}
-                {% if not field.is_hidden %}
-                <div class="my-5">
-                    <label for="{{ field.id_for_label }}" class="block text-lg font-medium secondary mb-1">
-                        {{ field.label }}
-                    </label>
-                    {{ field }}
-                    {% if field.name == 'address' %}
-                    <div id="suggestions" class="mt-1 bg-white shadow-lg rounded-md overflow-hidden hidden absolute z-50 w-full max-w-lg"></div>
-                    {% endif %}
-                    {% if field.errors %}
-                    <div class="mt-1 text-red-600 text-sm">
-                        {{ field.errors|join:", " }}
-                    </div>
-                    {% endif %}
+            {% for field in form %}
+            {% if not field.is_hidden %}
+            <div class="my-5">
+                <label for="{{ field.id_for_label }}" class="block text-lg font-medium secondary mb-1">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.name == 'address' %}
+                <div id="suggestions" class="mt-1 bg-white shadow-lg rounded-md overflow-hidden hidden absolute z-50 w-full max-w-lg"></div>
+                {% endif %}
+                {% if field.errors %}
+                <div class="mt-1 text-red-600 text-sm">
+                    {{ field.errors|join:", " }}
                 </div>
                 {% endif %}
-                {% endfor %}
-                
-                <button type="submit" class="w-fit mx-auto text-xl uppercase bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
-                    Modifier
-                </button>
-            </form>
-        </div>
-    </main>
-</div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            
+            <button type="submit" class="w-fit mx-auto text-xl uppercase bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
+                Modifier
+            </button>
+        </form>
+    </div>
+</main>
 {% endblock %}
 
 {% block extra_script %}

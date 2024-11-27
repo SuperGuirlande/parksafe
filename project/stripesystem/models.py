@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from accounts.models import CustomUser
 from reservations.models import Reservation
+from django.utils import timezone
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -108,6 +109,8 @@ class ReservationPayement(models.Model):
     parker_payed = models.BooleanField(verbose_name='Paiement versé au loueur', default=False)
     refound_require = models.BooleanField(verbose_name='Remboursement demandé', default=False)
     refounded = models.BooleanField(verbose_name="Remboursement au client effectué", default=False)
+
+    created_on = models.DateField(verbose_name="Date du gain", default=timezone.now)
 
     def __str__(self):
         client_name = f"{self.client.first_name} {self.client.last_name[0]}."

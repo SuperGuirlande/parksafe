@@ -9,10 +9,115 @@
         background-image: url("{% static 'images/home/hero-2.jpg' %}");
         position: relative;
     }
+
+    #avisContainer {
+    display: flex;
+    transition: all 0.3s ease;
+    gap: 20px;
+    position: relative;
+}
+
+.avis-cards-wrapper {
+    display: flex;
+    transition: transform 0.3s ease;
+    gap: 20px;
+}
+
+.avis-card {
+    flex: 0 0 auto;
+    width: calc(100vw - 48px); /* Sur mobile, prend toute la largeur moins les marges */
+}
+
+#prevBtn, #nextBtn {
+    position: absolute;
+    top: 50%;
+    transition: all 0.2s ease;
+    transform: translateY(-50%);
+    opacity: 0.8;
+    background: white;
+    border-radius: 9999px;
+    padding: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    z-index: 30;
+}
+
+#prevBtn {
+    left: 4px;
+}
+
+#nextBtn {
+    right: 4px;
+}
+
+#prevBtn:hover, #nextBtn:hover {
+    transform: translateY(-50%) scale(1.1);
+    opacity: 1;
+    background-color: rgb(243 244 246);
+}
+
+#prevBtn:disabled, #nextBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Container pour cacher le débordement */
+.carousel-container {
+    overflow: hidden;
+    padding: 0 8px; /* Petit padding pour les flèches sur mobile */
+}
+
+/* SM (640px and up) */
+@media (min-width: 640px) {
+    .avis-card {
+        width: 300px;
+    }
+    .carousel-container {
+        padding: 0;
+    }
+}
+
+/* LG (1024px and up) */
+@media (min-width: 1024px) {
+    .avis-card {
+        width: 350px;
+    }
+}
+
+/* XL (1280px and up) */
+@media (min-width: 1280px) {
+    .avis-card {
+        width: 400px;
+    }
+}
+/* Ajoutez ces styles à votre CSS */
+.avis-card {
+    transition: all 0.3s ease-in-out;
+}
+
+.response-btn {
+    transition: all 0.3s ease-in-out;
+    border-radius: 0 0 1rem 1rem;
+}
+
+.response-content {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.response-content.active {
+    max-height: 1000px; /* Hauteur maximale suffisante */
+    opacity: 1;
+}
+
+/* Ajustement pour le conteneur des avis */
+#avisContainer {
+    padding-bottom: 2rem; /* Espace pour l'expansion */
+}
 </style>
 <link rel="stylesheet" href="{% static 'css/main/home-styles.css' %}">
 <link rel="stylesheet" href="{% static 'faq/faq_styles.css' %}">
-<link rel='stylesheet' href="{% static 'avis_styles.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -52,7 +157,7 @@
 
  <!-- POURQUOI PARKSAFE -->
 <!-- POURQUOI PARKSAFE -->
-<section class="pt-10 pb-20 bg-slate-100 shadow-xl">
+<section class="pt-16 pb-20 bg-gray-200 shadow-xl">
     <h1 class="poppins text-4xl md:text-5xl lg:text-6xl font-bold text-center primary">
         Pourquoi <span class="secondary">Park</span><span class="secondary">Safe</span> ?
     </h1>
@@ -99,76 +204,88 @@
     
 
     <!-- AVIS -->
-<section class="bg-white pt-16 flex flex-col poppins" id="avis">
+<section class="bg-gray-200 pt-16 pb-12 flex flex-col poppins" id="avis">
     <!-- TITLE -->
     <div class="w-full mx-auto max-w-[1080px] px-5">
-        <h3 class="secondary text-2xl md:text-3xl font-medium">Avis clients</h3>
-        <p class="text-lg md:text-xl font-light text-slate-600 mb-8 relative">
-            Consultez ci-dessous les retours sur ce loueur, et laissez le vôtre
-            <span class="absolute w-16 md:w-24 h-[1px] bg-slate-600 bottom-0 left-0 translate-y-2"></span>
-        </p>
+        <h3 class="secondary text-2xl md:text-3xl lg:text-4xl text-center my-5 font-medium">Vos expériences partagées</h3>
     </div>
 
-    <!-- AVIS -->
-    <div class="w-full flex justify-center my-6 relative">
-        <!-- Bandeau bleu -->
-        <div class="absolute w-full h-16 bg-primary left-0 top-14 z-10"></div>
-        <!-- Container principal avec taille max -->
-        <div class="w-full max-w-[1400px] relative">
-            <!-- Container des avis avec overflow hidden -->
-            <div class="relative z-20 px-4">
-                {% if not avis_recus.exists %}
-                    <!-- AUCUN AVIS -->
-                    <div class="mx-auto w-[90%] xl:w-[450px] bg-white min-h-[350px] xl:h-[450px] shadow-lg rounded-3xl 
-                                flex flex-col px-5 xl:px-10 text-center items-center justify-center">
-                        <h3 class="secondary text-xl xl:text-2xl font-medium">
-                            Aucun avis pour le moment
-                        </h3>
-                        <p class="text-lg xl:text-xl font-light text-slate-600 my-5">
-                            {% if place.user == request.user %}
-                                Vous n'avez pas encore reçu d'avis
-                            {% else %}
-                                Soyez le premier à laisser votre avis sur ce loueur
-                            {% endif %}
-                        </p>
-                    </div>
+<!-- AVIS -->
+<div class="w-full flex justify-center my-6 relative">
+    <!-- Bandeau bleu -->
+    <div class="absolute w-full h-16 bg-primary left-0 top-14 z-10"></div>
+    <!-- Container principal avec taille max -->
+    <div class="w-full max-w-screen-2xl relative">
+        <!-- Container des avis -->
+        <div class="relative z-20">
+            {% if not avis_recus.exists %}
+                <!-- AUCUN AVIS -->
+                <div class="mx-auto w-[90%] xl:w-[400px] bg-white min-h-[350px] xl:h-[400px] shadow-lg rounded-3xl 
+                            flex flex-col px-5 xl:px-10 text-center items-center justify-center">
+                    <h3 class="secondary text-xl xl:text-2xl font-medium">
+                        Aucun avis pour le moment
+                    </h3>
+                    <p class="text-lg xl:text-xl font-light text-slate-600 my-5">
+                        {% if place.user == request.user %}
+                            Vous n'avez pas encore reçu d'avis
+                        {% else %}
+                            Soyez le premier à laisser votre avis sur ce loueur
+                        {% endif %}
+                    </p>
+                </div>
                 {% else %}
-                    <!-- Boutons de navigation -->
-                    {% if avis_recus.count > 1 %}
-                        <button id="prevBtn" class="absolute left-2 xl:left-0 top-1/2 z-30 bg-white rounded-full p-2 xl:p-3 shadow-lg hover:bg-gray-100 -translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <span class="text-xl xl:text-3xl">←</span>
-                        </button>
-                        <button id="nextBtn" class="absolute right-2 xl:right-0 top-1/2 z-30 bg-white rounded-full p-2 xl:p-3 shadow-lg hover:bg-gray-100 -translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <span class="text-xl xl:text-3xl">→</span>
-                        </button>
-                    {% endif %}
-
-                    <!-- Container avec effet de slide -->
-                    <div class="overflow-hidden">
-                        <div id="avisContainer" class="flex gap-5 transition-transform duration-300">
+                    <div class="relative px-4 sm:px-8 lg:px-12">
+                        <!-- Boutons de navigation -->
+                        {% if avis_recus.count > 1 %}
+                            <button id="prevBtn" class="absolute -left-3 sm:-left-6 top-1/2 z-30 bg-white rounded-full p-2 xl:p-3 shadow-lg hover:bg-gray-100 -translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="text-xl xl:text-3xl">←</span>
+                            </button>
+                            <button id="nextBtn" class="absolute -right-3 sm:-right-6 top-1/2 z-30 bg-white rounded-full p-2 xl:p-3 shadow-lg hover:bg-gray-100 -translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="text-xl xl:text-3xl">→</span>
+                            </button>
+                        {% endif %}
+    
+                        <div id="avisContainer" class="flex transition-transform duration-300 gap-3 sm:gap-4 lg:gap-5 {% if not avis_recus.count > 3 %} justify-center{% endif %}">
                             {% for avis in avis_recus %}
-                                <div class="avis-card flex-shrink-0 w-[90vw] xl:w-[450px] bg-white min-h-[350px] xl:h-[450px] shadow-lg rounded-3xl 
-                                        flex flex-col px-5 xl:px-10 text-center items-center justify-center">
-                                    <!-- CLIENT -->
-                                    <div class="flex gap-3 xl:gap-5 items-center">
-                                        <div class="h-12 w-12 xl:h-16 xl:w-16 rounded-full overflow-hidden">
-                                            <img src="{{avis.client.profil_pic.url}}" alt="Photo de profil" class="object-cover w-full h-full">
+                                <div class="avis-card flex-shrink-0 w-[280px] sm:w-[300px] lg:w-[350px] xl:w-[400px]">
+                                    <!-- Carte principale avec padding-bottom pour la réponse -->
+                                    <div class="bg-white shadow-lg rounded-3xl flex flex-col min-h-[350px] px-3 sm:px-5 xl:px-10 text-center items-center justify-center relative transition-all duration-300 ease-in-out">
+                                        <!-- Contenu de l'avis -->
+                                        <div class="py-8">
+                                            <div class="flex gap-2 sm:gap-3 xl:gap-5 items-center">
+                                                <h3 class="secondary text-xl sm:text-2xl xl:text-3xl font-semibold">
+                                                    {{avis.client.first_name}} {{avis.client.last_name|slice:"1"}}.
+                                                </h3>
+                                            </div>
+                                            <p class="text-sm sm:text-base xl:text-lg text-slate-500">
+                                                {{avis.created_on}}
+                                            </p>
+                                            <div class="flex gap-1 xl:gap-2 my-3 sm:my-4 xl:my-5">
+                                                {% for i in '12345'|make_list %}
+                                                    <span class="text-xl sm:text-2xl xl:text-4xl {% if avis.stars >= i|add:'0' %}text-amber-400{% else %}text-gray-200{% endif %}">★</span>
+                                                {% endfor %}
+                                            </div>
+                                            <p class="text-sm sm:text-lg xl:text-xl font-light text-slate-600 my-3 sm:my-4 xl:my-5">
+                                                {{avis.avis}}
+                                            </p>
                                         </div>
-                                        <h3 class="secondary text-2xl xl:text-3xl font-semibold">
-                                            {{avis.client.first_name}} {{avis.client.last_name|slice:"1"}}.
-                                        </h3>
+                        
                                     </div>
-                                    <p class="text-base xl:text-lg text-slate-500">
-                                        Avis reçu le : {{avis.created_on}}
-                                    </p>
-                                    <div class="flex gap-1 xl:gap-2 my-4 xl:my-5">
-                                        {% for i in '12345'|make_list %}
-                                            <span class="text-2xl xl:text-4xl {% if avis.stars >= i|add:'0' %}text-amber-400{% else %}text-gray-200{% endif %}">★</span>
-                                        {% endfor %}
-                                    </div>
-                                    <p class="text-lg xl:text-xl font-light text-slate-600 my-4 xl:my-5">
-                                        {{avis.avis}}
-                                    </p>
+                                        {% if avis.reponse.exists %}
+                                            <!-- Bouton de réponse -->
+                                            <div class="w-full -translate-y-12">
+                                                <button class="response-btn w-full bg-secondary text-white px-4 py-3 rounded-b-xl hover:bg-secondary/90 transition-all duration-300 relative">
+                                                    <span class="response-label">Réponse ></span>
+                                                </button>
+                                            </div>
+                                            <!-- Contenu de la réponse -->
+                                            <div class="response-content hidden w-full bg-secondary px-4 py-6 rounded-b-3xl transition-all duration-300 -translate-y-20 z-[-1] relative">
+                                                <p class="text-sm sm:text-lg xl:text-xl font-light text-white p-5 m-5 mb-1 bg-slate-500 rounded-xl">
+                                                    {{avis.reponse.first.reponse}}
+                                                </p>
+                                            </div>
+                                            
+                                        {% endif %}
                                 </div>
                             {% endfor %}
                         </div>
@@ -177,9 +294,8 @@
             </div>
         </div>
     </div>
-</section>
 
-    
+</section>
 
     <!-- FAQ -->
     {% include 'main/sections/faq_section.html' %}
@@ -187,5 +303,115 @@
 
 {% block extra_script %}
 <script src="{% static 'faq/faq_script.js' %}"></script>
-<script src="{% static 'avis_script.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('avisContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (!container) return;
+    const cards = container.querySelectorAll('.avis-card');
+    if (cards.length <= 1) return;
+
+    let currentIndex = 0;
+    
+    function getVisibleCards() {
+        if (window.innerWidth >= 1280) return 3;        // xl
+        if (window.innerWidth >= 1024) return 3;        // lg
+        if (window.innerWidth >= 768) return 2;         // md
+        if (window.innerWidth >= 640) return 2;         // sm
+        return 1;                                       // mobile
+    }
+    
+    function getCardWidth() {
+        const card = cards[0];
+        // Inclure le gap dans le calcul
+        return card.offsetWidth + 20; // 20px est la valeur du gap
+    }
+    
+    function updateTransform() {
+        const offset = currentIndex * -getCardWidth();
+        container.style.transform = `translateX(${offset}px)`;
+    }
+    
+    function updateButtonStates() {
+        if (prevBtn && nextBtn) {
+            const visibleCards = getVisibleCards();
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex >= cards.length - visibleCards;
+            
+            // Masquer les boutons si tous les avis sont visibles
+            const shouldShowButtons = cards.length > visibleCards;
+            prevBtn.style.display = shouldShowButtons ? 'block' : 'none';
+            nextBtn.style.display = shouldShowButtons ? 'block' : 'none';
+        }
+    }
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateTransform();
+                updateButtonStates();
+            }
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            const visibleCards = getVisibleCards();
+            if (currentIndex < cards.length - visibleCards) {
+                currentIndex++;
+                updateTransform();
+                updateButtonStates();
+            }
+        });
+    }
+    
+    // État initial
+    container.style.transform = 'translateX(0)';
+    updateButtonStates();
+    
+    // Gestion du responsive
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            // Reset à la première carte lors du redimensionnement
+            currentIndex = 0;
+            updateTransform();
+            updateButtonStates();
+        }, 100);
+    });
+});
+
+const responseButtons = document.querySelectorAll('.response-btn');
+    
+    responseButtons.forEach((btn) => {
+        const label = btn.querySelector('.response-label');
+        const content = btn.parentElement.nextElementSibling;
+        const card = btn.closest('.avis-card');
+        
+        btn.addEventListener('click', () => {
+            // Fermer toutes les autres réponses
+            responseButtons.forEach((otherBtn) => {
+                if (otherBtn !== btn) {
+                    const otherContent = otherBtn.parentElement.nextElementSibling;
+                    const otherCard = otherBtn.closest('.avis-card');
+                    otherContent.classList.remove('active');
+                    otherContent.classList.add('hidden');
+                    otherBtn.querySelector('.response-label').textContent = 'Réponse >';
+                }
+            });
+            
+            // Toggle la réponse actuelle
+            content.classList.toggle('hidden');
+            setTimeout(() => {
+                content.classList.toggle('active');
+            }, 10);
+            
+            label.textContent = content.classList.contains('hidden') ? 'Réponse >' : 'Fermer <';
+        });
+    });
+    </script>
 {% endblock %}

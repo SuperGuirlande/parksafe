@@ -39,7 +39,8 @@ class UserRegisterForm(UserCreationForm):
         widget=forms.PasswordInput(
             attrs={
                 'placeholder': 'Mot de passe',
-                'class': 'rounded-xl w-full px-4 py-2 border border-slate-500',
+                'class': 'rounded-xl w-full px-4 py-2 border border-slate-500 pr-12',
+                'id': 'password-field1'
             }
         )
     )
@@ -48,7 +49,8 @@ class UserRegisterForm(UserCreationForm):
         widget=forms.PasswordInput(
             attrs={
                 'placeholder': 'Confirmation du mot de passe',
-                'class': 'rounded-xl w-full px-4 py-2 border border-slate-500',
+                'class': 'rounded-xl w-full px-4 py-2 border border-slate-500 pr-12',
+                'id': 'password-field2'
             }
         )
     )
@@ -77,7 +79,15 @@ class UserRegisterForm(UserCreationForm):
 
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(label=_("Adresse e-mail"), widget=forms.TextInput)
-    password = forms.CharField(label=_('Password'), widget=forms.PasswordInput)
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Mot de passe',
+                'class': 'rounded-xl w-full px-4 py-2 border border-slate-500 pr-12', # ajout de pr-12 pour l'espace de l'icône
+                'id': 'password-field'
+            }
+        )
+    )
 
     def __init__(self, *args, **kwargs):
         super(UserLoginForm, self).__init__(*args, **kwargs)

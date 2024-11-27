@@ -99,9 +99,6 @@ def place_created_confirm(request):
 def search_parking_place_index(request):
     all_places = ParkingPlace.objects.all().order_by("-created_on")
 
-    for place in all_places:
-        place.total_price = place.price + (place.price * 20 / 100)
-    
     poi_category = request.GET.get('category')
     poi_city = request.GET.get('city')
     radius_km = float(request.GET.get('radius', 20))
@@ -146,7 +143,10 @@ def search_parking_place_index(request):
                 **annotate_params,  # Ajoute toutes les distances individuelles
                 min_distance=Min(*annotate_params.keys())  # Trouve la distance minimale
             ).order_by('min_distance').distinct()
-            
+
+    for place in all_places:
+        place.total_price = place.price + (place.price * 20 / 100)
+        
     context = {
         'all_places': all_places[:10],
         'selected_category': poi_category,

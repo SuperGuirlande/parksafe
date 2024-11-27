@@ -13,6 +13,8 @@
     border-radius: 50%;
   }
 </style>
+<script src="{% static 'password_utils.js' %}"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -100,5 +102,9 @@
 <div class="bg-blue-100">
   {% include 'main/sections/comment_ca_marche_section.html' %}
 </div>
+{% endblock %}
+
+{% block extra_script %}
+<!-- Dans base.html, avant </body> -->
 {% endblock %}
 

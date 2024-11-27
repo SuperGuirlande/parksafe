@@ -3,6 +3,7 @@
 {% load session_tags %}
 
 {% block extra_head %}
+<script src="{% static 'password_utils.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -14,10 +15,16 @@
         <form method='post'
             class="mx-auto w-full max-w-[550px] flex flex-col gap-5 px-5 sm:px-6 md:px-8  bg-white bg-opacity-90 py-10 rounded-3xl shadow-xl">
             {% csrf_token %}
-            <!-- MESSAGE INSCRIPTION RÉUSSIE -->
+            <!-- MESSAGE DE SESSION -->
             {% if request.session.message %}
-            <p class="text-xl my-5 text-green-600 font-bold">
+            <p class="text-3xl my-5 text-green-600 font-bold text-center mx-auto">
                 {{ request.session.message }}
+            </p>
+            {% del_session_message %}
+            {% endif %}
+            {% if request.session.alert %}
+            <p class="text-3xl my-5 text-red-500 font-bold text-center mx-auto">
+                {{ request.session.alert }}
             </p>
             {% del_session_message %}
             {% endif %}

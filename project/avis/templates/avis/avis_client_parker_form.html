@@ -51,7 +51,7 @@
 
         
         <form method="POST" class="w-full max-w-[500px] mx-auto flex flex-col">
-            <h3 class='font-semibold secondary text-center text-xl mt-5'>{{ place|simple_format_title }}</p>
+            <h3 class='font-semibold secondary text-center text-xl mt-5'>Réservation : {{ reservation.place|simple_format_title }}</p>
             {% csrf_token %}
             
             <div class="star-rating" id="star-container">

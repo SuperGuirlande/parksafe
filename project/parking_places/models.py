@@ -36,9 +36,7 @@ class ParkingPlace(models.Model):
 
     vehicles_types = models.CharField(
         verbose_name="Type(s) de véhicule(s) accepté(s)*",
-        max_length=3,
-        choices=VehiculeAcceptedChoice.choices,
-        default=VehiculeAcceptedChoice.ALL_VEHICULES
+        max_length=50,
     )   
     distance_to_transport = models.CharField(
         verbose_name="Distance à pied des transports en commun*",
@@ -98,7 +96,17 @@ class ParkingPlace(models.Model):
             self.geocode()
         # SAVE
         super().save(*args, **kwargs)
-        
+    
+    def get_vehicles_types_display_list(self):
+        """Retourne la liste des labels pour chaque type de véhicule sélectionné"""
+        if not self.vehicles_types:
+            return []
+        types = self.vehicles_types.split(',')
+        return [dict(self.VehiculeAcceptedChoice.choices)[type_] for type_ in types]
+
+    def get_vehicles_types_display(self):
+        """Retourne une chaîne formatée avec tous les types de véhicules"""
+        return ", ".join(self.get_vehicles_types_display_list())
 
     def __str__(self):
         return f"{self.places} places. {self.address} - User : {self.user}"

@@ -5,25 +5,31 @@ from django.core.validators import RegexValidator
 
 
 class CreateParkingPlaceForm(forms.ModelForm):
+    vehicles_types = forms.MultipleChoiceField(
+        choices=ParkingPlace.VehiculeAcceptedChoice.choices,
+        widget=forms.CheckboxSelectMultiple,
+        label="Type(s) de véhicule(s) accepté(s)*"
+    )
+
     class Meta:
         model = ParkingPlace
         fields = ['places', 'address', 'description', 'price', 'thumbnail', 'vehicles_types',
                   'distance_to_transport', 'navette_possible', 'navette_nocturne_possible',
                   'navette_price',  'navette_nocturne_price', 'handicaped_place', 'electric_vehicle', 'minimal_time',
                   'phone']
-        
-    phone_regex = RegexValidator(
-        regex=r'^(0[67](\s?\d{2}){4})$',
-        message="Le numéro de téléphone doit être au format '06 06 06 06 06' ou '0606060606'."
-    )
-    phone = forms.CharField(label='Numéro de téléphone', validators=[phone_regex], max_length=14)
 
+    def clean_vehicles_types(self):
+        """Convertit la liste en string avec séparateur"""
+        return ','.join(self.cleaned_data['vehicles_types'])
+        
     def clean_phone(self):
         phone = self.cleaned_data['phone']
         return ''.join(phone.split())
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if self.instance.pk and self.instance.vehicles_types:
+            self.initial['vehicles_types'] = self.instance.vehicles_types.split(',')
         self.fields['phone'].widget.attrs['placeholder'] = '06 07 08 09 10'
         self.fields['address'].widget.attrs.update({
             'id': 'addressInput',

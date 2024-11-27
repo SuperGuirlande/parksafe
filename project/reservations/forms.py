@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Reservation
+from .models import AcceptMessage, Reservation
 from django.utils import timezone
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget, RegionalPhoneNumberWidget
@@ -136,3 +136,18 @@ class ReservationForm(forms.ModelForm):
             'phone',
             'message',
         ]
+
+
+class AcceptMessageForm(forms.ModelForm):
+    message = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows': 6,
+            'placeholder': "Laissez un message à l'utilisateur"
+        })
+    )
+
+    class Meta:
+        model=AcceptMessage
+        fields=['message']
+
+

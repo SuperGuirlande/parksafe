@@ -22,7 +22,7 @@ from .forms import MobileNumberForm, UserRegisterForm, UserLoginForm, ProfilPicF
 from faq.models import FaqItem
 from faq.forms import FaqItemForm
 from django.db.models import Max, F
-
+from avis.models import AvisClientParker
 from reservations.models import Reservation
 from stripesystem.models import ReservationPayement
 
@@ -73,58 +73,32 @@ def user_logout(request):
     logout(request)
     return redirect('index')
 
+
 ### CLIENT ###
-# Reservations en attente d'acceptation
 @login_required
-def client_reservations_waiting(request):
+def client_index(request):
     user = request.user
-    reservations = Reservation.objects.filter(client=user, accepted=False, canceled=False, payed=False, finished=False).order_by('-id')
+    
+    all_reservation = Reservation.objects.filter(client=user, finished=False, canceled=False)
+    for reservation in all_reservation:
+        if not reservation.place:
+            reservation.canceled = True
+            reservation.save()
+
+    waiting_accept_reservations = Reservation.objects.filter(client=user, accepted=False, canceled=False, payed=False, finished=False).order_by('-id')
+    waiting_paiement_reservations = Reservation.objects.filter(client=user, accepted=True, canceled=False, payed=False, finished=False).order_by('-id')
+    current_reservations = Reservation.objects.filter(client=user, accepted=True, payed=True, canceled=False, finished=False).order_by('-id')
+    finished_reservations = Reservation.objects.filter(client=user, accepted=True, payed=True, canceled=False, finished=True).order_by('-id')
 
     context={
-        'reservations': reservations,
+        'waiting_accept_reservations': waiting_accept_reservations,
+        'waiting_paiement_reservations': waiting_paiement_reservations,
+        'current_reservations': current_reservations,
+        'finished_reservations': finished_reservations,
         'user': user,
     }
 
-    return TemplateResponse(request, 'accounts/user/client/waiting_reservations.html', context)
-
-# Reservations en attente de paiement
-@login_required
-def client_reservations_waiting_paiement(request):
-    user = request.user
-    reservations = Reservation.objects.filter(client=user, accepted=True, payed=False, finished=False, canceled=False).order_by('-id')
-
-    context={
-        'reservations': reservations,
-        'user': user,
-    }
-
-    return TemplateResponse(request, 'accounts/user/client/waiting_paiement_reservations.html', context)
-
-# Reservation a venir / en cours
-@login_required
-def client_current_reservations(request):
-    user = request.user
-    reservations = Reservation.objects.filter(client=user, accepted=True, payed=True, canceled=False, finished=False).order_by('-id')
-    print(reservations)
-    context={
-        'reservations': reservations,
-        'user': user,
-    }
-
-    return TemplateResponse(request, 'accounts/user/client/current_reservations.html', context)  
-
-# Reservation terminées
-@login_required
-def client_finished_reservations(request):
-    user = request.user
-    reservations = Reservation.objects.filter(client=user, accepted=True, payed=True, canceled=False, finished=True).order_by('-id')
-    print(reservations)
-    context={
-        'reservations': reservations,
-        'user': user,
-    }
-
-    return TemplateResponse(request, 'accounts/user/client/finished_reservations.html', context)   
+    return TemplateResponse(request, 'accounts/user/client/client_index.html', context)  
 
 # Annuler la reservation
 @login_required
@@ -147,38 +121,10 @@ def client_confirm_cancel(request, token):
     reservation.save()
     request.session['message'] = "La réservation à bien été annulée"
 
-    return redirect('client_reservations_waiting')
+    return redirect('client_index')
+
 
 ### LOUEUR ###
-# Account mes places
-@login_required
-def my_account_places(request):
-    user = request.user
-    user_places = ParkingPlace.objects.filter(user=user)
-
-    context = {
-        'user_places': user_places,
-        'api_key': settings.HERE_API_KEY,
-    }
-
-    return TemplateResponse(request, 'accounts/user/my_places.html', context)
-
-# Reservations à traiter
-@login_required
-def parker_reservation_waiting(request):
-    user = request.user
-    reservations = Reservation.objects.filter(parker=user, accepted=False, canceled=False)
-
-    for res in reservations:
-        client = res.client
-        res.name = f"{client.first_name} {client.last_name}"
-
-    context={
-        'reservations': reservations,
-    }
-
-    return TemplateResponse(request, 'accounts/user/parker/waiting_reservations.html', context)
-
 # Refuser la demande
 @login_required
 def parker_cancel_reservation(request, token):
@@ -201,48 +147,47 @@ def parker_confirm_cancel(request, token):
     reservation.save()
     request.session['message'] = "La réservation à bien été refusée"
 
-    return redirect('parker_reservation_waiting')
+    return redirect('parker_index')
 
-# Accepter la demande
-@login_required
-def parker_accept_reservation(request, token):
-    reservation = get_object_or_404(Reservation, token=token)
-    user = request.user
-
-    if reservation.parker != user:
-        return redirect('parker_reservation_waiting')
-    
-    reservation.name = f"{reservation.client.first_name} {reservation.client.last_name}"
-
-    context={
-        'reservation': reservation,
-    }
-
-    return TemplateResponse(request, 'accounts/user/parker/accept_reservation.html', context)
-
+# Reservation acceptée
 @login_required
 def parker_confirm_accept(request, token):
     reservation = get_object_or_404(Reservation, token=token)
     if request.user != reservation.parker:
-        return redirect('parker_reservation_waiting')
+        return redirect('parker_index')
     
     reservation.accepted = True
     reservation.save()
     request.session['message'] = "La réservation à bien été acceptée. Une demande de paiement à été transmise au client"
 
-    return redirect('parker_reservation_waiting')
+    return redirect('parker_index')
 
 # Mes reservations
 @login_required
 def parker_my_reservations(request):
     user = request.user
 
+    all_reservation = Reservation.objects.filter(parker=user, finished=False, canceled=False)
+    for reservation in all_reservation:
+        if not reservation.place:
+            reservation.canceled = True
+            reservation.save()
+
+    waiting_accept = Reservation.objects.filter(parker=user, accepted=False, payed=False, canceled=False, finished=False).order_by('arrivee')
     waiting_paiements = Reservation.objects.filter(parker=user, accepted=True, payed=False, canceled=False, finished=False).order_by('arrivee')
     current_reservations = Reservation.objects.filter(parker=user, accepted=True, payed=True, canceled=False, finished=False).order_by('arrivee')
+    finished_reservations = Reservation.objects.filter(parker=user, accepted=True, payed=True, canceled=False, finished=True).order_by('arrivee')
+    user_places = ParkingPlace.objects.filter(user=user)
+    avis = AvisClientParker.objects.filter(parker=user)
 
     context = {
+        'waiting_accept': waiting_accept,
         'current_reservations': current_reservations,
         'waiting_paiements': waiting_paiements,
+        'finished_reservations': finished_reservations,
+        'user_places': user_places,
+        'api_key': settings.HERE_API_KEY,
+        'avis': avis,
     }
 
     return TemplateResponse(request, 'accounts/user/parker/my_reservations.html', context)
@@ -261,7 +206,7 @@ def parker_my_gains(request):
             if pay.client_payed:
                 total_gains += pay.price
 
-            if not pay.parker_payed:
+            if pay.client_payed and not pay.parker_payed:
                 waiting_gains += pay.price
     
     try:
@@ -278,6 +223,8 @@ def parker_my_gains(request):
         'total_gains': total_gains,
         'waiting_gains': waiting_gains,
     })
+
+
 
 ### GENERAL ###
 # Account detail
