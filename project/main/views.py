@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from datetime import datetime, timedelta
+from django.shortcuts import redirect, render
 from faq.models import FaqItem
 from interactive_map.models import PointOfInterest, PoiCategory
 from django.template.response import TemplateResponse
@@ -7,13 +8,17 @@ from avis.models import AvisClientParker
 def index(request):
     user = request.user
     faq_items = FaqItem.objects.all().order_by('ordre')
-    last_avis = AvisClientParker.objects.all().order_by('-created_on')[:10]
+    last_avis = AvisClientParker.objects.filter(stars__gte=4).order_by('-created_on')[:10]
 
+    today = datetime.now().date()
+    tomorrow = today + timedelta(days=1)
 
     context = {
         'user': user,
         'faq_items': faq_items,
         'avis_recus': last_avis,
+        'today': today,
+        'tomorrow': tomorrow,
     }
     return TemplateResponse(request, 'main/index.html', context)
 
@@ -24,3 +29,6 @@ def a_propos(request):
     return TemplateResponse(request, 'main/a_propos.html', context={
         'faq_items': faq_items,
     })
+
+
+

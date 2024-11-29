@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load session_tags %}
+
+{% block title %}Espace Administrateur | ParkSafe{% endblock %}
+
+{% block extra_head %}
+{% endblock %}
+
+
+{% block content %}
+<section class="flex py-20 poppins bg-gray-200 relative z-[2] shadow-md">
+    <h1 class="poppins font-bold primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mx-auto">
+        Modifier la <span class="secondary">Commission&copy;</span>
+    </h1>
+</section>
+
+<section class="bg-white relative z-[1] py-16 flex flex-col poppins">
+    <div class="w-full max-w-[720px] mx-auto flex flex-col">
+        
+        <h3 class="secondary text-md sm:text-lg md:text-xl font-semibold my-3">{{poi.category}} | {{poi.city}}</h3>
+        
+        <form action="" method="post" class="w-full max-w-[400px]">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="my-5 py-2 px-5 bg-secondary rounded-xl text-white shadow-md">
+                Mettre à jour
+            </button>
+        </form>
+
+    </div>
+</section>
+{% endblock %}

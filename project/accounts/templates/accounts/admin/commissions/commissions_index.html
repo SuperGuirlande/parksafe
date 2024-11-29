@@ -1,0 +1,68 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load session_tags %}
+
+{% block title %}Espace Administrateur | ParkSafe{% endblock %}
+
+{% block extra_head %}
+{% endblock %}
+
+
+{% block content %}
+<section class="flex flex-col py-20 poppins bg-gray-200 relative z-[2] shadow-md">
+    <!-- TITLE -->
+     <div class="relative mx-auto flex flex-col">
+
+        <a href="{% url 'admin_index' %}" class="text-blue-500 underline mb-5">← Retour Admin</a>
+        <h1 class="poppins font-bold primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mx-auto relative">
+            Commissions <span class="secondary">ParkSafe&copy;</span>
+            
+        </h1>
+    </div>
+
+    <!-- MESSAGE DE SESSION -->
+    {% if request.session.message %}
+    <p class="text-xl md:text-2xl lg:text-3xl max-w-[1080px] my-5 text-green-600 font-bold text-center mx-auto">
+        {{ request.session.message }}
+    </p>
+    {% del_session_message %}
+    {% endif %}
+    {% if request.session.alert %}
+    <p class="text-xl md:text-2xl lg:text-3xl max-w-[1080px] my-5 text-red-500 font-bold text-center mx-auto">
+        {{ request.session.alert }}
+    </p>
+    {% del_session_message %}
+    {% endif %}
+</section>
+
+<section class="bg-white relative z-[1] py-16 flex flex-col poppins">
+    <div class="w-full max-w-[720px] mx-auto flex flex-col">
+        
+        <div class="flex w-full justify-between flex-wrap px-3">
+            <div class="flex flex-col">
+
+                {% for poi in pois %}
+                <h3 class="secondary text-md sm:text-lg md:text-xl font-semibold my-3">{{poi.category}} - {{poi.city}}</h3>
+                {% endfor %}
+
+            </div>
+            <div class="flex flex-col">
+
+                {% for poi in pois %}
+                <h3 class="primary text-md sm:text-lg md:text-xl font-semibold my-3">{{poi.commission}}%</h3>
+                {% endfor %}
+            </div>
+
+            <div class="flex flex-col">
+
+                {% for poi in pois %}
+                    <a href="{% url 'update_poi_commission' poi.id %}" class="my-3 text-md sm:text-lg md:text-xl text-blue-600 hover:text-blue-400 underline underline-offset-2 decoration-1">
+                        Modifier
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

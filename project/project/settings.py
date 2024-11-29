@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'faq',
     'avis',
     'stripesystem',
+    'auto_messages',
 ]
 
 MIDDLEWARE = [
@@ -158,6 +159,11 @@ DEFAULT_FROM_EMAIL = 'contact@agencecodemaster.com'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# TWILIO SMS
+TWILIO_SID=env('TWILIO_SID')
+TWILIO_TOKEN=env('TWILIO_TOKEN')
+TWILIO_NUMBER=env('TWILIO_NUMBER')
+
 # TAILWIND CSS
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
@@ -174,6 +180,9 @@ STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY').strip()
 STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY').strip()
 STRIPE_ENDPOINT_SECRET = env('STRIPE_ENDPOINT_SECRET', default='').strip()
 
-SITE_URL = 'http://127.0.0.1:8000' 
+if DEBUG:
+    SITE_URL = 'http://127.0.0.1:8000' 
+else:
+    SITE_URL = 'https://superguirlande.pythonanywhere.com'
 
 

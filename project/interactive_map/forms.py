@@ -37,3 +37,9 @@ class PointOfInterestForm(forms.ModelForm):
                 field.widget.attrs.update({
                     'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500'
                 })
+
+
+class PoiCommissionForm(forms.ModelForm):
+    class Meta:
+        model = PointOfInterest
+        fields = ['commission']

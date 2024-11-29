@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db import transaction
-from parking_places.models import ParkingPlace, DevenirHoteCommentCaMarcheItem, PourquoiDevenirHoteItem
+from parking_places.models import ParkingPlace, DevenirHoteCommentCaMarcheItem, PlaceIndisponibility, PourquoiDevenirHoteItem
 from interactive_map.models import PointOfInterest
 from .models import CustomUser
 from .forms import MobileNumberForm, UserRegisterForm, UserLoginForm, ProfilPicForm
@@ -27,7 +27,8 @@ from reservations.models import Reservation
 from stripesystem.models import ReservationPayement
 from django.db.models import Sum
 from django.db.models.functions import TruncDate
-
+from django.utils.timezone import localtime
+from auto_messages.views import send_parker_accept_reserv_email, send_parker_accept_reserv_sms_to_client, send_account_created_mail, send_place_checked_mail, send_place_checked_sms
 
 # General redirection
 def general_redirect(request):
@@ -41,7 +42,10 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+
+            send_account_created_mail(user)
+
             request.session['message'] = 'Votre inscription est réussie ! Vous pouvez vous connecter'
             return redirect('login')
     else:
@@ -130,7 +134,9 @@ def client_confirm_cancel(request, token):
 @login_required
 def parker_cancel_reservation(request, token):
     reservation = get_object_or_404(Reservation, token=token)
-    reservation.name = f"{reservation.client.first_name} {reservation.client.last_name}"
+    first_name = "Client supprimé" if reservation.client is None else reservation.client.first_name
+    last_name = "" if reservation.client is None else reservation.client.last_name
+    reservation.name = f"{first_name} {last_name}"
 
     context={
         'reservation': reservation,
@@ -159,7 +165,16 @@ def parker_confirm_accept(request, token):
     
     reservation.accepted = True
     reservation.save()
+
+    # SMS & MAIL
+    success_client, error_client = send_parker_accept_reserv_sms_to_client(reservation)
+    if not success_client:
+        print(f"Erreur lors de l'envoi du SMS au client: {error_client}")
+
+    send_parker_accept_reserv_email(reservation)
+
     request.session['message'] = "La réservation à bien été acceptée. Une demande de paiement à été transmise au client"
+
 
     return redirect('parker_index')
 
@@ -183,18 +198,22 @@ def parker_my_reservations(request):
     user_places = ParkingPlace.objects.filter(user=user)
     avis = AvisClientParker.objects.filter(parker=user)
 
+    indisponibles = PlaceIndisponibility.objects.filter(place__user=user)
+
     reservations_data = []
     for res in current_reservations:
+        first_name = "Client supprimé" if res.client is None else res.client.first_name
+        last_name = "" if res.client is None else res.client.last_name
         reservations_data.append({
             'client': {
-                'first_name': res.client.first_name,
-                'last_name': res.client.last_name
+                'first_name': first_name,
+                'last_name': last_name
             },
             'place': {
                 'address': res.place.address
             },
-            'arrivee': res.arrivee.strftime('%Y-%m-%dT%H:%M'),
-            'departure': res.departure.strftime('%Y-%m-%dT%H:%M'),
+            'arrivee': localtime(res.arrivee).strftime('%Y-%m-%dT%H:%M'),
+            'departure': localtime(res.departure).strftime('%Y-%m-%dT%H:%M'),
             'price': str(res.price)
         })
 
@@ -206,7 +225,8 @@ def parker_my_reservations(request):
         'user_places': user_places,
         'api_key': settings.HERE_API_KEY,
         'avis': avis,
-        'calendar_data': json.dumps(reservations_data, cls=DjangoJSONEncoder),  # Pour le calendrier
+        'calendar_data': json.dumps(reservations_data, cls=DjangoJSONEncoder), 
+        'indisponibles': indisponibles,
     }
 
     return TemplateResponse(request, 'accounts/user/parker/my_reservations.html', context)
@@ -221,22 +241,21 @@ def parker_my_gains(request):
     user = request.user
     payements = ReservationPayement.objects.filter(parker=user)
 
-    # Calcul des gains par jour en utilisant la date directement
     daily_gains = (
         payements
         .filter(
             reservation__finished=True,
             client_payed=True
         )
-        .values('created_on')  # Utilisez created_on directement au lieu de TruncDate
+        .values('created_on')
         .annotate(gains=Sum('price'))
         .order_by('created_on')
     )
 
-    # Formatage des données pour le graphique
+    # Include year in the date format
     gains_data = [
         {
-            'date': datetime.strftime(gain['created_on'], '%d/%m'),
+            'date': datetime.strftime(gain['created_on'], '%d/%m/%Y'),  # Ajout de l'année
             'gains': float(gain['gains'])
         }
         for gain in daily_gains
@@ -356,18 +375,73 @@ def change_profil_pic(request):
     return TemplateResponse(request, 'accounts/forms/profil_pic_form.html', {'form': form})
 
 
+
 ### ADMINISTRATEUR ###
-@login_required
+
+# INDEX
+@staff_member_required
 def admin_index(request):
     user = request.user
     if not user.is_superuser:
         return redirect('index')
+    
+    places = ParkingPlace.objects.filter(admin_accepted=False)
 
-    return TemplateResponse(request, "accounts/admin/admin_index.html", context={})
+    return TemplateResponse(request, "accounts/admin/admin_index.html", context={
+        'places': places,
+    })
 
+
+# COMMISSIONS
+@staff_member_required
+def commissions_index(request):
+    pois = PointOfInterest.objects.all()
+
+    context = {
+        'pois': pois,
+    }
+    return TemplateResponse(request, "accounts/admin/commissions/commissions_index.html", context)
+
+
+# ACCEPT PLACES
+@staff_member_required
+def places_waiting_accept(request):
+    places = ParkingPlace.objects.filter(admin_accepted=False, deleted=False)
+
+    
+    return TemplateResponse(request, 'accounts/admin/places_to_accept.html', context={
+        'places': places,
+    })
+
+
+# Accepter annonce
+@staff_member_required
+def accept_place(request, place_token):
+    place = get_object_or_404(ParkingPlace, token=place_token)
+    place.admin_accepted = True
+    place.save()
+    request.session['message'] = """L'annonce a bien été acceptée !
+Elle est maintenant visible par les utilisateurs"""
+
+    # Send SMS notification
+    success_parker, error_parker = send_place_checked_sms(place)
+    if not success_parker:
+        print(f"Erreur lors de l'envoi du SMS au propriétaire: {error_parker}")
+    # Send EMAIL notification
+    send_place_checked_mail(place)
+    
+    return redirect('places_waiting_accept')
+
+# Supprimer annonce
+def delete_place(request, place_token):
+    place = get_object_or_404(ParkingPlace, token=place_token)
+    place.deleted = True
+    place.save()
+    request.session['message'] = """L'annonce a bien été supprimée !"""
+    return redirect('places_waiting_accept')
 
 # FAQ ADMIN
-@login_required
+@staff_member_required
 def faq_index(request):
     user = request.user
     if not user.is_superuser:
@@ -379,8 +453,7 @@ def faq_index(request):
         'items': items,
     })
 
-
-@login_required
+@staff_member_required
 def faq_item_form(request, id=None):
     # Check SuperUser
     user = request.user

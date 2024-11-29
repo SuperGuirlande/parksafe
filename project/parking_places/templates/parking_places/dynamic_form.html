@@ -1,0 +1,97 @@
+<div class="w-full max-w-5xl mx-auto  text-xs sm:text-sm md:text-md">
+    <form id="searchForm" class="bg-white rounded-lg shadow-lg py-6 px-2 sm:px-4 md:px-8 justify-between" onsubmit="return handleSubmit(event)">
+      <div class="flex flex-wrap lg:flex-row lg:items-end space-x-2 lg:space-x-4 space-y-6 lg:space-y-0 justify-between">
+        <!-- Point d'intérêt avec menu dépliant -->
+        <div class="w-full lg:flex-1">
+          <label class="block text-gray-700 font-bold mb-2 lg:text-lg">Lieu</label>
+          <div class="relative">
+            <!-- Bouton déclencheur (inchangé) -->
+            <div id="poiTrigger" 
+              class="w-full border rounded-lg p-3 cursor-pointer flex justify-between items-center hover:border-blue-500"
+              onclick="togglePoiMenu()">
+            <span id="selectedPoiDisplay" class="text-gray-700">
+              {% if request.GET.point_of_interest %}
+                {% for cat in poi_cats %}
+                  {% for city in cat.unique_cities %}
+                    {% if city.slug == request.GET.point_of_interest %}
+                      {{ city.name }}
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+              {% elif poi %}
+                {{ poi.city.name }}
+              {% else %}
+                Sélectionnez un point d'intérêt
+              {% endif %}
+            </span>
+            <svg id="chevron" class="w-5 h-5 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </div>
+
+            <!-- Menu dépliant en colonnes -->
+            <div id="poiMenu" 
+                 class="absolute z-50 w-full mt-1 bg-white border rounded-lg shadow-lg hidden">
+              <div class="p-5">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {% for cat in poi_cats %}
+                    <div>
+                      <h3 class="font-semibold text-primary border-b pb-2 mb-3">{{ cat.name }}</h3>
+                      <div class="space-y-2">
+                        {% for city in cat.unique_cities %}
+                          <div>
+                            <label class="flex items-center space-x-2 cursor-pointer hover:text-blue-500 transition-colors">
+                              <input type="radio" 
+                                     name="point_of_interest" 
+                                     value="{{ city.slug }}"
+                                     {% if poi and poi.slug == city.slug %}checked{% endif %}
+                                     class="text-blue-500 focus:ring-blue-500"
+                                     onclick="updatePoiDisplay(this)"
+                                     required>
+                              <span>{{ city.name }}</span>
+                            </label>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          <!-- Dates -->
+          <div class="w-[47%] lg:w-[14%]">
+            <label class="block text-gray-700 font-bold mb-2 lg:text-lg" for="id_start_date">
+              Départ
+            </label>
+            <input type="date" 
+                  name="start_date" 
+                  id="id_start_date"
+                  required
+                  value="{% if request.GET.start_date %}{{ request.GET.start_date }}{% else %}{{ today|date:'Y-m-d' }}{% endif %}"
+                  class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm md:text-md">
+          </div>
+
+          <div class="w-[47%] lg:w-[14%]">
+            <label class="block text-gray-700 font-bold mb-2 lg:text-lg" for="id_end_date">
+              Retour
+            </label>
+            <input type="date" 
+                  name="end_date" 
+                  id="id_end_date"
+                  required
+                  value="{% if request.GET.end_date %}{{ request.GET.end_date }}{% else %}{{ tomorrow|date:'Y-m-d' }}{% endif %}"
+                  class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm md:text-md">
+          </div>
+
+        <div class="w-full lg:w-auto">
+          <button type="submit" 
+                  class="w-full lg:w-auto bg-secondary text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors lg:text-lg">
+            Rechercher
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>

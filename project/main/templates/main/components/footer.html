@@ -1,8 +1,8 @@
 {% load static %}
 <section class="bg-primary mt-auto text-white flex flex-col py-10 poppins">
-    <div class="flex flex-wrap w-full max-w-[1400px] mx-auto px-4 gap-10">
+    <div class="flex flex-wrap w-full justify-between max-w-[1400px] mx-auto px-4 gap-10">
         <!-- LEFT -->
-        <div class="flex flex-col flex-1 min-w-[300px] md:pr-10 md:border-r-2">
+        <div class="flex flex-col flex-1 basis-[300px] md:pr-10 md:border-r-2">
             <a href="{% url 'index' %}">
                 <h1 class="text-4xl md:text-6xl text-white jomhuria translate-y-1 text-center md:text-left">
                     <span class="secondary">Park</span>Safe
@@ -27,17 +27,17 @@
         </div>
 
         <!-- MIDDLE -->
-        <div class="flex flex-col flex-1 min-w-[300px] md:px-10 text-base md:text-lg">
-            <div class="flex flex-wrap justify-between gap-8">
+        <div class="flex flex-col flex-1 basis-[450px] md:px-3 text-base md:text-base">
+            <div class="flex flex-wrap justify-evenly gap-3 w-full">
                 {% for cat in poi_cats %}
-                <div class="basis-[calc(50%-1rem)] lg:basis-[calc(33%-1rem)] flex flex-col text-center md:text-left">
+                <div class="w-fit flex flex-grow flex-col text-center md:text-left">
                     <p class="font-bold mb-5">
                         {{ cat.name }}
                     </p>
                     {% for city in cat.unique_cities %}
-                    <a href="{% url 'search_parking_place_index' %}?category={{ cat.url_name|urlencode }}&city={{ city|urlencode }}" 
-                       class="font-light mb-2 {% if selected_category == cat.name and selected_city == city %}text-blue-600{% endif %}">
-                        {{ city }}
+                    <a href="{% url 'search_parking_place' poi_slug=city.slug %}" 
+                       class="font-light mb-2 hover:text-blue-300 transition-colors">
+                        {{ city.name }}
                     </a>
                     {% endfor %}
                 </div>
@@ -46,19 +46,19 @@
         </div>
 
         <!-- RIGHT -->
-        <div class="flex flex-col flex-1 min-w-[300px] md:pl-10 md:border-l-2">
+        <div class="flex flex-col flex-1 basis-[300px] md:pl-10 md:border-l-2">
             <h2 class="font-bold text-lg md:text-xl pb-5 text-center md:text-left">
                 Liens Utiles
             </h2>
-            <nav class="flex flex-col text-base md:text-lg gap-2 text-center md:text-left">
-                <a href="{% url 'index' %}" class="hover:underline">Accueil</a>
-                <a href="{% url 'a_propos' %}" class="hover:underline">À Propos</a>
-                <a href="{% url 'create_parking_place' %}" class="hover:underline">Proposer mes places</a>
-                <a href="{% url 'search_parking_place_index' %}" class="hover:underline mb-3">Rechercher une place</a>
-                <a href="#" class="hover:underline">→ Nous Contacter</a>
-                <a href="#" class="hover:underline">→ Politique de Confidentialité</a>
-                <a href="#" class="hover:underline">→ Mentions Légales</a>
-                <a href="#" class="hover:underline">→ Termes & Conditions</a>
+            <nav class="flex flex-col text-base md:text-base gap-2 text-center md:text-left">
+                <a href="{% url 'index' %}" class="hover:text-blue-300 transition-colors">Accueil</a>
+                <a href="{% url 'a_propos' %}" class="hover:text-blue-300 transition-colors">À Propos</a>
+                <a href="{% url 'create_parking_place' %}" class="hover:text-blue-300 transition-colors">Proposer mes places</a>
+                <a href="{% url 'search_parking_place_index' %}" class="hover:text-blue-300 transition-colors mb-3">Rechercher une place</a>
+                <a href="#" class="hover:text-blue-300 transition-colors">→ Nous Contacter</a>
+                <a href="#" class="hover:text-blue-300 transition-colors">→ Politique de Confidentialité</a>
+                <a href="#" class="hover:text-blue-300 transition-colors">→ Mentions Légales</a>
+                <a href="#" class="hover:text-blue-300 transition-colors">→ Termes & Conditions</a>
             </nav>
         </div>
     </div>
@@ -66,7 +66,7 @@
     <div class="mt-10 px-4">
         <p class="text-center text-sm md:text-base">
             ParkSafe&copy; 2024 | Tous droits réservés | Site réalisé avec &#x2665; par 
-            <a href="https://agencecodemaster.com/" class="hover:underline">Dylan Saint-Jalmes - Agence Codemaster</a>
+            <a href="https://agencecodemaster.com/" class="hover:text-blue-300 transition-colors">Dylan Saint-Jalmes - Agence Codemaster</a>
         </p>
     </div>
 </section>

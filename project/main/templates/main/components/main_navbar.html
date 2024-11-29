@@ -1,4 +1,4 @@
-<div class="w-full relative z-[10]"> <!-- Wrapper ajouté -->
+<div class="w-full relative z-[10]">
     <section class="bg-primary flex rounded-b-2xl relative mb-5 py-2">
         <!-- Le contenu principal (logo + nav) -->
         <div class="flex justify-between w-full max-w-[1280px] items-center mx-auto relative z-40 px-4">
@@ -11,7 +11,7 @@
                 </a>
             </div>
 
-            <!-- NAVIGATION -->
+            <!-- NAVIGATION DESKTOP -->
             <nav class="hidden lg:flex text-white gap-6 poppins text-lg items-center">
                 <a href="{% url 'index' %}" class="hover:underline"><p>Accueil</p></a>
                 <a href="{% url 'a_propos' %}" class="hover:underline"><p>A Propos</p></a>
@@ -22,7 +22,7 @@
                 </a>
             </nav>
 
-            <!-- USER NAVIGATION -->
+            <!-- USER NAVIGATION DESKTOP -->
             <nav class="hidden lg:flex text-white gap-3 poppins text-lg items-center">
                 <a href="{% url 'devenir_hote' %}">
                     <button class="button white-border-button">
@@ -43,8 +43,10 @@
                         <a href="{% url 'parker_my_gains' %}" class="block hover:underline">Revenus</a>
                         <hr class="my-2">
                         <a href="{% url 'my_account' %}" class="block hover:underline">Informations du compte</a>
+                        {% if request.user.is_superuser %}
                         <hr class="my-2">
                         <a href="{% url 'admin_index' %}" class="block hover:underline">Espace Administrateur</a>
+                        {% endif %}
                     </div>
                     {% else %}
                     <a href="{% url 'login' %}">
@@ -56,7 +58,7 @@
                 </div>
             </nav>
 
-            <!-- MOBILE MENU -->
+            <!-- MOBILE MENU BUTTON -->
             <div class="flex lg:hidden items-center">
                 <button id="mobile_menu_button" class="text-white text-3xl">
                     ☰
@@ -65,24 +67,27 @@
         </div>
 
         <!-- MOBILE MENU DROPDOWN -->
-        <div id="mobile_menu" class="hidden flex-col gap-4 text-white text-lg poppins bg-primary rounded-b-2xl p-5 lg:hidden">
+        <div id="mobile_menu" class="hidden lg:hidden absolute top-full right-4 w-[300px] bg-white px-6 py-6 text-right text-lg uppercase rounded-xl shadow-lg z-50 secondary">
             <a href="{% url 'index' %}" class="block hover:underline">Accueil</a>
+            <hr class="my-2">
             <a href="{% url 'a_propos' %}" class="block hover:underline">A Propos</a>
-            <a href="{% url 'search_parking_place_index' %}">
-                <button class="button white-border-button w-full">
-                    Rechercher une place
-                </button>
-            </a>
-            <a href="{% url 'create_parking_place' %}">
-                <button class="button white-border-button w-full">
-                    Louer mes places
-                </button>
-            </a>
+            <hr class="my-2">
+            <a href="{% url 'search_parking_place_index' %}" class="block hover:underline">Rechercher une place</a>
+            <hr class="my-2">
+            <a href="{% url 'devenir_hote' %}" class="block hover:underline">Louer mes places</a>
+            <hr class="my-2 border-2">
             {% if request.user.is_authenticated %}
             <a href="{% url 'client_index' %}" class="block hover:underline">Mes Voyages</a>
+            <hr class="my-2">
             <a href="{% url 'parker_index' %}" class="block hover:underline">Mon Park</a>
+            <hr class="my-2">
             <a href="{% url 'parker_my_gains' %}" class="block hover:underline">Revenus</a>
+            <hr class="my-2">
             <a href="{% url 'my_account' %}" class="block hover:underline">Informations du compte</a>
+            {% if request.user.is_superuser %}
+            <hr class="my-2">
+            <a href="{% url 'admin_index' %}" class="block hover:underline">Espace Administrateur</a>
+            {% endif %}
             {% else %}
             <a href="{% url 'login' %}" class="block hover:underline">Connexion</a>
             {% endif %}
@@ -113,5 +118,16 @@
                 mobileMenu.classList.toggle('hidden');
             });
         }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (accountButton && !accountButton.contains(event.target) && !accountNav.contains(event.target)) {
+                accountNav.classList.add('hidden');
+            }
+            
+            if (mobileMenuButton && !mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
     </script>
 </div>

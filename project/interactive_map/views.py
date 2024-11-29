@@ -5,7 +5,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import PointOfInterestForm, PoiCategoryForm, PoiCityForm
+from .forms import PointOfInterestForm, PoiCategoryForm, PoiCityForm, PoiCommissionForm
 from interactive_map.models import PoiCategory, PoiCity, PointOfInterest
 from django.template.response import TemplateResponse
 
@@ -107,3 +107,24 @@ def create_poi(request, id=None):
         return TemplateResponse(request, 'accounts/admin/poi/change_poi.html', context)
     else:
         return TemplateResponse(request, 'accounts/admin/poi/create_poi.html', context)
+
+
+# UPDATE COMMISSION
+def update_poi_commission(request, id):
+    poi = get_object_or_404(PointOfInterest, id=id)
+
+    if request.method == 'POST':
+        form = PoiCommissionForm(request.POST, instance=poi)
+        if form.is_valid():
+            form.save()
+            request.session['message'] = "La commission a été mise à jour avec succès."
+            return redirect('commissions_index')
+    else:
+        form = PoiCommissionForm(instance=poi)
+
+    context = {
+        'form': form,
+        'poi': poi,
+    }
+
+    return TemplateResponse(request, "accounts/admin/commissions/update_commission.html", context)

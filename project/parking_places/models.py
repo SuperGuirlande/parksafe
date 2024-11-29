@@ -64,6 +64,8 @@ class ParkingPlace(models.Model):
 
     created_on = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    admin_accepted = models.BooleanField(verbose_name="Acceptée par l'admin", default=False)
+    deleted = models.BooleanField(verbose_name="Supprimée", default=False)
 
     latitude = models.FloatField(verbose_name="Latitude", null=True, blank=True)
     longitude = models.FloatField(verbose_name="Longitude", null=True, blank=True)
@@ -111,7 +113,7 @@ class ParkingPlace(models.Model):
     def __str__(self):
         return f"{self.places} places. {self.address} - User : {self.user}"
     
-
+    
 
 class DevenirHoteCommentCaMarcheItem(models.Model):
     ordre = models.IntegerField(verbose_name="Ordre dans la section")
@@ -129,3 +131,10 @@ class PourquoiDevenirHoteItem(models.Model):
 
     def __str__(self):
         return f"N°{self.ordre} - {self.title}"
+    
+
+class PlaceIndisponibility(models.Model):
+    place = models.ForeignKey(ParkingPlace, on_delete=models.CASCADE, related_name="indisponibilites", verbose_name="Place")
+
+    debut = models.DateTimeField(verbose_name="Indisponible à partir de")
+    fin = models.DateTimeField(verbose_name="Indisponible jusqu'au")

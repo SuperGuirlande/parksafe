@@ -1,0 +1,48 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Proposer ma place de parking | ParkSafe{% endblock %}
+
+{% block extra_head %}
+<style>
+    form p {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    form p label {
+        font-size: 1.2rem;
+        color: var(--secondary-blue);
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="pt-32 pb-16 bg-gray-200 poppins flex flex-col w-full shadow-xl relative z-[1]">
+        <h1 class="text-4xl secondary text-center font-semibold mx-auto">
+            Ajouter une indisponibilité
+        </h1>
+        <p class="text-xl my-5 text-slate-800 text-center max-w-[700px] mx-auto">
+            Dans cette section, déclarez unne période ou votre place de parking n'est pas disponible
+        </p>
+    </section>
+
+    <section class="flex flex-col py-16 bg-white relative poppins">
+        <form method="POST" class="flex flex-col gap-5 w-full px-3 max-w-[550px] mx-auto" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="text-lg py-2 px-6 bg-secondary rounded-xl shadow-md text-white hover:-translate-y-1 hover:shadow-xl hover:text-blue-700 
+            transition-all duration-200 ease-in-out mx-auto w-fit" type="submit">
+                Enregistrer
+            </button>
+        </form>
+    </section>
+
+{% endblock %}
+
+
+{% block extra_script %}{% endblock %}

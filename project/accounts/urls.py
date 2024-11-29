@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import change_password, register, user_login, user_logout, my_account, general_redirect, change_mobile_number
+from .views import change_password, register, user_login, user_logout, my_account, general_redirect, change_mobile_number, commissions_index
 from .views import change_profil_pic, admin_index, faq_index, faq_item_form, client_cancel_reservation, client_confirm_cancel, client_index
-from .views import parker_cancel_reservation, parker_confirm_cancel, parker_confirm_accept, devenir_hote_index, parker_my_gains, parker_my_reservations
+from .views import parker_cancel_reservation, parker_confirm_cancel, parker_confirm_accept, devenir_hote_index, parker_my_gains, parker_my_reservations, places_waiting_accept
+from .views import accept_place, delete_place
 from reservations.views import accept_message
-from interactive_map.views import create_poi, create_poi_category, create_poi_city, poi_index
+from interactive_map.views import create_poi, create_poi_category, create_poi_city, poi_index, update_poi_commission
 from faq.views import move_faq_item
 from django.contrib.auth import views as auth_views
 from accounts.views import devenir_hote_add_ccm, devenir_hote_add_pdh, devenir_hote_edit_ccm, devenir_hote_edit_pdh
@@ -43,6 +44,13 @@ urlpatterns = [
 
     # ADMIN
     path('administrateur/', admin_index, name="admin_index"),
+    path('administrateur/places-en-attente/', places_waiting_accept, name="places_waiting_accept"),
+    path('administrateur/accepter-place/<str:place_token>/', accept_place, name="accept_place"),
+    path('administrateur/supprimer-place/<str:place_token>/', delete_place, name="delete_place"),
+
+    # COMMISSIONS 
+    path('administrateur/commissions-parksafe/', commissions_index, name="commissions_index"),
+    path('administrateur/modifier-commission/<int:id>/', update_poi_commission, name="update_poi_commission"),
 
     # POI
     path('administrateur/points-d-interet/', poi_index, name="poi_index"),

@@ -17,13 +17,13 @@
             {% csrf_token %}
             <!-- MESSAGE DE SESSION -->
             {% if request.session.message %}
-            <p class="text-3xl my-5 text-green-600 font-bold text-center mx-auto">
+            <p class="text-xl md:text-2xl lg:text-3xl max-w-[1080px] my-5 text-green-600 font-bold text-center mx-auto">
                 {{ request.session.message }}
             </p>
             {% del_session_message %}
             {% endif %}
             {% if request.session.alert %}
-            <p class="text-3xl my-5 text-red-500 font-bold text-center mx-auto">
+            <p class="text-xl md:text-2xl lg:text-3xl max-w-[1080px] my-5 text-red-500 font-bold text-center mx-auto">
                 {{ request.session.alert }}
             </p>
             {% del_session_message %}

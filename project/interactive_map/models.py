@@ -5,6 +5,9 @@ from django.utils.text import slugify
 from django.conf import settings
 from parking_places.models import ParkingPlace
 import requests
+from django.db.models import F
+from django.db.models.functions import Power, Sqrt
+
 
 class PoiCategory(models.Model):
     name = models.CharField(max_length=255, verbose_name="Nom de la catégorie")
@@ -27,6 +30,8 @@ class PointOfInterest(models.Model):
     address = models.CharField(verbose_name="Adresse complète", max_length=255)
     latitude = models.FloatField(verbose_name="Latitude", null=True, blank=True)  
     longitude = models.FloatField(verbose_name="Longitude", null=True, blank=True)
+
+    commission = models.IntegerField(verbose_name="Commission ParkSafe", blank=True, default=20)
 
     def find_nearby_parkings(self, radius_km=2):
         lat_radius = radius_km / 111
@@ -69,3 +74,24 @@ class PointOfInterest(models.Model):
             self.geocode()
             
         super().save(*args, **kwargs)
+
+    @staticmethod
+    def find_closest_to_coordinates(latitude, longitude):
+        """
+        Trouve le Point d'Intérêt le plus proche des coordonnées données
+        """
+        return (
+            PointOfInterest.objects
+            .filter(
+                latitude__isnull=False,
+                longitude__isnull=False
+            )
+            .annotate(
+                distance=Sqrt(
+                    Power(111.0 * (F('latitude') - latitude), 2) +
+                    Power(111.0 * (F('longitude') - longitude) * 0.7, 2)
+                )
+            )
+            .order_by('distance')
+            .first()
+        )

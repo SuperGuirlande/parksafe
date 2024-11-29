@@ -65,18 +65,31 @@ def create_checkout_session(request, reservation_token):
         # Créer la session de paiement
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
-            line_items=[{
-                'price_data': {
-                    'currency': 'eur',
-                    'unit_amount': int(reservation.total_price * 100),  # Stripe utilise les centimes
-                    'product_data': {
-                        'name': f'Réservation parking - {reservation.name}',
-                        'description': f"""Réservation du {reservation.arrivee.strftime("%d/%m/%Y")} au {reservation.departure.strftime("%d/%m/%Y")}
-                                         | Adresse: {reservation.place.address}""",
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'eur',
+                        'unit_amount': int(reservation.total_price * 100),  # Stripe utilise les centimes
+                        'product_data': {
+                            'name': f'Réservation parking - {reservation.name}',
+                            'description': f"""Réservation du {reservation.arrivee.strftime("%d/%m/%Y")} au {reservation.departure.strftime("%d/%m/%Y")}
+                                            \n| Adresse: {reservation.place.address}""".strip(),
+                        },
                     },
+                    'quantity': 1,
                 },
-                'quantity': 1,
-            }],
+                {
+                    'price_data': {
+                        'currency': 'eur',
+                        'unit_amount': int(50 + (reservation.total_price * 100 * 2/100)),
+                        'product_data': {
+                            'name': 'Frais de transaction',
+                            'description': 'Frais fixe de la plateforme Stripe (2% + 0.50€)',
+                        },
+                    },
+                    'quantity': 1,
+                }
+            ],
             mode='payment',
             success_url=request.build_absolute_uri(reverse('payment_success')) + f'?reservation={reservation_token}',
             cancel_url=request.build_absolute_uri(reverse('payment_cancel')),
@@ -114,6 +127,19 @@ def payment_success(request):
 
             reservation.payed = True
             reservation.save()
+
+            from auto_messages.views import send_client_payed_reserv_email, send_client_payed_reserv_sms_to_client, send_client_payed_reserv_sms_to_parker
+            # Send SMS notification
+            success_parker, error_parker = send_client_payed_reserv_sms_to_parker(reservation)
+            success_client, error_client = send_client_payed_reserv_sms_to_client(reservation)
+
+            if not success_parker:
+                print(f"Erreur lors de l'envoi du SMS au propriétaire: {error_parker}")
+            if not success_client:
+                print(f"Erreur lors de l'envoi du SMS au client: {error_client}")
+
+            # Send EMAIL notification
+            send_client_payed_reserv_email(reservation)
 
             request.session['message'] = "Votre paiement a été effectué avec succès ! Vous pouvez consulter votre réservation dans la section 'En cours / à venir"
         except Exception as e:

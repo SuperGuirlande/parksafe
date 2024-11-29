@@ -9,23 +9,24 @@
 {% endblock %}
 
 {% block account_content %}
+<section class="flex w-full bg-gray-200">
 <main class="basis-[1080px] shrink grow-0 mx-auto poppins">
     <div class="w-full max-w-[1080px] mx-auto text-center py-20">
-        <h1 class="text-4xl primary font-bold">Mes Revenus</h1>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl primary font-bold">Mes Revenus</h1>
 
-        <!-- MESSAGE DE SESSION -->
-        {% if request.session.message %}
-        <p class="text-3xl my-5 text-green-600 font-bold text-center mx-auto">
-            {{ request.session.message }}
-        </p>
-        {% del_session_message %}
-        {% endif %}
-        {% if request.session.alert %}
-        <p class="text-3xl my-5 text-red-500 font-bold text-center mx-auto">
-            {{ request.session.alert }}
-        </p>
-        {% del_session_message %}
-        {% endif %}
+    <!-- MESSAGE DE SESSION -->
+    {% if request.session.message %}
+    <p class="text-xl md:text-2xl lg:text-3xl max-w-[1080px] my-5 text-green-600 font-bold text-center mx-auto">
+        {{ request.session.message }}
+    </p>
+    {% del_session_message %}
+    {% endif %}
+    {% if request.session.alert %}
+    <p class="text-xl md:text-2xl lg:text-3xl max-w-[1080px] my-5 text-red-500 font-bold text-center mx-auto">
+        {{ request.session.alert }}
+    </p>
+    {% del_session_message %}
+    {% endif %}
         
         {% if not has_stripe_account %}
         <div class="mt-10 p-8 bg-white rounded-lg shadow-md">
@@ -82,7 +83,7 @@
         {% endif %}
     </div>
 
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="bg-white rounded-lg shadow-xl border border-gray-200 mb-12">
         <div class="p-4 border-b border-gray-200">
             <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <h2 class="text-lg font-semibold">Calendrier des gains</h2>
@@ -113,40 +114,11 @@
         </div>
     </div>
 </main>
+</section>
+
 {% endblock %}
 
 {% block account_script %}
-<div class="bg-white rounded-lg shadow-sm border border-gray-200">
-    <div class="p-4 border-b border-gray-200">
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <h2 class="text-lg font-semibold">Calendrier des gains</h2>
-            <div class="flex items-center space-x-4">
-                <select id="period-select" class="rounded-lg border border-gray-300 px-3 py-2 text-sm">
-                    <option value="week">Semaine</option>
-                    <option value="month">Mois</option>
-                    <option value="quarter">Trimestre</option>
-                </select>
-                <div class="flex items-center space-x-2">
-                    <button id="prev-period" class="p-2 hover:bg-gray-100 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <span id="current-period" class="text-sm font-medium"></span>
-                    <button id="next-period" class="p-2 hover:bg-gray-100 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="p-4">
-        <div id="earnings-chart" class="w-full h-64 relative"></div>
-    </div>
-</div>
-
 <script>
 class EarningsChart {
     constructor(selector) {
@@ -200,128 +172,127 @@ class EarningsChart {
         this.updateChart();
     };
 
-        formatDate(date) {
+    formatDate(date) {
         switch(this.currentPeriod) {
             case 'week':
-                return date.getDate();  // Juste le numéro du jour
+                return date.getDate();
             case 'month':
-                return `S${Math.ceil(date.getDate() / 7)}`;
+                return date.label || date.toLocaleDateString('fr-FR', { month: 'long' });
             case 'quarter':
-                const months = ['jan.', 'fév.', 'mar.', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sep.', 'oct.', 'nov.', 'déc.'];
-                return months[date.getMonth()];
+                return date.label || `T${Math.floor(date.getMonth() / 3) + 1}`;
             default:
                 return date.toLocaleDateString('fr-FR');
         }
     }
 
     getPeriodDates() {
-        const now = new Date();
-        let startDate, endDate, periodLabel;
+    const now = new Date();
+    let startDate, endDate, periodLabel;
 
-        switch(this.currentPeriod) {
-            case 'week':
-                startDate = new Date(now);
-                startDate.setDate(now.getDate() - (now.getDay() || 7) + 1 + (this.currentOffset * 7));
-                endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate() + 6);
-                periodLabel = `Semaine du ${startDate.toLocaleDateString('fr-FR')}`;
-                break;
+    switch(this.currentPeriod) {
+        case 'week':
+            startDate = new Date(now);
+            startDate.setDate(now.getDate() - (now.getDay() || 7) + 1 + (this.currentOffset * 7));
+            endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + 6);
+            periodLabel = `Semaine du ${startDate.toLocaleDateString('fr-FR')}`;
+            break;
 
-            case 'month':
-                startDate = new Date(now.getFullYear(), now.getMonth() + this.currentOffset, 1);
-                endDate = new Date(now.getFullYear(), now.getMonth() + this.currentOffset + 1, 0);
-                periodLabel = startDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-                break;
+        case 'month':
+            const yearM = now.getFullYear() + Math.floor(this.currentOffset);
+            startDate = new Date(yearM, 0, 1);
+            endDate = new Date(yearM, 11, 31);
+            periodLabel = `Année ${yearM}`;
+            break;
 
-            case 'quarter':
-                const quarter = Math.floor(now.getMonth() / 3) + this.currentOffset;
-                startDate = new Date(now.getFullYear(), quarter * 3, 1);
-                endDate = new Date(now.getFullYear(), (quarter + 1) * 3 - 1, 1);
-                const quarterNum = Math.floor(startDate.getMonth() / 3) + 1;
-                periodLabel = `${quarterNum}e trimestre ${startDate.getFullYear()}`;
-                break;
-        }
-
-        return { startDate, endDate, periodLabel };
-    };
-
-    getDataForPeriod() {
-        const { startDate, endDate, periodLabel } = this.getPeriodDates();
-        document.getElementById('current-period').textContent = periodLabel;
-
-        let data = [];
-        
-        switch(this.currentPeriod) {
-            case 'week':
-                for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-                    data.push({
-                        date: new Date(d),
-                        gains: 0
-                    });
-                }
-                break;
-
-            case 'month':
-                for (let week = 1; week <= 6; week++) {
-                    const weekStart = new Date(startDate);
-                    weekStart.setDate((week - 1) * 7 + 1);
-                    if (weekStart <= endDate) {
-                        data.push({
-                            date: new Date(weekStart),
-                            gains: 0
-                        });
-                    }
-                }
-                break;
-
-            case 'quarter':
-                for (let month = 0; month < 3; month++) {
-                    const monthDate = new Date(startDate);
-                    monthDate.setMonth(startDate.getMonth() + month);
-                    data.push({
-                        date: new Date(monthDate),
-                        gains: 0
-                    });
-                }
-                break;
-        }
-
-        // Fusionner avec les données réelles
-        this.allData.forEach(gainData => {
-            const [day, month] = gainData.date.split('/');
-            const gainDate = new Date(new Date().getFullYear(), parseInt(month) - 1, parseInt(day));
-
-            if (gainDate >= startDate && gainDate <= endDate) {
-                let targetItem;
-
-                switch(this.currentPeriod) {
-                    case 'week':
-                        targetItem = data.find(d => 
-                            d.date.getDate() === gainDate.getDate() && 
-                            d.date.getMonth() === gainDate.getMonth()
-                        );
-                        break;
-
-                    case 'month':
-                        const weekNum = Math.ceil(gainDate.getDate() / 7);
-                        targetItem = data[weekNum - 1];
-                        break;
-
-                    case 'quarter':
-                        targetItem = data.find(d => 
-                            d.date.getMonth() === gainDate.getMonth()
-                        );
-                        break;
-                }
-
-                if (targetItem) {
-                    targetItem.gains += gainData.gains;
-                }
-            }
-        });
-
-        return data;
+        case 'quarter':
+            const yearQ = now.getFullYear() + Math.floor(this.currentOffset);
+            startDate = new Date(yearQ, 0, 1);
+            endDate = new Date(yearQ, 11, 31);
+            periodLabel = `Année ${yearQ}`;
+            break;
     }
+
+    return { startDate, endDate, periodLabel };
+}
+
+getDataForPeriod() {
+    const { startDate, endDate, periodLabel } = this.getPeriodDates();
+    document.getElementById('current-period').textContent = periodLabel;
+
+    let data = [];
+    
+    switch(this.currentPeriod) {
+        case 'week':
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                data.push({
+                    date: new Date(d),
+                    gains: 0
+                });
+            }
+            break;
+
+        case 'month':
+            const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                          'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+            for (let i = 0; i < 12; i++) {
+                data.push({
+                    date: new Date(startDate.getFullYear(), i, 1),
+                    gains: 0,
+                    label: months[i]
+                });
+            }
+            break;
+
+        case 'quarter':
+            for (let q = 0; q < 4; q++) {
+                data.push({
+                    date: new Date(startDate.getFullYear(), q * 3, 1),
+                    gains: 0,
+                    label: `T${q + 1}`
+                });
+            }
+            break;
+    }
+
+    this.allData.forEach(gainData => {
+    const [day, month, year] = gainData.date.split('/');
+    const gainDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+
+    if (gainDate >= startDate && gainDate <= endDate) {
+        let targetItem;
+
+        switch(this.currentPeriod) {
+            case 'week':
+                targetItem = data.find(d => 
+                    d.date.getDate() === gainDate.getDate() && 
+                    d.date.getMonth() === gainDate.getMonth() &&
+                    d.date.getFullYear() === gainDate.getFullYear()
+                );
+                break;
+
+            case 'month':
+                if (gainDate.getFullYear() === startDate.getFullYear()) {
+                    targetItem = data[gainDate.getMonth()];
+                }
+                break;
+
+            case 'quarter':
+                if (gainDate.getFullYear() === startDate.getFullYear()) {
+                    targetItem = data[Math.floor(gainDate.getMonth() / 3)];
+                }
+                break;
+        }
+
+        if (targetItem) {
+            targetItem.gains += gainData.gains;
+        }
+    }
+});
+
+    return data;
+}
+
 
     updateChart() {
         this.svg.innerHTML = '';

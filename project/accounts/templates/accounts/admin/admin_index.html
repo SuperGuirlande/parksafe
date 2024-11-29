@@ -9,13 +9,74 @@
 
 
 {% block content %}
-<section class="flex py-20 poppins">
-    <div class="container mx-auto">
-        <h1 class="poppins font-bold primary text-6xl text-center">
-            Espace <span class="secondary">Administrateur</span>
-        </h1>
-        <a href="{% url 'faq_index' %}">Modifier la FAQ →</a><br>
-        <a href="{% url 'poi_index' %}">Les points d'intéret →</a>
+<section class="flex flex-col py-20 poppins bg-gray-200 relative z-[2] shadow-md">
+    <h1 class="poppins font-bold primary text-6xl mx-auto">
+        Espace <span class="secondary">Administrateur</span>
+    </h1>
+    <!-- MESSAGE DE SESSION -->
+    {% if request.session.message %}
+    <p class="text-xl md:text-2xl lg:text-3xl max-w-[1080px] my-5 text-green-600 font-bold text-center mx-auto">
+        {{ request.session.message }}
+    </p>
+    {% del_session_message %}
+    {% endif %}
+    {% if request.session.alert %}
+    <p class="text-xl md:text-2xl lg:text-3xl max-w-[1080px] my-5 text-red-500 font-bold text-center mx-auto">
+        {{ request.session.alert }}
+    </p>
+    {% del_session_message %}
+    {% endif %}
+</section>
+
+<section class="bg-white relative z-[1] py-16 flex flex-col poppins">
+    <div class="w-full max-w-[720px] mx-auto flex flex-col">
+        <h3 class="primary text-3xl font-bold uppercase">Annonces en attente d'acceptation</h3>
+        {% if not places.exists %}
+        <p class="text-base md:text-lg lg:text-xl text-slate-800 mx-auto my-5">
+            Aucune annonce en attente d'acceptation pour le moment
+        </p>
+        {% else %}
+        <a href="{% url 'places_waiting_accept' %}">
+            <button class="bg-secondary text-lg rounded-xl shadow-lg text-white hover:bg-blue-800 my-5 py-3 px-8">
+                Voir les annonces
+            </button>
+        </a>
+        {% endif %}
+
+    </div>
+</section>
+
+<section class="bg-gray-200 relative z-[1] py-16 flex flex-col poppins">
+    <div class="w-full max-w-[720px] mx-auto flex flex-col">
+        <h3 class="primary text-3xl font-bold uppercase">Gestion du contenu</h3>
+
+        <h4 class="text-2xl secondary font-semibold mt-10 mb-5">Commissions ParkSafe</h4>
+        <a href="{% url 'commissions_index' %}" class="text-xl text-blue-600 hover:text-blue-400 underline decoration-1 underline-offset-4">
+            <p>
+                Commissions par point d'intérêt →
+            </p>
+        </a>
+        
+        <h4 class="text-2xl secondary font-semibold mt-10 mb-5">Sections de pages</h4>
+        <a href="{% url 'faq_index' %}" class="text-xl text-blue-600 hover:text-blue-400 underline decoration-1 underline-offset-4">
+            <p>
+                Section FAQ →
+            </p>
+        </a>
+        <a href="{% url 'poi_index' %}" class="text-xl text-blue-600 hover:text-blue-400 underline decoration-1 underline-offset-4 mt-3">
+            <p>
+                Les points d'intérêts →
+            </p>
+        </a>
+
+        <h4 class="text-2xl secondary font-semibold mt-10 mb-5">Page devenir hôte</h4>
+        <a href="{% url 'devenir_hote_index' %}" class="text-xl text-blue-600 hover:text-blue-400 underline decoration-1 underline-offset-4">
+            <p>
+                Comment ça marche & Pourquoi parksafe →
+            </p>
+        </a>
+
+
     </div>
 </section>
 {% endblock %}
