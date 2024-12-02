@@ -141,7 +141,7 @@ def payment_success(request):
             # Send EMAIL notification
             send_client_payed_reserv_email(reservation)
 
-            request.session['message'] = "Votre paiement a été effectué avec succès ! Vous pouvez consulter votre réservation dans la section 'En cours / à venir"
+            request.session['message'] = "Votre paiement a été effectué avec succès ! Vous pouvez consulter votre réservation dans la section 'En cours / à venir'"
         except Exception as e:
             messages.error(request, str(e))
     return redirect('client_index')

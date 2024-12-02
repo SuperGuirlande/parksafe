@@ -1,10 +1,10 @@
 {% load static %}
 {% load places_tags %}
 <section id="place_details" class="pt-16 md:pt-20 pb-20 md:pb-32 flex bg-slate-100 poppins shadow-xl">
-    <div class="p-6 md:px-10 bg-white w-full mx-4 md:mx-auto max-w-[1080px] shadow-lg rounded-3xl">
+    <div class="p-3 sm:p-6 md:px-10 bg-white w-full mx-3 md:mx-auto max-w-[1080px] shadow-lg rounded-3xl mb-5">
         <div class="flex flex-col md:flex-row gap-8">
             <!-- Image -->
-            <div class="w-full md:w-[300px] md:grow-0 lg:shrink-0 h-[350px] my-auto">
+            <div class="w-full md:w-[300px] md:grow-0 lg:shrink-0 h-[200px] sm:h-[350px] my-auto">
                 <div class="aspect-video lg:aspect-square w-full h-full">
                     <img src="{{place.thumbnail.url}}" alt="" class="w-full h-full object-cover object-center rounded-xl">
                 </div>
@@ -62,10 +62,10 @@
                         </div>
                     </div>
 
-                    <div class="basis-1/2">
+                    <div class="basis-1/2 flex-1">
                         <p class="secondary text-lg md:text-xl font-semibold uppercase">Véhicules acceptés</p>
-                        <p class="text-lg md:text-xl mt-3 text-wrap">{{place.get_vehicles_types_display}}</p>
-                        <p class="text-lg md:text-xl mt-3">{{place.places}} place{% if place.places > 1 %}s{% endif %}</p>
+                        <p class="text-sm sm:text-base md:text-xl mt-3 text-wrap">{{place.get_vehicles_types_display}}</p>
+                        <p class="text-sm sm:text-base md:text-xl mt-3">{{place.places}} place{% if place.places > 1 %}s{% endif %}</p>
                     </div>
                 </div>
 
