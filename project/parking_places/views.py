@@ -15,7 +15,7 @@ from .models import DevenirHoteCommentCaMarcheItem, PourquoiDevenirHoteItem
 from datetime import datetime, timedelta
 from django.db.models import F
 from django.db.models.functions import Power, Sqrt
-
+from django.db.models import Avg
 
 def get_simple_format_adress(parking_place):
     user = parking_place.user
@@ -111,19 +111,61 @@ def place_created_confirm(request):
     return TemplateResponse(request, 'parking_places/place_created.html', context={})
 
 
-def search_parking_place_index(request, poi_slug=None):
-    if request.user.is_authenticated:
-        all_places = ParkingPlace.objects.filter(admin_accepted=True, deleted=False).exclude(user=request.user).order_by("-created_on")
+def update_url_params(base_url, params, key, value=None):
+    """
+    Helper pour mettre à jour les paramètres d'URL
+    Si value est None, on bascule le booléen existant
+    """
+    new_params = params.copy()
+    
+    if value is None:
+        # Pour les filtres booléens, on bascule la valeur
+        current_value = params.get(key) == 'true'
+        new_params[key] = str(not current_value).lower()
     else:
-        all_places = ParkingPlace.objects.filter(admin_accepted=True, deleted=False).order_by("-created_on")
+        # Pour le tri, on met simplement la nouvelle valeur
+        new_params['sort'] = value
+        
+    return f"{base_url}?{new_params.urlencode()}"
+
+
+def search_parking_place_index(request, poi_slug=None):
+    # Récupérer les paramètres de tri et filtrage
+    sort_by = request.GET.get('sort', '')  # Prix croissant par défaut
+    handicap_filter = request.GET.get('handicap', '') == 'true'
+    electric_filter = request.GET.get('electric', '') == 'true'
+    navette_filter = request.GET.get('navette', '') == 'true'
+    navette_nocturne_filter = request.GET.get('navette_nocturne', '') == 'true'
+    
+    # Base queryset
+    if request.user.is_authenticated:
+        all_places = ParkingPlace.objects.filter(
+            admin_accepted=True, 
+            deleted=False
+        ).exclude(user=request.user)
+    else:
+        all_places = ParkingPlace.objects.filter(
+            admin_accepted=True, 
+            deleted=False
+        )
 
     radius_km = 15
     form = None
     poi = None
-    commission = 20  # Commission par défaut
+    commission = 20
 
+    # Appliquer les filtres de base
+    if handicap_filter:
+        all_places = all_places.filter(handicaped_place=True)
+    if electric_filter:
+        all_places = all_places.filter(electric_vehicle=True)
+    if navette_filter:
+        all_places = all_places.filter(navette_possible=True)
+    if navette_nocturne_filter:
+        all_places = all_places.filter(navette_nocturne_possible=True)
+
+    # Logique pour POI
     if poi_slug:
-        # Si on a un slug, on récupère directement le POI
         poi = get_object_or_404(PointOfInterest, slug=poi_slug)
         commission = poi.commission
         
@@ -142,10 +184,10 @@ def search_parking_place_index(request, poi_slug=None):
                 Power(111.0 * (F('latitude') - poi.latitude), 2) +
                 Power(111.0 * (F('longitude') - poi.longitude) * 0.7, 2)
             )
-        ).filter(distance__lte=radius_km).order_by('distance')
+        ).filter(distance__lte=radius_km)
 
     else:
-        # Sans slug, on utilise le formulaire
+        # Logique du formulaire
         if request.method == 'POST':
             form = SearchParkingForm(request.POST)
             if form.is_valid():
@@ -169,15 +211,29 @@ def search_parking_place_index(request, poi_slug=None):
                         Power(111.0 * (F('latitude') - poi.latitude), 2) +
                         Power(111.0 * (F('longitude') - poi.longitude) * 0.7, 2)
                     )
-                ).filter(distance__lte=radius_km).order_by('distance')
+                ).filter(distance__lte=radius_km)
 
-                # Filtrer les places indisponibles pour les dates sélectionnées
+                # Filtrer les places indisponibles
                 all_places = all_places.exclude(
                     indisponibilities__start_date__lte=end_date,
                     indisponibilities__end_date__gte=start_date
                 )
         else:
             form = SearchParkingForm()
+
+    # Appliquer le tri
+    if sort_by == 'price_asc':
+        all_places = all_places.order_by('price')
+    elif sort_by == 'price_desc':
+        all_places = all_places.order_by('-price')
+    elif sort_by == 'rating':
+        all_places = all_places.annotate(
+            user_rating=Avg('user__avis_recus__stars')
+        ).order_by('-user_rating')
+    elif sort_by == 'distance' and poi:
+        all_places = all_places.order_by('distance')
+    else:
+        all_places = all_places.order_by("-created_on")
 
     # Calculer le prix total avec la commission
     for place in all_places:
@@ -188,6 +244,25 @@ def search_parking_place_index(request, poi_slug=None):
     today = datetime.now().date()
     tomorrow = today + timedelta(days=1)
 
+    # Construire l'URL de base pour les filtres
+    base_url = request.path
+    current_filters = request.GET.copy()
+    
+    # Préparer les URLs pour le template
+    filter_urls = {
+        'handicap': update_url_params(base_url, current_filters, 'handicap'),
+        'electric': update_url_params(base_url, current_filters, 'electric'),
+        'navette': update_url_params(base_url, current_filters, 'navette'),
+        'navette_nocturne': update_url_params(base_url, current_filters, 'navette_nocturne'),
+    }
+    
+    sort_urls = {
+        'price_asc': update_url_params(base_url, current_filters, 'sort', 'price_asc'),
+        'price_desc': update_url_params(base_url, current_filters, 'sort', 'price_desc'),
+        'rating': update_url_params(base_url, current_filters, 'sort', 'rating'),
+        'distance': update_url_params(base_url, current_filters, 'sort', 'distance'),
+    }
+
     context = {
         'all_places': all_places[:10],
         'form': form,
@@ -197,6 +272,15 @@ def search_parking_place_index(request, poi_slug=None):
         'poi_cats': PointOfInterest.objects.values('category__name').distinct(),
         'today': today,
         'tomorrow': tomorrow,
+        'current_sort': sort_by,
+        'current_filters': {
+            'handicap': handicap_filter,
+            'electric': electric_filter,
+            'navette': navette_filter,
+            'navette_nocturne': navette_nocturne_filter,
+        },
+        'filter_urls': filter_urls,
+        'sort_urls': sort_urls,
     }
 
     return TemplateResponse(request, "parking_places/found_place_index.html", context)

@@ -23,3 +23,10 @@ def get_rank(user):
     print(f"Total: {total}")
     print(f"Moyenne: {rank}")
     return rank
+
+
+@register.filter
+def remove_plural(value):
+    if value.name.endswith('s'):
+        return value.name[:-1]
+    return value.name

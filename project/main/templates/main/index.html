@@ -420,7 +420,7 @@ const responseButtons = document.querySelectorAll('.response-btn');
         const startDate = form.querySelector('#id_start_date').value;
         const endDate = form.querySelector('#id_end_date').value;
         
-        const baseUrl = "{% url 'search_parking_place' poi_slug='SLUG_PLACEHOLDER' %}".replace('SLUG_PLACEHOLDER', selectedPOI);
+        const baseUrl = "{% url 'search_parking_place' poi_slug='SLUG_PLACEHOLDER' %}#resultats".replace('SLUG_PLACEHOLDER', selectedPOI);
         const url = `${baseUrl}?start_date=${startDate}&end_date=${endDate}`;
         
         window.location.href = url;

@@ -2,6 +2,7 @@ from project import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Avg
 
 
 class CustomUserManager(BaseUserManager):
@@ -49,6 +50,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'birth_date']
+
+    @property
+    def average_rating(self):
+        """
+        Calcule la moyenne des étoiles pour cet utilisateur
+        Retourne 0 si aucun avis
+        """
+        average = self.avis_recus.aggregate(Avg('stars'))['stars__avg']
+        return average or 0
 
     def __str__(self):
         return f"{self.id} : {self.first_name} {self.last_name} - {self.email}"

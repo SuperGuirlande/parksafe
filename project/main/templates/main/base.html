@@ -29,6 +29,30 @@
 
 {% block extra_script %}
 {% endblock %}
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Sélectionne tous les liens qui commencent par # (liens d'ancrage)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Récupère l'ID de la cible depuis le href
+            const targetId = this.getAttribute('href');
+            
+            // Vérifie si l'élément cible existe
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+</script>
 </body>
 
 </html>

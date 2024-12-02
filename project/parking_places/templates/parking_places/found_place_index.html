@@ -9,17 +9,109 @@
       <h1 class="text-4xl md:text-5xl lg:text-6xl secondary font-extrabold text-center mb-10">
         Rechercher une Place
       </h1>
-
       {% include 'parking_places/dynamic_form.html' %}
     </div>
   </section>
 
   {% if poi %}
-  <section class="bg-gray-200 py-20 relative z-[0] poppins flex flex-col">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl sm:text-4xl md:text-5xl secondary font-bold text-center mb-12">
-        Places disponibles 
-      </h2>
+  <section class="bg-gray-200 pb-20 relative z-[0] poppins flex flex-col" id="resultats">
+    <div class="w-full bg-gray-100 py-16 px-3">
+
+        <div class="relative">
+            
+            <h2 class="text-3xl sm:text-4xl md:text-5xl secondary font-bold text-center mb-12">
+                {% if all_places %}
+                {{poi.category|remove_plural}} {{poi.city}}
+                {% else %}
+                Résultats de recherche
+                {% endif %}
+            </h2>
+            <div class="w-[50%] max-w-[300px] h-[2px] bg-slate-500 bottom-0 left-1/2 z-40 absolute translate-y-4 -translate-x-[50%]"></div>
+        </div>
+        <div class="flex w-full max-w-[1280px] justify-between mx-auto flex-wrap gap-5">
+            <div>
+                <h3 class="secondary text-xl sm:text-2xl md:text-3xl font-bold">
+                    &#x1F4A1; Astuce !
+                </h3>
+                <p class="pl-8 sm:pl-10 md:pl-12 text-base sm:text-lg md:text-xl max-w-xl my-3">
+                    N’hésitez pas a effectuer plusieurs demande de réservation pour augment les chance 
+                    d’une réponse positive
+                </p>
+            </div>
+       
+            <div class="flex flex-wrap mt-auto items-center gap-5 my-5">
+                <!-- Menu Trier par -->
+                <div class="relative my-auto">
+                    <button 
+                        class="flex py-1 px-5 bg-gray-50 rounded-xl border-2 border-[var(--secondary-blue)] secondary shadow-md hover:shadow-xl hover:bg-gray-100 hover:-translate-y-1 transition-all duration-200 ease-in-out"
+                        onclick="toggleDropdown('sortMenu')"
+                        class="flex items-center gap-2"
+                    >
+                        Trier par
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                        </svg>
+                    </button>
+                    
+                    <div id="sortMenu" class="hidden absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg z-50 min-w-48">
+                        <button onclick="updateFilters('sort', 'price_asc')" 
+                                class="block w-full text-left px-4 py-2 hover:bg-gray-50 {% if current_sort == 'price_asc' %}text-primary font-bold{% endif %}">
+                            Prix croissant
+                        </button>
+                        <button onclick="updateFilters('sort', 'price_desc')" 
+                                class="block w-full text-left px-4 py-2 hover:bg-gray-50 {% if current_sort == 'price_desc' %}text-primary font-bold{% endif %}">
+                            Prix décroissant
+                        </button>
+                        <button onclick="updateFilters('sort', 'rating')" 
+                                class="block w-full text-left px-4 py-2 hover:bg-gray-50 {% if current_sort == 'rating' %}text-primary font-bold{% endif %}">
+                            Mieux noté
+                        </button>
+                        {% if poi %}
+                        <button onclick="updateFilters('sort', 'distance')" 
+                                class="block w-full text-left px-4 py-2 hover:bg-gray-50 {% if current_sort == 'distance' %}text-primary font-bold{% endif %}">
+                            Plus proche
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            
+                <!-- Menu Filtrer par -->
+                <div class="relative">
+                    <button 
+                    class="flex py-1 px-5 bg-secondary rounded-xl border-2 border-[var(--secondary-blue)] text-white shadow-md hover:shadow-xl hover:bg-blue-900 hover:-translate-y-1 transition-all duration-200 ease-in-out"
+                        onclick="toggleDropdown('filterMenu')"
+                        class="flex items-center gap-2"
+                    >
+                        Filtrer par
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5" />
+                        </svg>
+                    </button>
+                    
+                    <div id="filterMenu" class="hidden absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg z-50 min-w-48">
+                        <button onclick="updateFilters('handicap', '{% if not current_filters.handicap %}true{% else %}false{% endif %}')"
+                                class="block w-full text-left px-4 py-2 hover:bg-gray-50 {% if current_filters.handicap %}text-primary font-bold{% endif %}">
+                            Accès Mobilité Réduite
+                        </button>
+                        <button onclick="updateFilters('electric', '{% if not current_filters.electric %}true{% else %}false{% endif %}')"
+                                class="block w-full text-left px-4 py-2 hover:bg-gray-50 {% if current_filters.electric %}text-primary font-bold{% endif %}">
+                            Recharge électrique
+                        </button>
+                        <button onclick="updateFilters('navette', '{% if not current_filters.navette %}true{% else %}false{% endif %}')"
+                                class="block w-full text-left px-4 py-2 hover:bg-gray-50 {% if current_filters.navette %}text-primary font-bold{% endif %}">
+                            Navette Incluse
+                        </button>
+                        <button onclick="updateFilters('navette_nocturne', '{% if not current_filters.navette_nocturne %}true{% else %}false{% endif %}')"
+                                class="block w-full text-left px-4 py-2 hover:bg-gray-50 {% if current_filters.navette_nocturne %}text-primary font-bold{% endif %}">
+                            Navette nocturne
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 mt-10">
 
       <div class="max-w-5xl mx-auto space-y-8 flex flex-col">
         {% for place in all_places %}
@@ -171,11 +263,104 @@
             const startDate = form.querySelector('#id_start_date').value;
             const endDate = form.querySelector('#id_end_date').value;
             
-            const baseUrl = "{% url 'search_parking_place' poi_slug='SLUG_PLACEHOLDER' %}".replace('SLUG_PLACEHOLDER', selectedPOI);
+            const baseUrl = "{% url 'search_parking_place' poi_slug='SLUG_PLACEHOLDER' %}".replace('SLUG_PLACEHOLDER', selectedPOI) + "#resultats";
             const url = `${baseUrl}?start_date=${startDate}&end_date=${endDate}`;
             
             window.location.href = url;
             return false;
         }
+
+        function smoothScrollToHash() {
+    // Récupère le hash et enlève les paramètres de requête
+    const hash = window.location.hash.split('?')[0];
+    
+    if (hash) {
+        // Attend un court instant pour s'assurer que le DOM est chargé
+        setTimeout(() => {
+            const element = document.querySelector(hash);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }, 100);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Défilement au chargement de la page
+    smoothScrollToHash();
+    
+    // Gestion du défilement pour les liens d'ancrage
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').split('?')[0];
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                // Met à jour l'URL sans recharger la page
+                history.pushState(null, '', this.getAttribute('href'));
+            }
+        });
+    });
+});
+
+// Gestion du retour arrière du navigateur
+window.addEventListener('popstate', function() {
+    smoothScrollToHash();
+});
         </script>
+
+<script>
+    function toggleDropdown(menuId) {
+        document.querySelectorAll('[id$="Menu"]').forEach(menu => {
+            if (menu.id !== menuId) {
+                menu.classList.add('hidden');
+            }
+        });
+        const menu = document.getElementById(menuId);
+        menu.classList.toggle('hidden');
+    }
+    
+    function updateFilters(key, value) {
+    // Récupérer tous les paramètres actuels
+    const params = new URLSearchParams(window.location.search);
+    
+    // Si les dates ne sont pas dans l'URL principale, les chercher après #resultats
+    if (window.location.hash.includes('?')) {
+        const hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
+        // Récupérer les dates du hash et les ajouter aux paramètres principaux
+        if (hashParams.has('start_date')) {
+            params.set('start_date', hashParams.get('start_date'));
+        }
+        if (hashParams.has('end_date')) {
+            params.set('end_date', hashParams.get('end_date'));
+        }
+    }
+    
+    // Mettre à jour ou ajouter le nouveau paramètre
+    params.set(key, value);
+    
+    // Construire la nouvelle URL avec tous les paramètres avant le #resultats
+    const newUrl = `${window.location.pathname}?${params.toString()}#resultats`;
+    
+    // Rediriger vers la nouvelle URL
+    window.location.href = newUrl;
+}
+    
+    // Fermer les menus si on clique en dehors
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.relative')) {
+            document.querySelectorAll('[id$="Menu"]').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        }
+    });
+    </script>
         {% endblock %}
