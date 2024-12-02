@@ -4,46 +4,41 @@
 {% block account_title %}Ajouter une étape | ParkSafe{% endblock %}
 
 {% block account_content %}
-<div class="flex min-h-screen">
-    {% include 'accounts/account_sidebar.html' %}
-    
-    <main class="mx-auto max-w-[720px] w-full poppins py-12 px-6">
-        <h1 class="text-4xl font-bold primary mb-12">
+    <main class="mx-auto max-w-[720px] w-full poppins py-8 sm:py-12 px-4 sm:px-6">
+        <h1 class="text-3xl sm:text-4xl font-bold secondary mb-8 sm:mb-12 mt-10">
             {% if item %}Modifier{% else %}Ajouter{% endif %} une étape
         </h1>
 
-        <form method="POST" class="flex flex-col gap-6">
+        <form method="POST" class="flex flex-col gap-4 sm:gap-6">
             {% csrf_token %}
             
             <div class="flex flex-col gap-2">
-                <label class="text-lg font-medium">Titre</label>
+                <label class="text-base sm:text-lg font-medium">Titre</label>
                 <input type="text" 
                        name="title" 
                        value="{{ item.title|default:'' }}"
-                       class="p-3 border rounded-lg"
+                       class="w-full p-2 sm:p-3 border rounded-lg"
                        required>
             </div>
 
             <div class="flex flex-col gap-2">
-                <label class="text-lg font-medium">Contenu</label>
+                <label class="text-base sm:text-lg font-medium">Contenu</label>
                 <textarea name="content" 
                           rows="6" 
-                          class="p-3 border rounded-lg"
+                          class="w-full p-2 sm:p-3 border rounded-lg resize-y"
                           required>{{ item.content|default:'' }}</textarea>
             </div>
 
-            <div class="flex gap-4 mt-6">
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
                 <button type="submit" 
-                        class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        class="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors">
                     {% if item %}Modifier{% else %}Ajouter{% endif %}
                 </button>
                 <a href="{% url 'devenir_hote_index' %}" 
-                   class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
+                   class="w-full sm:w-auto text-center px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
                     Annuler
                 </a>
             </div>
         </form>
     </main>
-</div>
 {% endblock %}
-

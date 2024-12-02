@@ -9,18 +9,18 @@
 
 
 {% block content %}
-<main class="mx-auto">
+<main class="mx-auto px-3 sm:px-0">
     <section class="flex py-20">
         <div class="container mx-auto">
-            <h1 class="poppins font-bold primary text-6xl text-center">
-                Ajouter / Modifier Q&R
+            <h1 class="poppins font-bold primary text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center">
+                Ajouter <span class="secondary drop-shadow-md">/ Modifier</span> Q&R
             </h1>
 
-            <form action="#" method="post" class="max-w-xl mx-auto my-20 flex flex-col">
+            <form action="#" method="post" class="w-full max-w-xl mx-auto my-10 md:my-20 flex flex-col">
                 {% csrf_token %}
                 {% for field in form %}
-                <div class='flex flex-col mb-3'>
-                    <p class="text-xl poppins">{{ field.label }}</p>
+                <div class='flex flex-col mb-4 gap-2'>
+                    <p class="text-base sm:text-lg md:text-xl poppins">{{ field.label }}</p>
                     {{ field }}
                     <p class="text-lg font-semibold text-red-500 poppins">{{ field.errors }}</p>
 

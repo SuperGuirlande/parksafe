@@ -112,8 +112,12 @@ def place_created_confirm(request):
 
 
 def search_parking_place_index(request, poi_slug=None):
-    all_places = ParkingPlace.objects.filter(admin_accepted=True, deleted=False).exclude(user=request.user).order_by("-created_on")
-    radius_km = 15  # Rayon fixe de 20km
+    if request.user.is_authenticated:
+        all_places = ParkingPlace.objects.filter(admin_accepted=True, deleted=False).exclude(user=request.user).order_by("-created_on")
+    else:
+        all_places = ParkingPlace.objects.filter(admin_accepted=True, deleted=False).order_by("-created_on")
+
+    radius_km = 15
     form = None
     poi = None
     commission = 20  # Commission par défaut

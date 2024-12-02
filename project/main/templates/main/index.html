@@ -214,7 +214,7 @@
                             </button>
                         {% endif %}
     
-                        <div id="avisContainer" class="flex transition-transform duration-300 gap-3 sm:gap-4 lg:gap-5 {% if not avis_recus.count > 3 %} justify-center{% endif %}">
+                        <div id="avisContainer" class="flex transition-transform duration-300 gap-3 sm:gap-4 lg:gap-5 {% if not avis_recus.count > 3 %} lg:justify-center{% endif %}">
                             {% for avis in avis_recus %}
                                 <div class="avis-card flex-shrink-0 w-[280px] sm:w-[300px] lg:w-[350px] xl:w-[400px]">
                                     <!-- Carte principale avec padding-bottom pour la réponse -->

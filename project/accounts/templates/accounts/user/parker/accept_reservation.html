@@ -4,30 +4,29 @@
 
 {% block account_title %}Réservations en attente | ParkSafe{% endblock %}
 
-{% block account_head %}
-{% endblock %}
+{% block account_head %}{% endblock %}
 
 {% block account_content %}
-<div class="flex gap-20 min-h-screen poppins">
-
+<div class="flex flex-col lg:flex-row gap-8 lg:gap-20 min-h-screen poppins">
     {% include 'accounts/account_sidebar.html' %}
-    <main class="basis-[1080px] shrink grow-0 mx-auto flex flex-col">
-        <div class="w-full max-w-[1080px] mx-auto text-center py-20 flex flex-col">
-            <h1 class="text-5xl primary text-center font-semibold">
+    
+    <main class="w-full lg:basis-[1080px] lg:shrink lg:grow-0 mx-auto flex flex-col px-4 lg:px-0">
+        <div class="w-full max-w-[1080px] mx-auto text-center py-10 lg:py-20 flex flex-col">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl primary text-center font-semibold">
                 Accepter la réservation
             </h1>
-            <p class="text-xl font-light text-slate-600 my-5">
+            <p class="text-lg sm:text-xl font-light text-slate-600 my-4 lg:my-5">
                 Après acceptation de votre part, le client sera invité à payer la réservation.
             </p>
-            <div class="flex mx-auto gap-8 items-center">
-                <a href="{% url 'parker_confirm_accept' reservation.token %}" class="text-center">
-                    <button class="py-2 px-3 bg-green-500 hover:bg-green-600 uppercase text-white
-                        shadow-lg hover:shadow-2xl rounded-lg transition-all duration-300 ease-in-out text-2xl">
+            <div class="flex flex-col sm:flex-row mx-auto gap-4 sm:gap-8 items-center">
+                <a href="{% url 'parker_confirm_accept' reservation.token %}" class="w-full sm:w-auto text-center">
+                    <button class="w-full sm:w-auto py-2 px-3 bg-green-500 hover:bg-green-600 uppercase text-white
+                        shadow-lg hover:shadow-2xl rounded-lg transition-all duration-300 ease-in-out text-xl sm:text-2xl">
                         Accepter
                     </button>
                 </a>
-                <a href="{% url 'parker_reservation_waiting' %}" class="text-center">
-                    <button class="py-2 px-3 bg-secondary hover:bg-blue-700 uppercase text-white
+                <a href="{% url 'parker_reservation_waiting' %}" class="w-full sm:w-auto text-center">
+                    <button class="w-full sm:w-auto py-2 px-3 bg-secondary hover:bg-blue-700 uppercase text-white
                         shadow-lg hover:shadow-2xl rounded-lg transition-all duration-300 ease-in-out">
                         Retour
                     </button>
@@ -35,26 +34,26 @@
             </div>
         </div>
 
-        <div class="bg-slate-100 shadow-xl py-10 px-12 flex gap-6">
+        <div class="bg-slate-100 shadow-xl py-6 lg:py-10 px-4 lg:px-12 flex flex-col sm:flex-row gap-6">
             <!-- MINIATURE -->
-            <div class="w-64 h-64 overflow-hidden">
-                <img src="{{ reservation.place.thumbnail.url }}" alt="" class="object-cover object-center">
+            <div class="w-full sm:w-64 h-48 sm:h-64 overflow-hidden rounded-lg">
+                <img src="{{ reservation.place.thumbnail.url }}" alt="" class="w-full h-full object-cover object-center">
             </div>
             <!-- TEXT -->
-            <div class="flex flex-col gap-5">
-                <h2 class="secondary text-3xl font-normal">
+            <div class="flex flex-col gap-4 lg:gap-5">
+                <h2 class="secondary text-2xl lg:text-3xl font-normal">
                     Demande de <span class="font-semibold">{{ reservation.name }}</span>
                 </h2>
-                <p class="text-xl text-slate-800">
-                    <b>Départ:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}} |
-                    <b>Retour:</b> {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}
-
-                </p>
+                <div class="text-lg lg:text-xl text-slate-800 flex flex-col sm:flex-row gap-2 sm:gap-4">
+                    <p><b>Départ:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}}</p>
+                    <p class="hidden sm:block">|</p>
+                    <p><b>Retour:</b> {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}</p>
+                </div>
                 <p class="text-md">
                     {{reservation.message}}
                 </p>
 
-                <div class="space-y-2 text-gray-700 text-md">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700 text-md mt-2">
                     <p><b>Durée : </b>{{ reservation.days }} jours</p>
                     <p><b>Nb de véhicules : </b>{{ reservation.vehicules_number }}</p>
                     <p><b>Nb de passagers : </b>{{ reservation.passengers }}</p>
@@ -62,7 +61,6 @@
                 </div>
             </div>
         </div>
-
     </main>
 </div>
 {% endblock %}

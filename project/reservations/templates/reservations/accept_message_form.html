@@ -12,42 +12,47 @@
         gap: 10px;
     }
     form p label {
-        font-size: 1.2rem;
+        font-size: 1.125rem;
         font-weight: 600;
+    }
+    @media (max-width: 640px) {
+        form p label {
+            font-size: 1rem;
+        }
     }
 </style>
 {% endblock %}
 
 {% block account_content %}
-<main class="flex flex-col poppins">
-    <div class="w-full max-w-[850px] mx-auto py-20 flex flex-col">
-        <h1 class="text-5xl primary text-center font-semibold">
+<main class="flex flex-col poppins px-4 sm:px-6">
+    <div class="w-full max-w-[850px] mx-auto py-10 sm:py-20 flex flex-col">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl primary text-center font-semibold mt-10">
             Accepter la réservation
         </h1>
-        <p class="text-xl font-light text-slate-600 my-5 text-center">
+        <p class="text-lg sm:text-xl font-light text-slate-600 my-4 sm:my-5 text-center">
             Après acceptation de votre part, le client sera invité à payer la réservation.
         </p>
 
-        <div class="bg-gray-200 shadow-xl py-6 px-8 flex gap-8 mt-12 items-center rounded-2xl">
+        <div class="bg-gray-200 shadow-xl py-6 px-4 sm:px-8 flex flex-col sm:flex-row gap-6 sm:gap-8 mt-8 sm:mt-12 items-start sm:items-center rounded-2xl">
             <!-- MINIATURE -->
-            <div class="w-64 h-64 overflow-hidden rounded-xl">
+            <div class="w-full sm:w-64 h-48 sm:h-64 overflow-hidden rounded-xl">
                 <img src="{{ reservation.place.thumbnail.url }}" alt="" class="object-cover object-center h-full w-full">
             </div>
             <!-- TEXT -->
-            <div class="flex flex-col gap-5">
-                <h2 class="secondary text-3xl font-normal">
+            <div class="flex flex-col gap-4 sm:gap-5">
+                <h2 class="secondary text-2xl sm:text-3xl font-normal">
                     Demande de <span class="font-semibold">{{ reservation.client.first_name }} {{ reservation.client.last_name.0 }}.</span>
                 </h2>
-                <p class="text-xl text-slate-800">
-                    <b>Départ:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}} |
-                    <b>Retour:</b> {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}
-
-                </p>
+                <div class="text-lg sm:text-xl text-slate-800 flex flex-col sm:flex-row gap-2">
+                    <p><b>Départ:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}}</p>
+                    <span class="hidden sm:inline">|</span>
+                    <p><b>Retour:</b> {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}</p>
+                </div>
                 <p class="text-md">
                     {{reservation.message}}
                 </p>
 
-                <div class="space-y-2 text-gray-700 text-md">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-700 text-md">
                     <p><b>Durée : </b>{{ reservation.days }} jours</p>
                     <p><b>Nb de véhicules : </b>{{ reservation.vehicules_number }}</p>
                     <p><b>Nb de passagers : </b>{{ reservation.passengers }}</p>
@@ -57,16 +62,16 @@
         </div>
 
         <!-- FORM -->
-        <form action="" method="POST" class="mx-auto w-full px-3 max-w-[500px] my-10 flex flex-col">
+        <form action="" method="POST" class="mx-auto w-full px-3 max-w-[500px] my-8 sm:my-10 flex flex-col">
             {% csrf_token %}
             {{form.as_p}}
-            <div class="flex mx-auto gap-8 items-center mt-5">
-                <a href="{% url 'parker_index' %}" class="py-2 px-3 bg-secondary hover:bg-blue-700 uppercase text-white text-xl
+            <div class="flex flex-col sm:flex-row mx-auto gap-4 sm:gap-8 items-center mt-5">
+                <a href="{% url 'parker_index' %}" class="w-full sm:w-auto py-2 px-3 bg-secondary hover:bg-blue-700 uppercase text-white text-lg sm:text-xl
                     shadow-lg hover:shadow-2xl rounded-lg transition-all duration-300 ease-in-out text-center">
                     Retour
                 </a>
-                <button type="submit" class="py-2 px-3 bg-green-500 hover:bg-green-600 uppercase text-white
-                    shadow-lg hover:shadow-2xl rounded-lg transition-all duration-300 ease-in-out text-2xl">
+                <button type="submit" class="w-full sm:w-auto py-2 px-3 bg-green-500 hover:bg-green-600 uppercase text-white
+                    shadow-lg hover:shadow-2xl rounded-lg transition-all duration-300 ease-in-out text-xl sm:text-2xl">
                     Accepter
                 </button>
             </div>

@@ -17,12 +17,12 @@
             <!-- LEFT -->
             <div class='w-fit items-center justify-center my-auto'>
                 <!-- Nom -->
-                <h1 class='text-center text-4xl font-extrabold text-blue-500'>
+                <h1 class='text-center text-2xl sm:text-3xl md:text-4xl font-extrabold secondary drop-shadow-md'>
                     {{ user.first_name }} {{ user.last_name }}
                 </h1>
                 <!-- Logout -->
                 <a href="{% url 'logout' %}" alt="Se déconnecter">
-                    <p class="text-xl underline text-center decoration-1 underline-offset-4 mt-3 text-slate-700">
+                    <p class="text-base sm:text-md md:text-xl underline text-center decoration-1 underline-offset-4 mt-3 text-slate-700">
                         Se déconnecter
                     </p>
                 </a>
@@ -31,7 +31,7 @@
             <div class='w-fit h-fit items-center justify-center'>
                 <a href="{% url 'change_profil_pic' %}" alt="Changer d'image de profil utilisateur">
                     <div id="account-pp"
-                        class="mx-auto overflow-hidden w-32 h-32 relative z-[1]
+                        class="mx-auto overflow-hidden w-24 sm:w-28 md:w-32 h-24 sm:h-28 md:h-32 relative z-[1]
                     after:absolute after:w-full after:h-full after:left-0 after:top-0 after:z-[2] after:bg-slate-50 after:bg-opacity-0 hover:after:bg-opacity-30">
                         <img src="{{ user.profil_pic.url }}"
                             alt="Photo de profil de {{user.first_name}} {{user.last_name}}" class="rounded-full">
@@ -52,68 +52,66 @@
     </p>
     {% del_session_message %}
     {% endif %}
-
+    </div>
 
     <!-- INFORMATiONS -->
-    <section class="bg-gray-200 py-20 flex flex-col">
+    <section class="bg-gray-200 py-20 flex flex-col w-full">
             <!-- INFOS PERSOS -->
-            <div class='flex flex-col gap-6 w-full max-w-[500px] mx-auto'>
+            <div class='flex flex-col gap-6 w-full max-w-[600px] mx-auto px-5'>
                 <h1 class='secondary font-bold text-2xl md:text-3xl lg:text-4xl text-left drop-shadow-lg'>
                     Informations personnelles
                 </h1>
-                <hr class='my-6'>
-
                 
                 <!-- NOM -->
-                <div class="flex justify-between text-xl leading-loose">
+                <div class="flex justify-between text-base sm:text-lg md:text-xl leading-loose mt-5">
                     <p class="secondary font-semibold">Nom :</p><p>{{user.last_name}}</p>
                 </div>
                 <!-- PRENOM -->
-                <div class="flex justify-between text-xl leading-loose">
+                <div class="flex justify-between text-base sm:text-lg md:text-xl leading-loose">
                     <p class="secondary font-semibold">Prénom(s) :</p><p>{{user.first_name}}</p>
                 </div>
                 <!-- EMAIL -->
-                <div class="flex justify-between text-xl leading-loose">
+                <div class="flex justify-between text-sm sm:text-lg md:text-xl leading-loose">
                     <p class="secondary font-semibold">Email :</p><p>{{user.email}}</p>
                 </div>
                 <!-- TELEPHONE -->
-                <div class="flex justify-between text-xl leading-loose">
+                <div class="flex justify-between text-base sm:text-lg md:text-xl leading-loose">
                     <p class="secondary font-semibold">N° de téléphone :</p>
                     
                     {% if user.phone %}
                     <div class="text-right">
                         <p>{{user.phone}}</p>
                         <a href="{% url 'change_mobile_number' %}">
-                            <p class="underline text-blue-500">Changer le numéro</p>
+                            <p class="underline text-blue-500 text-sm sm:text-base">Changer le numéro</p>
                         </a>
                     </div>
                     {% else %}
                         <a href="{% url 'change_mobile_number' %}">
-                            <p class="underline text-blue-500">Renseigner un numéro</p>
+                            <p class="underline text-blue-500 text-sm sm:text-base">Renseigner un numéro</p>
                         </a>
                     {% endif %}
                 </div>
                 <!-- NAISSANCE -->
-                <div class="flex justify-between text-xl leading-loose">
+                <div class="flex justify-between text-base sm:text-lg md:text-xl leading-loose">
                     <p class="secondary font-semibold">Date de naissance :</p><p>{{user.birth_date}}</p>
                 </div>
                 <!-- PROFILPIC -->
-                <div class="flex flex-wrap justify-between text-xl leading-loose">
+                <div class="flex flex-wrap justify-between text-base sm:text-lg md:text-xl leading-loose">
                     <p class="secondary font-semibold">Photo de profil :</p>
 
                     {% if user.profil_pic %}
                     <div class="flex flex-col justify-end">
 
-                        <div class="ml-auto h-24 w-24 overflow-hidden rounded-full">
+                        <div class="ml-auto h-16 sm:h-20 md:h-24 w-16 sm:w-20 md:w-24 overflow-hidden rounded-full">
                             <img src="{{user.profil_pic.url}}" alt="" class="w-full h-full object-cover object-center">
                         </div>
                         <a href="{% url 'change_profil_pic' %}">
-                            <p class="underline text-blue-500">Changer photo de profil</p>
+                            <p class="underline text-blue-500 text-sm sm:text-base">Changer photo de profil</p>
                         </a>
                     </div>
                     {% else %}
                         <a href="{% url 'change_profil_pic' %}">
-                            <p class="underline text-blue-500">Uploader une photo de profil</p>
+                            <p class="underline text-blue-500 text-sm sm:text-base">Uploader une photo de profil</p>
                         </a>
                     {% endif %}
                 </div>

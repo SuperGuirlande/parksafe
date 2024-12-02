@@ -51,6 +51,11 @@
         height:30px;
         border-radius: 50%;
     }
+
+    input#id_thumbnail {
+        display: flex;
+        flex-wrap: wrap;
+    }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
 
@@ -75,18 +80,18 @@ select.phone-input {
 {% block content %}
 
 <div class="my-auto mx-auto poppins py-12 w-full max-w-[720px]">
-    <h1 class="primary text-9xl mt-10 drop-shadow-lg text-center jomhuria" id="proposer-une-place">
+    <h1 class="primary text-7xl md:text-8xl lg:text-9xl mt-10 drop-shadow-lg text-center jomhuria" id="proposer-une-place">
         <span class="secondary">Park</span>Safe
     </h1>
-    <h2 class="text-4xl font-medium secondary text-center uppercase -mt-5">
+    <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium secondary text-center uppercase -mt-5">
         Louer mes places de parking
     </h2>
 
-    <form method="post" enctype="multipart/form-data" class="w-full max-w-[500px] mx-auto flex flex-col">
+    <form method="post" enctype="multipart/form-data" class="w-full max-w-[500px] mx-auto flex flex-col px-3 sm:px-0">
         {% csrf_token %}
         
         {% comment %} PRIX {% endcomment %}
-        <div class="flex flex-col mt-8 text-lg w-fit gap-2">
+        <div class="flex flex-col mt-8 text-base sm:text-lg w-fit gap-2">
             <p class="font-semibold secondary mt-5">{{ form.price.label }}</p>
             <div class="w-fit">
                 {{ form.price }}
@@ -96,7 +101,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} NOMBRE DE PLACES {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg w-fit gap-2">
+        <div class="flex flex-col mt-5 text-base sm:text-lg w-fit gap-2">
             <p class="font-semibold secondary mt-5">{{ form.places.label }}</p>
             <div class="w-fit">
                 {{ form.places }}
@@ -106,7 +111,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} ADRESSE COMPLETE {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <p class="font-semibold secondary mt-5">{{ form.address.label }}</p>
             {{ form.address }}
             <div class="relative">
@@ -117,7 +122,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} DESCRIPTION {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <p class="font-semibold secondary mt-5">{{ form.description.label }}</p>
             {{ form.description }}
             {% for error in form.description.errors %}
@@ -125,7 +130,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} MINIATURE {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <p class="font-semibold secondary mt-5">{{ form.thumbnail.label }}</p>
             <p class='text-sm text-slate-500 -mt-2'>
                 Vous pourrez ajouter d'autres photos par la suite
@@ -136,7 +141,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} TYPES DE VEHICULES {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <p class="font-semibold secondary mt-5">{{ form.vehicles_types.label }}</p>
             {{ form.vehicles_types }}
             {% for error in form.vehicles_types.errors %}
@@ -144,7 +149,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} DISTANCE A PIED {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <p class="font-semibold secondary mt-5">{{ form.distance_to_transport.label }}</p>
             {{ form.distance_to_transport }}
             {% for error in form.distance_to_transport.errors %}
@@ -152,7 +157,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} NAVETTE {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <div class='flex gap-5 flex-row-reverse items-center'>
                 <p class="font-semibold secondary mt-5">{{ form.navette_possible.label }}</p>
                 {{ form.navette_possible }}
@@ -162,7 +167,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} PRIX NAVETTE {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-fit">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-fit">
             <p class="font-semibold secondary mt-5">{{ form.navette_price.label }}</p>
             <div class="w-fit">{{ form.navette_price }}</div>
             {% for error in form.navette_price.errors %}
@@ -170,7 +175,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} NAVETTE NOCTURNE {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <div class='flex gap-5 flex-row-reverse items-center'>
                 <p class="font-semibold secondary mt-5">{{ form.navette_nocturne_possible.label }}</p>
                 {{ form.navette_nocturne_possible }}
@@ -180,7 +185,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} PRIX NAVETTE NOCTURNE {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-fit">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-fit">
             <p class="font-semibold secondary mt-5">{{ form.navette_nocturne_price.label }}</p>
             <div class="w-fit">{{ form.navette_nocturne_price }}</div>
             {% for error in form.navette_nocturne_price.errors %}
@@ -188,7 +193,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} ACCES HANDICAPE {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <div class='flex gap-5 flex-row items-center'>
                 {{ form.handicaped_place }}
                 <div class='flex flex-col'>
@@ -201,7 +206,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} ELECTRIQUE {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <div class='flex gap-5 flex-row-reverse items-center'>
                 <p class="font-semibold secondary mt-5">{{ form.electric_vehicle.label }}</p>
                 {{ form.electric_vehicle }}
@@ -211,7 +216,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} DUREE MINIMALE {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <p class="font-semibold secondary mt-5">{{ form.minimal_time.label }}</p>
             <p class='w-fit'>{{ form.minimal_time }}</p>
             {% for error in form.minimal_time.errors %}
@@ -219,7 +224,7 @@ select.phone-input {
             {% endfor %}
         </div>
         {% comment %} TELEPHONE {% endcomment %}
-        <div class="flex flex-col mt-5 text-lg gap-2 w-full">
+        <div class="flex flex-col mt-5 text-base sm:text-lg gap-2 w-full">
             <p class="font-semibold secondary mt-5">{{ form.phone.label }}</p>
             {{ form.phone }}
             {% for error in form.phone.errors %}
@@ -227,7 +232,7 @@ select.phone-input {
             {% endfor %}
         </div>        
 
-        <button type="submit" class="my-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-5 text-xl rounded-2xl mx-auto">
+        <button type="submit" class="my-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-5 text-base sm:text-lg md:text-xl rounded-2xl mx-auto">
             Proposer la place
         </button>
     </form>

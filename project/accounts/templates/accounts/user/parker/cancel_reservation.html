@@ -4,62 +4,94 @@
 
 {% block account_title %}Réservations en attente | ParkSafe{% endblock %}
 
-{% block account_head %}
-{% endblock %}
+{% block account_head %}{% endblock %}
 
 {% block account_content %}
-<main class="basis-[1080px] shrink grow-0 mx-auto flex flex-col">
-    <div class="w-full max-w-[1080px] mx-auto text-center py-20 flex flex-col">
-        <h1 class="text-5xl primary text-center font-semibold">
+<main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 poppins">
+    <!-- Section Confirmation -->
+    <section class="max-w-3xl mx-auto text-center py-12 space-y-6">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl primary font-semibold leading-tight">
             Confirmer l'annulation
         </h1>
-        <p class="text-xl font-light text-slate-600 my-5">
-            Êtes vous certain de vouloir refuser cette reservation ?
+        <p class="text-lg sm:text-xl text-slate-600 font-light max-w-2xl mx-auto">
+            Êtes-vous certain de vouloir refuser cette réservation ?
         </p>
-        <div class="flex mx-auto gap-8">
-            <a href="{% url 'parker_confirm_cancel' reservation.token %}" class="text-center">
-                <button class="py-2 px-3 bg-red-500 hover:bg-red-600 uppercase text-white
-                    shadow-lg hover:shadow-2xl rounded-lg transition-all duration-300 ease-in-out">
-                    Annuler la reservation
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mt-8">
+            <a href="{% url 'parker_confirm_cancel' reservation.token %}" class="w-full sm:w-auto">
+                <button class="w-full sm:w-auto py-3 px-6 bg-red-500 hover:bg-red-600 text-sm sm:text-base 
+                    uppercase text-white rounded-lg shadow-lg hover:shadow-2xl 
+                    transition-all duration-300 ease-in-out">
+                    Annuler la réservation
                 </button>
             </a>
-            <a href="{% url 'parker_index' %}" class="text-center">
-                <button class="py-2 px-3 bg-secondary hover:bg-blue-700 uppercase text-white
-                    shadow-lg hover:shadow-2xl rounded-lg transition-all duration-300 ease-in-out">
+            <a href="{% url 'parker_index' %}" class="w-full sm:w-auto">
+                <button class="w-full sm:w-auto py-3 px-6 bg-secondary hover:bg-blue-700 text-sm sm:text-base
+                    uppercase text-white rounded-lg shadow-lg hover:shadow-2xl
+                    transition-all duration-300 ease-in-out">
                     Retour
                 </button>
             </a>
         </div>
-    </div>
+    </section>
 
-    <div class="bg-slate-100 shadow-xl py-10 px-12 flex gap-6">
-        <!-- MINIATURE -->
-        <div class="w-64 h-64 overflow-hidden">
-            <img src="{{ reservation.place.thumbnail.url }}" alt="" class="object-cover object-center">
-        </div>
-        <!-- TEXT -->
-        <div class="flex flex-col gap-5">
-            <h2 class="secondary text-3xl font-normal">
-                Demande de <span class="font-semibold">{{ reservation.name }}</span>
-            </h2>
-            <p class="text-xl text-slate-800">
-                <b>Départ:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}} |
-                <b>Retour:</b> {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}
+    <!-- Section Détails -->
+    <section class="bg-white  rounded-2xl shadow-xl mt-8">
+        <div class="flex flex-col md:flex-row gap-8 p-6 md:p-8">
+            <!-- Image -->
+            <div class="w-full md:w-64 h-64 rounded-xl overflow-hidden flex-shrink-0">
+                <img src="{{ reservation.place.thumbnail.url }}" 
+                     alt="Photo du parking" 
+                     class="w-full h-full object-cover object-center">
+            </div>
 
-            </p>
-            <p class="text-md">
-                {{reservation.message}}
-            </p>
+            <!-- Informations -->
+            <div class="flex flex-col gap-6 flex-grow">
+                <h2 class="text-2xl sm:text-3xl secondary font-normal">
+                    Demande de <span class="font-semibold">{{ reservation.name }}</span>
+                </h2>
 
-            <div class="space-y-2 text-gray-700 text-md">
-                <p><b>Durée : </b>{{ reservation.days }} jours</p>
-                <p><b>Nb de véhicules : </b>{{ reservation.vehicules_number }}</p>
-                <p><b>Nb de passagers : </b>{{ reservation.passengers }}</p>
-                <p><b>Revenus :</b> {{ reservation.price }} €</p>
+                <!-- Dates -->
+                <div class="space-y-2 text-slate-700 ">
+                    <p class="text-lg sm:text-xl flex flex-col sm:flex-row gap-2 sm:gap-4">
+                        <span class="flex items-center gap-2">
+                            <strong>Départ:</strong> 
+                            {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}}
+                        </span>
+                        <span class="hidden sm:inline">|</span>
+                        <span class="flex items-center gap-2">
+                            <strong>Retour:</strong> 
+                            {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}
+                        </span>
+                    </p>
+                </div>
+
+                <!-- Message -->
+                <p class="text-slate-600">
+                    {{reservation.message}}
+                </p>
+
+                <!-- Détails -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-slate-700">
+                    <p class="flex items-center gap-2">
+                        <strong>Durée:</strong> 
+                        <span>{{ reservation.days }} jours</span>
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <strong>Véhicules:</strong> 
+                        <span>{{ reservation.vehicules_number }}</span>
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <strong>Passagers:</strong> 
+                        <span>{{ reservation.passengers }}</span>
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <strong>Revenus:</strong> 
+                        <span>{{ reservation.price }} €</span>
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
-
+    </section>
 </main>
 {% endblock %}
 
