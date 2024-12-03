@@ -3,36 +3,14 @@
 </h1>
 <div class="flex flex-wrap justify-center gap-6 w-full max-w-[1500px] mx-auto text-center my-12 px-4">
     <!-- Parking Economique -->
-    <div class="bg-white shadow-md py-10 px-6 md:py-10 md:px-10 rounded-lg flex-1 basis-[300px] max-w-[400px] flex flex-col items-center">
+     {% for item in pq_items %}
+    <div class="bg-white shadow-lg pt-8 pb-12 px-6 md:py-10 md:px-10 rounded-2xl grow shrink-0 basis-[320px] sm:basis-[420px] max-w-[400px] flex flex-col items-center">
         <h3 class="my-6 poppins text-xl sm:text-2xl md:text-3xl font-bold secondary">
-            Parking Économique
+            {{item.title}}
         </h3>
         <p class="text-base sm:text-lg md:text-xl poppins">
-            Ne payez plus le prix fort pour stationner près de l'aéroport.
-            <br><br>
-            Trouvez des places de parking proposées par des hôtes locaux, à des tarifs bien plus abordables que ceux des parkings traditionnels.
+            {{item.content}}
         </p>
     </div>
-    <!-- Annulation gratuite -->
-    <div class="bg-white shadow-md py-10 px-6 md:py-10 md:px-10 rounded-lg flex-1 basis-[300px] max-w-[400px]">
-        <h3 class="my-6 poppins text-xl sm:text-2xl md:text-3xl font-bold secondary">
-            Annulation gratuite
-        </h3>
-        <p class="text-base sm:text-lg md:text-xl poppins">
-            Réservez en toute sérénité ! Grâce à notre politique d'annulation gratuite, vous pouvez modifier ou annuler votre réservation sans frais, jusqu'à 24 heures avant l'heure prévue.
-            <br><br>
-            Profitez de la flexibilité dont vous avez besoin pour voyager l'esprit tranquille.
-        </p>
-    </div>
-    <!-- Sécurité et tranquillité -->
-    <div class="bg-white shadow-md py-10 px-6 md:py-10 md:px-10 rounded-lg flex-1 basis-[300px] max-w-[400px]">
-        <h3 class="my-6 poppins text-xl sm:text-2xl md:text-3xl font-bold secondary">
-            Sécurité et tranquillité
-        </h3>
-        <p class="text-base sm:text-lg md:text-xl poppins">
-            Nos hôtes sont vérifiés pour vous garantir une expérience de stationnement sûre et fiable.
-            <br><br>
-            Garez-vous en toute confiance dans des lieux sécurisés et surveillés, directement chez des résidents.
-        </p>
-    </div>
+    {% endfor %}
 </div>

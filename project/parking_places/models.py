@@ -133,6 +133,24 @@ class PourquoiDevenirHoteItem(models.Model):
         return f"N°{self.ordre} - {self.title}"
     
 
+class CommentCaMarcheItem(models.Model):
+    ordre = models.IntegerField(verbose_name="Ordre dans la section")
+    title = models.CharField(max_length=255, verbose_name="Titre de la section")
+    content = models.TextField(verbose_name="Contenu textuel de la section")
+
+    def __str__(self):
+        return f"N°{self.ordre} - {self.title}"
+    
+
+class PourquoiParksafeItem(models.Model):
+    ordre = models.IntegerField(verbose_name="Ordre dans la section")
+    title = models.CharField(max_length=255, verbose_name="Titre de la section")
+    content = models.TextField(verbose_name="Contenu textuel de la section")
+
+    def __str__(self):
+        return f"N°{self.ordre} - {self.title}"
+    
+
 class PlaceIndisponibility(models.Model):
     place = models.ForeignKey(ParkingPlace, on_delete=models.CASCADE, related_name="indisponibilites", verbose_name="Place")
 

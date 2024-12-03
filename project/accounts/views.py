@@ -497,6 +497,7 @@ def faq_item_form(request, id=None):
         'form': form,
     })
 
+
 # Devenir hote admin
 def devenir_hote_index(request):
     ccm_items = DevenirHoteCommentCaMarcheItem.objects.all().order_by('ordre')
@@ -665,6 +666,182 @@ def delete_devenir_hote_pdh(request):
             
             # Réorganiser les ordres
             PourquoiDevenirHoteItem.objects.filter(ordre__gt=current_ordre).update(
+                ordre=F('ordre') - 1
+            )
+            
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+# PQ PARKSAFE & CCM
+from parking_places.models import PourquoiParksafeItem, CommentCaMarcheItem
+def main_items_index(request):
+    ccm_items = CommentCaMarcheItem.objects.all().order_by('ordre')
+    pdh_items = PourquoiParksafeItem.objects.all().order_by('ordre')
+
+    return TemplateResponse(request, 'accounts/admin/main_items/items.html', context={
+        'ccm_items': ccm_items,
+        'pdh_items': pdh_items,
+        'hide_buttons': True,
+    })
+
+@staff_member_required
+def ccm_add_item(request):
+    if request.method == "POST":
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        # Récupérer l'ordre maximum actuel et ajouter 1
+        max_ordre = CommentCaMarcheItem.objects.all().aggregate(Max('ordre'))['ordre__max'] or 0
+        
+        CommentCaMarcheItem.objects.create(
+            title=title,
+            content=content,
+            ordre=max_ordre + 1
+        )
+        return redirect('cms_index')
+        
+    return render(request, 'parking_places/forms/ccm_form.html')
+
+@staff_member_required
+def pq_add_item(request):
+    if request.method == "POST":
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        # Récupérer l'ordre maximum actuel et ajouter 1
+        max_ordre = PourquoiParksafeItem.objects.all().aggregate(Max('ordre'))['ordre__max'] or 0
+        
+        PourquoiParksafeItem.objects.create(
+            title=title,
+            content=content,
+            ordre=max_ordre + 1
+        )
+        return redirect('cms_index')
+        
+    return render(request, 'parking_places/forms/pdh_form.html')
+
+@staff_member_required
+def ccm_edit_item(request, id):
+    item = get_object_or_404(CommentCaMarcheItem, id=id)
+    
+    if request.method == "POST":
+        item.title = request.POST.get('title')
+        item.content = request.POST.get('content')
+        item.save()
+        return redirect('cms_index')
+        
+    return render(request, 'parking_places/forms/ccm_form.html', {'item': item})
+
+@staff_member_required
+def pq_edit_item(request, id):
+    item = get_object_or_404(PourquoiParksafeItem, id=id)
+    
+    if request.method == "POST":
+        item.title = request.POST.get('title')
+        item.content = request.POST.get('content')
+        item.save()
+        return redirect('cms_index')
+        
+    return render(request, 'parking_places/forms/pdh_form.html', {'item': item})
+
+@require_POST
+@staff_member_required
+def move_ccm_item(request):
+    try:
+        data = json.loads(request.body)
+        item_id = data.get('item_id')
+        direction = data.get('direction')
+        
+        with transaction.atomic():
+            current_item = get_object_or_404(CommentCaMarcheItem, id=item_id)
+            current_ordre = current_item.ordre
+            
+            if direction == 'up' and current_ordre > 1:
+                swap_item = CommentCaMarcheItem.objects.get(ordre=current_ordre - 1)
+                swap_item.ordre = current_ordre
+                current_item.ordre = current_ordre - 1
+                swap_item.save()
+                current_item.save()
+            elif direction == 'down':
+                try:
+                    swap_item = CommentCaMarcheItem.objects.get(ordre=current_ordre + 1)
+                    swap_item.ordre = current_ordre
+                    current_item.ordre = current_ordre + 1
+                    swap_item.save()
+                    current_item.save()
+                except CommentCaMarcheItem.DoesNotExist:
+                    pass
+                    
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+@require_POST
+@staff_member_required
+def move_pq_item(request):
+    try:
+        data = json.loads(request.body)
+        item_id = data.get('item_id')
+        direction = data.get('direction')
+        
+        with transaction.atomic():
+            current_item = get_object_or_404(PourquoiParksafeItem, id=item_id)
+            current_ordre = current_item.ordre
+            
+            if direction == 'up' and current_ordre > 1:
+                swap_item = PourquoiParksafeItem.objects.get(ordre=current_ordre - 1)
+                swap_item.ordre = current_ordre
+                current_item.ordre = current_ordre - 1
+                swap_item.save()
+                current_item.save()
+            elif direction == 'down':
+                try:
+                    swap_item = PourquoiParksafeItem.objects.get(ordre=current_ordre + 1)
+                    swap_item.ordre = current_ordre
+                    current_item.ordre = current_ordre + 1
+                    swap_item.save()
+                    current_item.save()
+                except PourquoiParksafeItem.DoesNotExist:
+                    pass
+                    
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+@require_POST
+@staff_member_required
+def delete_ccm_item(request):
+    try:
+        data = json.loads(request.body)
+        item_id = data.get('item_id')
+        
+        with transaction.atomic():
+            item = get_object_or_404(CommentCaMarcheItem, id=item_id)
+            current_ordre = item.ordre
+            item.delete()
+            
+            # Réorganiser les ordres
+            CommentCaMarcheItem.objects.filter(ordre__gt=current_ordre).update(
+                ordre=F('ordre') - 1
+            )
+            
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+@require_POST
+@staff_member_required
+def delete_pq_item(request):
+    try:
+        data = json.loads(request.body)
+        item_id = data.get('item_id')
+        
+        with transaction.atomic():
+            item = get_object_or_404(PourquoiParksafeItem, id=item_id)
+            current_ordre = item.ordre
+            item.delete()
+            
+            # Réorganiser les ordres
+            PourquoiParksafeItem.objects.filter(ordre__gt=current_ordre).update(
                 ordre=F('ordre') - 1
             )
             

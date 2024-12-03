@@ -14,39 +14,24 @@
             </div>
             <!-- LIST -->
             <div class="flex flex-col">
-                <!-- ITEM 1 -->
-                <div class="flex gap-5 items-start my-8">
-                    <div class="mr-3 md:mr-5 py-4 px-6 md:py-6 md:px-10 rounded-3xl text-4xl lg:text-7xl font-semibold poppins bg-slate-100 shadow-2xl text-blue-500">
-                        1
-                    </div>
-                    <p class="text-base xl:text-lg poppins max-w-md">
-                        Effectuez une demande de réservation de stationnement parmi nos hôtes. 
-                        Nous vous conseillons d'effectuer plusieurs demandes pour maximiser une réponse positive.
-                    </p>
-                </div>
-                <div class="flex gap-5 items-start my-8 lg:ml-12 relative">
-                    <div class="mr-3 md:mr-5 py-4 px-6 md:py-6 md:px-10  rounded-3xl text-4xl lg:text-7xl font-semibold poppins bg-blue-500 shadow-2xl text-white relative">
-                        2
+                {% for item in ccm_items %}
+                <div class="flex gap-5 my-8 items-center {% if item.ordre == 2 %}lg:ml-12{% elif item.ordre == 3 %}lg:ml-24{% endif %}">
+                    <div class="relative mr-3 md:mr-5 py-4 px-6 md:py-6 md:px-10 rounded-3xl text-4xl lg:text-7xl font-semibold poppins shadow-2xl {% if item.ordre == 2 %}bg-blue-500 text-white{% else %}bg-gray-100 text-blue-500{% endif %}">
+                        {{item.ordre}}
+                        {% if item.ordre == 2 %}
                         <div class="absolute z-[-1] top-1/2 -left-[25%] w-[150%] h-[2px] bg-gray-300"></div>
                         <div class="absolute z-[-1] top-0 left-[125%] w-[2px] h-full bg-gray-300"></div>
+                        {% endif %}
                     </div>
-                    <p class="text-base xl:text-lg poppins max-w-md">
-                        <b>
-                            Le ou les hôtes auxquels vous avez soumis votre demande de stationnement 
-                            vous donneront un retour : "Demande acceptée" ou "refusée" en fonction de leurs disponibilités.
-                        </b>
+                    <p class="text-base xl:text-lg poppins max-w-md relative">
+                        {% if item.ordre == 2 %}<b>{% endif %}
+                            {{item.content}}
+                        {% if item.ordre == 2 %}</b>{% endif %}
+
+
                     </p>
                 </div>
-                <!-- ITEM 3 -->
-                <div class="flex gap-5 items-start my-8 lg:ml-24">
-                    <div class="mr-3 md:mr-5 py-4 px-6 md:py-6 md:px-10  rounded-3xl text-4xl lg:text-7xl font-semibold poppins bg-slate-100 shadow-2xl text-blue-500">
-                        3
-                    </div>
-                    <p class="text-base xl:text-lg poppins max-w-md">
-                        Une fois votre demande acceptée, vous recevrez un SMS et un email pour vous en informer. 
-                        Vous disposerez ensuite de 24 heures pour finaliser votre réservation en procédant au paiement.
-                    </p>
-                </div>
+                {% endfor %}
             </div>
         </div>
         <!-- RIGHT SIDE -->

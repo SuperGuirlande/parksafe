@@ -3,6 +3,8 @@ from .views import change_password, register, user_login, user_logout, my_accoun
 from .views import change_profil_pic, admin_index, faq_index, faq_item_form, client_cancel_reservation, client_confirm_cancel, client_index
 from .views import parker_cancel_reservation, parker_confirm_cancel, parker_confirm_accept, devenir_hote_index, parker_my_gains, parker_my_reservations, places_waiting_accept
 from .views import accept_place, delete_place
+
+from .views import main_items_index, ccm_add_item, ccm_edit_item, move_ccm_item, delete_ccm_item, pq_add_item, pq_edit_item, move_pq_item, delete_ccm_item
 from reservations.views import accept_message
 from interactive_map.views import create_poi, create_poi_category, create_poi_city, poi_index, update_poi_commission
 from faq.views import move_faq_item
@@ -70,4 +72,11 @@ urlpatterns = [
     path('administrateur/devenir_hote/add/pdh/', devenir_hote_add_pdh, name="devenir_hote_add_pdh"),
     path('administrateur/devenir-hote/edit/ccm/<int:id>/', devenir_hote_edit_ccm, name="devenir_hote_edit_ccm"),
     path('administrateur/devenir_hote/edit/pdh/<int:id>/', devenir_hote_edit_pdh, name="devenir_hote_edit_pdh"),
+
+    
+    path('administrateur/contenu/', main_items_index, name="cms_index"),
+    path('administrateur/contenu/add/ccm/', ccm_add_item, name="cms_add_ccm"),
+    path('administrateur/contenu/add/pdh/', pq_add_item, name="cms_add_pdh"),
+    path('administrateur/contenu/edit/ccm/<int:id>/', ccm_edit_item, name="cms_edit_ccm"),
+    path('administrateur/contenu/edit/pdh/<int:id>/', pq_edit_item, name="cms_edit_pdh"),
 ]
