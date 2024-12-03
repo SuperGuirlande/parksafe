@@ -16,6 +16,8 @@ from datetime import datetime, timedelta
 from django.db.models import F
 from django.db.models.functions import Power, Sqrt
 from django.db.models import Avg
+from parking_places.models import CommentCaMarcheItem, PourquoiParksafeItem
+
 
 def get_simple_format_adress(parking_place):
     user = parking_place.user
@@ -136,7 +138,10 @@ def search_parking_place_index(request, poi_slug=None):
     electric_filter = request.GET.get('electric', '') == 'true'
     navette_filter = request.GET.get('navette', '') == 'true'
     navette_nocturne_filter = request.GET.get('navette_nocturne', '') == 'true'
-    
+    ccm_items = CommentCaMarcheItem.objects.all().order_by('ordre')
+    pq_items = PourquoiParksafeItem.objects.all().order_by('ordre') 
+
+
     # Base queryset
     if request.user.is_authenticated:
         all_places = ParkingPlace.objects.filter(
@@ -281,7 +286,9 @@ def search_parking_place_index(request, poi_slug=None):
         },
         'filter_urls': filter_urls,
         'sort_urls': sort_urls,
-    }
+        'ccm_items': ccm_items,
+        'pq_items': pq_items,
+        }
 
     return TemplateResponse(request, "parking_places/found_place_index.html", context)
 
