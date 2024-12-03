@@ -149,7 +149,7 @@ def search_parking_place_index(request, poi_slug=None):
             deleted=False
         )
 
-    radius_km = 15
+    radius_km = 20
     form = None
     poi = None
     commission = 20
