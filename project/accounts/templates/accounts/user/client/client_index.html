@@ -39,10 +39,6 @@
                 <h1 class="text-2xl md:text-3xl secondary font-semibold">
                     En attente de paiement
                 </h1>
-                <p class="text-lg md:text-xl font-light text-slate-600 my-5">
-                    Ces réservations ont été acceptées par les hôtes <br class="hidden md:block">
-                    Il ne vous reste plus qu'à régler le prix total pour valider la reservation
-                </p>
             </div>
             <div class="flex flex-col px-4 md:px-0">
                 {% if not waiting_paiement_reservations.exists %}
@@ -116,10 +112,6 @@
                 <h1 class="text-2xl md:text-3xl secondary font-semibold">
                     Réservations en attente
                 </h1>
-                <p class="text-lg md:text-xl font-light text-slate-600 my-5">
-                    Ces demandes de reservations sont en attente d'une validation de la part de l'hôte. <br class="hidden md:block">
-                    N'hésitez pas à faire plusieurs demandes de réservations pour maximiser vos chances.
-                </p>
             </div>
             <div class="flex flex-col px-4 md:px-0">
                 {% if not waiting_accept_reservations.exists %}
@@ -177,9 +169,6 @@
                 <h1 class="text-2xl md:text-3xl secondary font-semibold">
                     Réservations en cours / à venir
                 </h1>
-                <p class="text-lg md:text-xl font-light text-slate-600 my-5">
-                    Ces réservations ont été acceptée et payées.
-                </p>
             </div>
             <div class="flex flex-col px-4 md:px-0">
                 {% if not current_reservations.exists %}
@@ -230,10 +219,6 @@
                 <h1 class="text-2xl md:text-3xl secondary font-semibold">
                     Réservations terminées
                 </h1>
-                <p class="text-lg md:text-xl font-light text-slate-600 my-5">
-                    Liste de vos réservations passées. <br class="hidden md:block">
-                    N'oubliez pas de laisser un avis à votre hôte.
-                </p>
             </div>
             <div class="flex flex-col px-4 md:px-0">
                 {% if not finished_reservations.exists %}
