@@ -43,7 +43,7 @@
                         <div class="pointer ml-4 transition-transform duration-200">></div>
                     </div>
                     <div id="{{ item.id }}" class="reponse">
-                        {{item.reponse}}
+                        {{item.reponse|safe}}
                     </div>
                 </div>
                 {% endfor %}

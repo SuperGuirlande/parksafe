@@ -22,6 +22,7 @@ urlpatterns = [
     path('api/devenir-hote/move/pdh/', move_devenir_hote_pdh, name='move_devenir_hote_pdh'),
     path('api/devenir-hote/delete/ccm/', delete_devenir_hote_ccm, name='delete_devenir_hote_ccm'),
     path('api/devenir-hote/delete/pdh/', delete_devenir_hote_pdh, name='delete_devenir_hote_pdh'),
+    path("ckeditor5/", include('django_ckeditor_5.urls')),
 ]
 
 if settings.DEBUG:

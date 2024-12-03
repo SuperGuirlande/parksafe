@@ -1,10 +1,11 @@
 <section class="min-h-screen shadow-lg flex flex-col py-20 px-5 poppins">
     <div class="my-auto mx-auto">
-        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl primary font-extrabold w-fit text-center mx-auto" id="faq-title">FAQ - Questions Fréquentes</h1>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl primary font-extrabold w-fit text-center mx-auto"
+            id="faq-title">FAQ - Questions Fréquentes</h1>
         <p class="text-center text-base sm:text-lg md:text-xl mt-10">
             Trouvez ici les réponses aux questions les plus courantes sur ParkSafe. <br><br>
             👉 Si vous ne trouvez pas la réponse que vous cherchez, <br>
-            contactez-nous au <a href="tel:0712345678" class="text-blue-500 underline">07.12.34.56.78</a>  ou par
+            contactez-nous au <a href="tel:0712345678" class="text-blue-500 underline">07.12.34.56.78</a> ou par
             e-mail à <a href="mailto:support@parksafe.com" class="text-blue-500 underline">support@parksafe.com</a>.
         </p>
         <div class="w-full max-w-4xl mx-auto my-20">
@@ -17,8 +18,12 @@
                     <p class="text-md sm:text-lg md:text-xl poppins pointer transition-all duration-200">&gt;</p>
 
                 </div>
-                <p class="text-sm md:text-md poppins transition-all duration-300 ease-out reponse" id="{{item.id}}">
-                    {{item.reponse}}
+                <p class="text-sm md:text-md poppins transition-all duration-300 ease-out">
+                    <div class="reponse"
+                    id="{{item.id}}">
+                        {{item.reponse|safe}}
+
+                    </div>
                 </p>
             </div>
             {% endfor %}
