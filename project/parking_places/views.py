@@ -147,7 +147,7 @@ def search_parking_place_index(request, poi_slug=None):
         all_places = ParkingPlace.objects.filter(
             admin_accepted=True, 
             deleted=False
-        ).exclude(user=request.user)
+        )
     else:
         all_places = ParkingPlace.objects.filter(
             admin_accepted=True, 
