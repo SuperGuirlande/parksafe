@@ -18,7 +18,7 @@ from django.db import transaction
 from parking_places.models import ParkingPlace, DevenirHoteCommentCaMarcheItem, PlaceIndisponibility, PourquoiDevenirHoteItem
 from interactive_map.models import PointOfInterest
 from .models import CustomUser
-from .forms import MobileNumberForm, UserRegisterForm, UserLoginForm, ProfilPicForm
+from .forms import MobileNumberForm, UserRegisterForm, UserLoginForm, ProfilPicForm, EmailForm
 from faq.models import FaqItem
 from faq.forms import FaqItemForm
 from django.db.models import Max, F
@@ -373,6 +373,31 @@ def change_profil_pic(request):
         form = ProfilPicForm()
 
     return TemplateResponse(request, 'accounts/forms/profil_pic_form.html', {'form': form})
+
+#  Change Profil Pic
+@login_required
+def change_email(request):
+    user = request.user
+
+    if request.method == 'POST':
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            exists = CustomUser.objects.filter(email=form.cleaned_data['email'])
+
+            if not exists.exists():
+                user.email = form.cleaned_data['email']
+                user.save()
+                request.session['message'] = 'Votre adresse email a été mise à jour avec succès !'
+            else:
+                request.session['alert']="Cette adresse e-mail est déjà utilisée sur un compte ParkSafe"
+
+            return redirect('my_account')
+        else:
+            request.session['alert']="Il y a un problème avec l'adresse e-mail"
+    else:
+        form = EmailForm()
+
+    return TemplateResponse(request, 'accounts/forms/email_form.html', {'form': form})
 
 
 

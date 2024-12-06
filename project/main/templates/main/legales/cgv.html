@@ -1,0 +1,981 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}ParkSafe | Conditions Générales{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-200 py-6 md:py-12 lg:py-16 poppins">
+    <div class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8">
+        <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold secondary text-center mb-6 md:mb-12">Conditions Générales
+            de ParkSafe</h1>
+
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Section 1 à 4 -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">1. Objet des conditions générales
+                </h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base">
+                    <p>Les Conditions Générales actuelles concernent les conditions de vente et d'utilisation des
+                        services proposées par ParkSafe, notamment l'accès à la plateforme de mise en relation entre
+                        hôtes et voyageurs.</p>
+                </div>
+            </div>
+
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">2. Acceptation des conditions
+                    générales</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-4">
+                    <p>L'utilisation des services de ParkSafe est soumise à la prise de connaissance et à l'acceptation
+                        préalable des Conditions Générales présentes lors de l'inscription sur la plateforme.</p>
+
+                    <p>Cette acceptation est matérialisée par une « case à cocher » sur le site ou l'application, qui
+                        atteste que l'utilisateur a pris connaissance des contions générales et qu'il y adhère
+                        pleinement et sans réserve.</p>
+
+                    <p>En validant les conditions générales, l'utilisateur confirme également avoir obtenu de ParkSafe
+                        toutes les informations nécessaires concernant les services proposés, leur fonctionnement et les
+                        conditions qui les régissent. Sans cette acceptation, l'accès et l'utilisation des services de
+                        la plateforme ne sont pas autorisés.</p>
+                </div>
+            </div>
+            <!-- Services fournis -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">3. Services fournis par ParkSafe
+                </h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-4">
+                    <p>ParkSafe offre une plateforme permettant :</p>
+                    <ul class="list-none space-y-2">
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <span>Aux hôtes de publier des annonces pour proposer des espaces de stationnement.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <span>Aux voyageurs de réserver ces espaces offrant une rémunération.</span>
+                        </li>
+                    </ul>
+                    <p class="mt-4">ParkSafe agit uniquement en tant qu'intermédiaire et ne participe pas directement au
+                        contrat entre hôtes et voyageurs.</p>
+                </div>
+            </div>
+
+            <!-- Tarifs et commission -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">4. Tarifs et commission</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">4.1. Tarifs des services</h3>
+                        <p>Les prix des espaces de stationnement sont fixés librement par les hôtes et affichés sur la
+                            plateforme.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">4.2. Commission de ParkSafe</h3>
+                        <p>ParkSafe prélève une commission pouvant aller jusqu'à 50 % sur chaque transaction effectuée
+                            via la plateforme. Cette commission est incluse dans le prix payé par le voyageur.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">4.3. Frais supplémentaires</h3>
+                        <p>Les frais facturés aux utilisateurs incluent uniquement les transactions réalisées sur la
+                            plateforme ParkSafe. Cependant, les montants facturés peuvent inclure :</p>
+                        <ul class="list-none space-y-2 mt-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Les frais de paiement appliqués par notre prestataire de services Stripe, intégrés
+                                    au montant final.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>La TVA applicable, calculée sur les frais de service et incluse dans le prix
+                                    affiché.</span>
+                            </li>
+                        </ul>
+                        <p class="mt-4">ParkSafe garantit une transparence totale sur les frais lors du processus de
+                            réservation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paiements -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">5. Paiements</h2>
+                <div class="space-y-6 text-sm md:text-base text-gray-600">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">5.1. Paiement des réservations</h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Les paiements sont gérés via le prestataire Stripe pour garantir leur
+                                    sécurité.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Le montant total, incluant la commission de ParkSafe, est débité lors de la
+                                    réservation.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">5.2. Facturation</h3>
+                        <p>ParkSafe émet les factures au nom des hôtes et les transmet aux voyageurs.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Modalités d'annulation -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">6. Modalités d'annulation et de
+                    remboursement</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">6.1. Annulation par le voyageur</h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Plus de 72 heures avant la date d'arrivée : <span
+                                        class="font-medium">Remboursement total.</span></span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Entre 72 et 48 heures avant la date d'arrivée : <span
+                                        class="font-medium">Remboursement de 50 %.</span></span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Moins de 48 heures avant la date d'arrivée : <span class="font-medium">Aucun
+                                        remboursement.</span></span>
+                            </li>
+                        </ul>
+                        <p class="mt-4">La date d'arrivée correspond à celle inscrite sur la réservation.</p>
+                        <p>Des exceptions peuvent avoir lieux au cas par cas</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">6.2. Annulation par l'hôte</h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>En cas d'annulation moins de 72 heures avant la réservation, une pénalité de 50 %
+                                    de la valeur totale sera prélevée et reversée au voyageur en compensation.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>ParkSafe se réserve le droit de suspendre ou de supprimer le compte de l'hôte en
+                                    cas d'annulations répétées et ou massives.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Obligations des hôtes -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">7. Obligations des hôtes</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">7.1. Conformité des espaces proposés
+                        </h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Les espaces de stationnement doivent correspondre précisément aux descriptions,
+                                    photos et caractéristiques indiquées dans les annonces.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Les informations clés (dimensions, accessibilité, restrictions éventuelles)
+                                    doivent être claires et exactes.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>L'espace doit être en bon état, propre et adapté au stationnement.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Suite des obligations des hôtes -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">7.2. Respect des horaires de
+                            réservation</h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Les hôtes doivent respecter les plages horaires convenues.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Ils doivent fournir des instructions claires pour l'accès (codes, clés, modalités
+                                    d'entrée).</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">7.3. Sécurité des espaces</h3>
+                        <p>L'espace doit être sécurisé conformément à la description :</p>
+                        <ul class="list-none space-y-2 mt-2 ml-4">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Propriétés clôturées ou surveillées si mentionnées.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Absence de risques pour les véhicules (obstacles, débris, etc.).</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">7.4. Respect des réglementations
+                            locales</h3>
+                        <p>L'hôte est tenu de respecter les lois locales concernant la mise à disposition des espaces de
+                            stationnement (fiscales, urbanistiques, autorisations communales).</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">7.5. Communication et gestion des
+                            litiges</h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>L'hôte doit répondre rapidement aux messages des voyageurs et signaler tout
+                                    problème à ParkSafe.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>En cas de différend, il doit collaborer de bonne foi pour trouver une
+                                    solution.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Responsabilités de ParkSafe -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">8. Responsabilités de ParkSafe</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">8.1. Litiges entre utilisateurs</h3>
+                        <p>ParkSafe agit en tant qu'intermédiaire et ne peut être tenu responsable des litiges liés aux
+                            :</p>
+                        <ul class="list-none space-y-2 mt-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Annulations de réservation.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Paiements contestés.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Conditions d'utilisation ou d'accès aux espaces.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">8.2. Dommages et pertes</h3>
+                        <p>ParkSafe décline toute responsabilité en cas de :</p>
+                        <ul class="list-none space-y-2 mt-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Dommages matériels causés aux espaces ou aux véhicules.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Perte ou vol d'objets personnels.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Accidents survenus dans les espaces réservés.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">8.3. Informations fournies par les
+                            utilisateurs</h3>
+                        <p>Les utilisateurs sont seuls responsables de l'exactitude et de la légalité des informations
+                            publiées.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">8.4. Problèmes techniques</h3>
+                        <p>ParkSafe ne peut être tenu responsable en cas de :</p>
+                        <ul class="list-none space-y-2 mt-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Techniques de dysfonctionnements.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Interruptions temporaires ou pertes de données.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. Résiliation du service -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">9. Résiliation du service</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base">
+                    <p>ParkSafe se réserve le droit de suspension ou résilier l'accès à la plateforme en cas de
+                        non-respect des conditions générales présentes (fraudes, comportements inappropriés, etc.).</p>
+                </div>
+            </div>
+
+            <!-- 12. Obligations fiscales, sociales et d'assurance -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">12. Obligations fiscales, sociales
+                    et d'assurance</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">12.1. Obligations fiscales</h3>
+                        <p>Les utilisateurs de la plateforme ParkSafe, en particulier les hôtes proposant des espaces de
+                            stationnement, sont responsables de respecter leurs obligations fiscales. Cela inclut, mais
+                            ne se limite pas à :</p>
+                        <ul class="list-none space-y-2 mt-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>La déclaration des revenus perçus via la plateforme auprès des autorités fiscales
+                                    compétentes.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Le paiement des impôts ou taxes applicables en fonction de leur situation
+                                    personnelle ou professionnelle (impôt sur le revenu, TVA, etc.).</span>
+                            </li>
+                        </ul>
+                        <p class="mt-4">ParkSafe recommande aux hôtes de consulter un conseiller fiscal pour s'assurer
+                            de leur conformité avec les lois fiscales en vigueur.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">12.2. Obligations sociales</h3>
+                        <p>En cas d'utilisation régulière ou professionnelle de la plateforme, les hôtes peuvent être
+                            soumis à des obligations sociales, telles que :</p>
+                        <ul class="list-none space-y-2 mt-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Le paiement des cotisations sociales applicables aux revenus générés via la
+                                    localisation d'espaces de stationnement.</span>
+                            </li>
+                        </ul>
+                        <p class="mt-4">Les utilisateurs sont invités à se rapprocher des organismes concernés pour
+                            clarifier leur situation et éviter tout risque de non-conformité.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">12.3. Obligations en matière
+                            d'assurance</h3>
+                        <p>Les utilisateurs doivent s'assurer que leur activité sur la plateforme est couverte par une
+                            politique d'assurance adéquate.</p>
+                        <ul class="list-none space-y-2 mt-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span><span class="font-medium">Hôtes :</span> Ils doivent informer leur assureur de
+                                    l'utilisation de leur espace de stationnement à des fins de localisation et vérifier
+                                    que leur contrat d'assurance inclut une couverture en cas de sinistres, de dommages
+                                    matériels ou d'incidents survenant dans le cadre de cette activité.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span><span class="font-medium">Voyageurs :</span> Ils doivent s'assurer que leur propre
+                                    véhicule est couvert pour tout dommage ou incident pouvant survenir sur l'espace de
+                                    stationnement réservé.</span>
+                            </li>
+                        </ul>
+                        <p class="mt-4">ParkSafe décline toute responsabilité en cas d'absence ou d'insuffisance de
+                            couverture d'assurance de la part des utilisateurs. Pour une meilleure protection, il est
+                            recommandé aux utilisateurs de consulter leur assureur ou un courtier spécialisé.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 13. Déclaration de sinistre -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">13. Déclaration de sinistre</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">13.1. Définition du sinistre</h3>
+                        <p>Un sinistre désigne tout événement imprévu entraînant des dommages matériels, immatériels ou
+                            corporels dans le cadre de l'utilisation de la plateforme ParkSafe, que ce soit :</p>
+                        <ul class="list-none space-y-2 mt-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Un dommage causé au véhicule d'un voyageur (ex. : collision, vol,
+                                    vandalisme).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Un dommage matériel ou structurel sur l'espace de stationnement d'un hôte (ex. :
+                                    dégradation, accident).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Un accident corporel impliquant un utilisateur ou un tiers sur les lieux
+                                    réservés.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- 13.2. Procédure de déclaration -->
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">13.2. Procédure de déclaration à
+                            ParkSafe</h3>
+                        <p>Pour signaler un sinistre lié à une réservation effectuée via la plateforme, les utilisateurs
+                            doivent suivre les étapes ci-dessous :</p>
+
+                        <div class="mt-4 space-y-4">
+                            <div>
+                                <h4 class="font-medium mb-2">1. Notification immédiate à l'autre partie</h4>
+                                <div class="ml-4">
+                                    <p class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Le sinistre doit être communiqué sans délai à l'hôte ou au voyageur
+                                            concerné. Cela permet d'entamer un dialogue et de clarifier la
+                                            situation.</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-medium mb-2">2. Signalisation à ParkSafe</h4>
+                                <div class="ml-4 space-y-2">
+                                    <p class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>La déclaration doit être envoyée à ParkSafe dans un délai de <span
+                                                class="font-medium">48 heures</span> après la découverte du
+                                            sinistre.</span>
+                                    </p>
+                                    <p class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Le signalement peut être fait via :</span>
+                                    </p>
+                                    <ul class="ml-6 space-y-1">
+                                        <li class="flex items-start">
+                                            <span class="mr-2">-</span>
+                                            <span>La messagerie interne de la plateforme.</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="mr-2">-</span>
+                                            <span>Par email à l'adresse <a href="mailto:support@parksafe.fr"
+                                                    class="text-primary hover:underline">support@parksafe.fr</a></span>
+                                        </li>
+                                    </ul>
+                                    <p class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>La déclaration doit inclure les informations suivantes :</span>
+                                    </p>
+                                    <ul class="ml-6 space-y-1">
+                                        <li class="flex items-start">
+                                            <span class="mr-2">-</span>
+                                            <span>Une description détaillée de l'incident.</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="mr-2">-</span>
+                                            <span>La date, l'heure et le lieu exact du sinistre.</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="mr-2">-</span>
+                                            <span>Les identités des parties impliquées.</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="mr-2">-</span>
+                                            <span>Des preuves documentées telles que des photos, vidéos, ou
+                                                témoignages.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-medium mb-2">3. Suivi avec ParkSafe</h4>
+                                <div class="ml-4">
+                                    <p class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Une fois le signal reçu, ParkSafe analysera les informations fournies et
+                                            agira en tant qu'intermédiaire pour faciliter la communication entre les
+                                            parties impliquées si nécessaire.</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 13.3. Déclaration aux autorités -->
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">13.3. Déclaration aux autorités (le
+                            cas échéant)</h3>
+                        <p class="mb-4">En fonction de la gravité du sinistre, un signalement auprès des autorités
+                            compétentes peut être nécessaire :</p>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span><span class="font-medium">Vol ou vandalisme :</span> Déposez une plainte auprès de
+                                    la gendarmerie ou de la police dans un délai de <span class="font-medium">48
+                                        heures</span> après la découverte des faits.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span><span class="font-medium">Accident impliquant des dommages corporels ou des tiers
+                                        :</span> Signalez immédiatement l'incident aux forces de l'ordre.</span>
+                            </li>
+                        </ul>
+                        <p class="mt-4">Le dépôt de plainte peut être requis par l'assurance pour la prise en charge des
+                            dommages.</p>
+                    </div>
+
+                    <!-- 13.4. Déclaration à l'assurance -->
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">13.4. Déclaration à l'assurance</h3>
+                        <p class="mb-4">Les utilisateurs sont tenus de signaler le sinistre à leur propre assurance dans
+                            les délais contractuels, généralement :</p>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span><span class="font-medium">5 jours ouvrés</span> pour les sinistres classiques
+                                    (dommages matériels).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span><span class="font-medium">2 jours ouverts</span> pour les cas de vol ou de
+                                    tentative de vol.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span><span class="font-medium">10 jours ouvrés</span> en cas de catastrophe naturelle
+                                    après la publication de l'arrêté.</span>
+                            </li>
+                        </ul>
+                        <p class="mt-4">Les utilisateurs doivent transmettre à leur assureur toutes les pièces
+                            nécessaires, y compris les preuves, constats amiables et copies des dépôts de plainte, le
+                            cas échéant.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 14. Loi Applicable -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">14. Loi Applicable et Attribution
+                    de Juridiction</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">14.1. Loi applicable</h3>
+                        <p>Les présentes Conditions Générales ainsi que toutes les relations contractuelles et non
+                            contractuelles entre les utilisateurs et ParkSafe sont régies exclusivement par le droit
+                            français. Cette législation s'applique tant aux règles de fond qu'aux règles de forme.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">14.2. Attribution de juridiction
+                        </h3>
+                        <p>En cas de différend relatif à l'interprétation, à l'exécution ou à la résiliation des
+                            présentes CGV, et après échec d'une tentative de résolution amiable, les tribunaux français
+                            seront seuls compétents.</p>
+                        <p class="mt-2">Sauf disposition légale impérative contraire, tout litige sera soumis à la
+                            compétence exclusive des tribunaux situés dans le ressort du siège social de ParkSafe, à
+                            savoir les <span class="font-medium">tribunaux de Nantes</span>.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 15. Modification des conditions -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">15. Modification des conditions
+                </h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">15.1. Informations des utilisateurs
+                        </h3>
+                        <p>Toute modification des Conditions Générales sera publiée sur la plateforme, accompagnée de la
+                            date d’entrée en vigueur. Les utilisateurs seront informés par tout moyen approprié,
+                            notamment :</p>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Un email envoyé à l’adresse enregistrée dans leur compte.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Une notification dans leur espace utilisateur sur la plateforme.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">15.2. Acceptation des modifications
+                        </h3>
+                        <p>L’utilisation continue de la plateforme après la date d’entrée en vigueur des nouvelles
+                            conditions générales vaut acceptation de ces dernières par l’utilisateur. En cas de
+                            désaccord, l’utilisateur a la possibilité de :</p>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Résilier son compte sans frais.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Cesser d’utiliser les services proposés par ParkSafe.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">15.3. Version applicable des
+                            Conditions Générales</h3>
+                        <p>Les conditions générales en vigueur sont celles disponibles sur le site ou l’application à la
+                            date d’utilisation des services. Les utilisateurs sont invités à consulter régulièrement les
+                            conditions générales pour rester informés de leurs droits et obligations.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Force Majeure -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">Force Majeure</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">Définition</h3>
+                        <p>ParkSafe ne saurait être tenu responsable des retards ou de l’inexécution de ses obligations
+                            contractuelles en cas de survenance d’un événement de force majeure. Conformément à
+                            l’article 1218 du Code civil, un événement de force majeure est caractérisé par un événement
+                            imprévisible, irrésistible et extérieur correspondant à l’exécution des obligations de l’une
+                            des parties.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">Exemples d’événements de force
+                            majeure</h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Catastrophes naturelles (inondations, tempêtes, tremblements de terre,
+                                    etc.).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Épidémies ou pandémies.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Grèves totales ou partielles affectant les services de ParkSafe ou ses
+                                    prestataires.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Actes de terrorisme, guerre ou conflit armé.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Interruption ou défaillance des réseaux de télécommunication ou d’énergie.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Cyberattaques ou autres incidents affectant la sécurité informatique de la
+                                    plateforme.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">Conséquences de la force majeure
+                        </h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Suspension des obligations : Les obligations de ParkSafe et de l’utilisateur
+                                    affecté seront suspendues pendant toute la durée de l’événement de force
+                                    majeure.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Limitation de responsabilité : ParkSafe ne pourra être tenu responsable des
+                                    dommages ou préjudices subis par l’utilisateur en raison de la non-exécution ou du
+                                    retard dans l’exécution des obligations dues à la force majeure.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Information des parties : ParkSafe s’engage à informer l’utilisateur concerné dès
+                                    que possible de la survenue d’un cas de force majeure et des mesures prises pour y
+                                    remédier.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">Durée de l’événement de force
+                            majeure</h3>
+                        <p>Si l’événement de force majeure se prolonge au-delà d’une durée de 30 jours consécutifs,
+                            chaque partie aura la possibilité de résilier le contrat ou la réservation en cours, sans
+                            qu’aucune indemnité ne puisse être réclamée.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conditions spécifiques au service -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">Conditions spécifiques au service
+                </h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base space-y-6">
+                    <!-- 1. Conditions spécifiques aux hôtes -->
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">1. Conditions spécifiques aux hôtes
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium mb-2">1.1. Création et gestion des annonces</h4>
+                                <ul class="list-none space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les hôtes sont responsables de la publication d’annonces précises et
+                                            complètes concernant leurs espaces de stationnement.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les informations obligatoires incluent :</span>
+                                    </li>
+                                </ul>
+                                <ul class="ml-6 space-y-1">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>La description détaillée de l’espace (dimensions, accessibilité,
+                                            restrictions).</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Des photos récentes et représentatives.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Les conditions d’utilisation (horaires, règles spécifiques).</span>
+                                    </li>
+                                </ul>
+                                <p>Les annonces doivent être mises à jour régulièrement pour refléter l’état actuel et
+                                    la disponibilité de l’espace.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-2">1.2. Conformité et sécurité des espaces</h4>
+                                <ul class="list-none space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les espaces de stationnement proposés doivent être conformes aux
+                                            descriptions publiées sur la plateforme.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les hôtes s’engagent à :</span>
+                                    </li>
+                                </ul>
+                                <ul class="ml-6 space-y-1">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Maintenir l’espace propre, sécurisé et libre d’obstacles.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Respecter les normes locales en matière de sécurité et d’urbanisme.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Garantir une accessibilité conforme aux informations fournies.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-2">1.3. Disponibilité et respect des réservations</h4>
+                                <ul class="list-none space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les hôtes doivent respecter les plages horaires convenues avec les
+                                            voyageurs.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>En cas d’indisponibilité imprévue, l’hôte doit immédiatement informer le
+                                            voyageur et ParkSafe via la plateforme.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les annulations répétées ou de dernière minute peuvent entraîner des
+                                            sanctions, telles que la suspension ou la suppression du compte.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-2">1.4. Obligations réglementaires et fiscales</h4>
+                                <ul class="list-none space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les hôtes doivent s’assurer que leur activité de location est conforme aux
+                                            réglementations locales et nationales, notamment :</span>
+                                    </li>
+                                </ul>
+                                <ul class="ml-6 space-y-1">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>La déclaration des revenus issus de la location d’espaces.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Le respect des règles d’urbanisme et d’usage des biens.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>L’obtention d’autorisations, le cas échéant, auprès des autorités
+                                            compétentes.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-2">1.5. Responsabilité en cas de litige ou de sinistre</h4>
+                                <ul class="list-none space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les hôtes doivent collaborer de bonne foi avec les voyageurs et ParkSafe
+                                            en cas de sinistre ou de litige.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Toute réclamation concernant un dommage doit être signalée rapidement,
+                                            avec les preuves nécessaires (photos, témoignages, etc.).</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Conditions spécifiques aux voyageurs -->
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">2. Conditions spécifiques aux
+                            voyageurs</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium mb-2">2.1. Réservation des espaces</h4>
+                                <ul class="list-none space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les voyageurs doivent vérifier que l’espace réservé correspond à leurs
+                                            besoins (dimensions, accessibilité, restrictions).</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les réservations effectuées via la plateforme sont considérées comme
+                                            définitives après le paiement intégral.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-2">2.2. Respect des conditions d’utilisation</h4>
+                                <ul class="list-none space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les voyageurs s’engagent à respecter les règles définies par l’hôte dans
+                                            l’annonce, notamment :</span>
+                                    </li>
+                                </ul>
+                                <ul class="ml-6 space-y-1">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Horaires de réservation.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Les consignes spécifiques (ex. : code d’accès, restrictions sur les
+                                            véhicules).</span>
+                                    </li>
+                                </ul>
+                                <p>En cas de dépassement des horaires ou de non-respect des règles, l’hôte est en droit
+                                    de réclamer des frais supplémentaires.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-2">2.3. Obligations de sécurité</h4>
+                                <ul class="list-none space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les voyageurs doivent garer leur véhicule conformément aux indications
+                                            fournies par l’hôte.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>ParkSafe recommande aux voyageurs de s’assurer que leur véhicule est
+                                            couvert par une assurance adéquate pour les incidents pouvant survenir dans
+                                            un espace réservé.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-2">2.4. Annulation et remboursement</h4>
+                                <ul class="list-none space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les voyageurs peuvent annuler une réservation conformément aux conditions
+                                            définies dans les CGV :</span>
+                                    </li>
+                                </ul>
+                                <ul class="ml-6 space-y-1">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Annulation plus de 72 heures avant la date prévue : remboursement
+                                            total.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Annulation entre 72 et 48 heures avant : remboursement partiel.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">-</span>
+                                        <span>Annulation moins de 48 heures avant : aucun remboursement.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-2">2.5. Responsabilité en cas de dommage</h4>
+                                <ul class="list-none space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Les voyageurs doivent signaler immédiatement tout dommage causé à l’espace
+                                            de stationnement ou tout incident survenu lors de leur réservation.</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">•</span>
+                                        <span>Ils sont tenus responsables des dommages causés intentionnellement ou par
+                                            négligence, et doivent coopérer avec l’hôte et ParkSafe pour résoudre le
+                                            litige.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Dispositions communes aux hôtes et aux voyageurs -->
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">3. Dispositions communes aux hôtes
+                            et aux voyageurs</h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Utilisation de la plateforme : Les utilisateurs (hôtes et voyageurs) s’engagent à
+                                    utiliser la plateforme ParkSafe de manière honnête et respectueuse. Toute
+                                    utilisation abusive ou frauduleuse peut entraîner la suspension ou la résiliation du
+                                    compte.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Communication : Les parties doivent informer ParkSafe le plus rapidement possible
+                                    en cas de problèmes.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-2">•</span>
+                                <span>Assurance : ParkSafe recommande à tous les utilisateurs de vérifier que leurs
+                                    assurances personnelles ou professionnelles couvrent leur activité ou leur
+                                    utilisation de la plateforme.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

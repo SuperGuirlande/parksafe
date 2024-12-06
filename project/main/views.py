@@ -41,4 +41,17 @@ def a_propos(request):
     })
 
 
+def mentions_legales(request):
+    return TemplateResponse(request, 'main/legales/mentions_legales.html', context={
+    })
+
+def confidentitalite(request):
+    return TemplateResponse(request, 'main/legales/confidentitalite.html', context={
+    })
+
+def cgv(request):
+    return TemplateResponse(request, 'main/legales/cgv.html', context={
+    })
+
+
 

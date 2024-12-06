@@ -1,0 +1,52 @@
+{% load static %}
+<!-- Balises meta de base -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<!-- Balises meta SEO principales -->
+<meta name="description" content="Trouvez et réservez des places de parking sécurisées près des aéroports, gares, ports et en centre-ville. Location entre particuliers jusqu'à 70% moins cher. Places vérifiées, réservation instantanée, service client 7j/7.">
+<meta name="keywords" content="parking aéroport, parking gare, parking port, parking centre ville, stationnement particulier, location parking, parking pas cher, parking sécurisé, parking longue durée, parking courte durée, place de parking, stationnement économique, parking collaboratif, parking surveillé, parking privé, parking vacances, parking weekend, location entre particuliers, covoiturage parking, parking résidentiel, parking mensuel, parking touristique, parking journée, parking navette aéroport, parking voyageur">
+
+<!-- Balises Open Graph pour les réseaux sociaux -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:title" content="ParkSafe | Location de parking entre particuliers - Aéroports, Gares, Ports, Centre-ville">
+<meta property="og:description" content="Économisez sur votre stationnement en réservant une place chez un particulier. Parkings vérifiés près des aéroports, gares, ports et centres-villes. Service client 7j/7.">
+<meta property="og:image" content="{% static 'images/home/hero-2.jpg' %}">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ParkSafe | Location de parking près des aéroports, gares et centres-villes">
+<meta name="twitter:description" content="Économisez sur votre stationnement. Places sécurisées chez des particuliers près des aéroports, gares, ports et en ville.">
+<meta name="twitter:image" content="{% static 'images/home/hero-2.jpg' %}">
+
+<!-- Autres balises meta importantes -->
+<meta name="robots" content="index, follow">
+<meta name="language" content="fr-FR">
+<meta name="author" content="ParkSafe">
+<meta name="reply-to" content="contact@parksafe.fr">
+
+<!-- Balises pour les moteurs de recherche locaux -->
+<meta name="geo.region" content="FR">
+<meta name="geo.position" content="46.603354;1.888334">
+<meta name="ICBM" content="46.603354, 1.888334">
+
+<!-- Verification des propriétés du site -->
+<meta name="google-site-verification" content="VOTRE_CODE_DE_VERIFICATION">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Balises pour les navigateurs mobiles -->
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<!-- Balises pour la sécurité -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:;">
+<meta name="referrer" content="no-referrer-when-downgrade">

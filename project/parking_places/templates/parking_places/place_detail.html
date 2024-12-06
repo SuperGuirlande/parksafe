@@ -129,13 +129,13 @@
 <section class="w-full flex">
     <div class="mx-auto px-4 -mt-20 poppins flex flex-col w-full max-w-[720px]">
         <h4 class="text-lg font-bold text-blue-600 mb-6 text-center">{{ place|simple_format_title }}</h4>
-        <div class="mx-auto w-full">
-            <div id="mapContainer" style="width: 100%; height: 400px; border-radius: 32px;" class="rounded-xl overflow-hidden shadow-xl"></div>
+        <div class="mx-auto w-full h-64 sm:h-96 md:h-[420px]">
+            <div id="mapContainer" style="width: 100%; height: 100%; border-radius: 32px;" class="rounded-xl overflow-hidden shadow-xl"></div>
         </div>
         <!-- BOUTON RESERVER -->
         {% if place.user != request.user %}
         <a href="{% url 'make_reservation' place_token=place.token %}#formulaire"class="mx-auto my-6">
-            <button class="bg-primary py-4 px-10 text-3xl mt-auto rounded-3xl text-white shadow-lg
+            <button class="bg-primary py-4 px-10 text-xl sm:text-2xl md:text-3xl mt-auto rounded-3xl text-white shadow-lg
             hover:bg-blue-400 hover:-translate-y-1 hover:shadow-2xl transition-all duration-200 ease-in-out">
                 Réserver
             </button>

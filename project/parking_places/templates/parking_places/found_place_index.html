@@ -2,6 +2,10 @@
 {% load static %} 
 {% load places_tags %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/main/home-styles.css' %}">
+{% endblock %}
+
 {% block content %}
 <main class="poppins">
   <section class="relative pt-20 md:pt-28 pb-16 bg-primary shadow-lg z-[1]">
@@ -39,7 +43,7 @@
                 </p>
             </div>
        
-            <div class="flex flex-wrap mt-auto items-center gap-5 my-5">
+            <div class="flex flex-wrap mt-auto items-center gap-5 my-5 ml-5">
                 <!-- Menu Trier par -->
                 <div class="relative my-auto">
                     <button 

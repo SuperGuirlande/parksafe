@@ -192,7 +192,7 @@ def transfer_earnings(request):
             
         except stripe.error.StripeError as se:
             print(f"Stripe error: {se.error.message}")
-            messages.error(request, f"Erreur Stripe détaillée: {se.error.message}")
+            request.session['alert'] = f"""Impossible pour le moment<br>Réessayez plus tard ou contactez le service technique"""
             
     except Exception as e:
         import traceback

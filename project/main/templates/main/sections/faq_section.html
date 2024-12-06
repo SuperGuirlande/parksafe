@@ -1,8 +1,8 @@
-<section class="min-h-screen shadow-lg flex flex-col py-20 px-5 poppins">
-    <div class="my-auto mx-auto">
-        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl primary font-extrabold w-fit text-center mx-auto"
+<section class="min-h-screen shadow-lg flex flex-col py-16 px-5 poppins">
+    <div class="my-auto mx-auto flex flex-col">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl primary font-extrabold w-fit text-center mx-auto"
             id="faq-title">FAQ - Questions Fréquentes</h1>
-        <p class="text-center text-base sm:text-lg md:text-xl mt-10">
+        <p class="text-center text-base sm:text-lg mt-12">
             Trouvez ici les réponses aux questions les plus courantes sur ParkSafe. <br><br>
             👉 Si vous ne trouvez pas la réponse que vous cherchez, <br>
             contactez-nous au <a href="tel:0712345678" class="text-blue-500 underline">07.12.34.56.78</a> ou par
@@ -10,15 +10,15 @@
         </p>
         <div class="w-full max-w-4xl mx-auto my-20">
             {% for item in faq_items %}
-            <div class="question-card flex flex-col w-full bg-slate-100 py-5 px-10 my-5 shadow-md cursor-pointer
+            <div class="question-card flex flex-col w-full bg-gray-100 py-5 px-10 my-3 shadow-md cursor-pointer
             transition-all duration-200 hover:bg-gray-200" data-target="{{item.id}}">
 
                 <div class="flex w-full justify-between secondary">
-                    <p class="text-md sm:text-lg md:text-xl poppins font-semibold">{{ item.question }}</p>
-                    <p class="text-md sm:text-lg md:text-xl poppins pointer transition-all duration-200">&gt;</p>
+                    <p class="text-md sm:text-md md:text-lg poppins font-semibold">{{ item.question }}</p>
+                    <p class="text-md sm:text-md md:text-lg poppins pointer transition-all duration-200">&gt;</p>
 
                 </div>
-                <p class="text-sm md:text-md poppins transition-all duration-300 ease-out">
+                <p class="text-xs md:text-sm poppins transition-all duration-300 ease-out">
                     <div class="reponse"
                     id="{{item.id}}">
                         {{item.reponse|safe}}

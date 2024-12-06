@@ -122,3 +122,7 @@ class MobileNumberForm(forms.Form):
 
 class ProfilPicForm(forms.Form):
     profil_pic = forms.ImageField(label=_("Image de profil"), required=True)
+
+
+class EmailForm(forms.Form):
+    email = forms.EmailField(label="Adresse email", required=True)

@@ -1,0 +1,307 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}ParkSafe | Charte de Confidentialité{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-200 py-6 md:py-12 lg:py-16 poppins">
+    <div class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8">
+        <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold secondary text-center mb-6 md:mb-12">Charte de
+            Confidentialité de ParkSafe</h1>
+
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- 1. Introduction -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">1. Introduction</h2>
+                <div class="prose max-w-none text-gray-600 text-sm md:text-base">
+                    <p>La présente Charte de Confidentialité a pour objectif d'informer les utilisateurs de <span
+                            class="font-semibold">ParkSafe</span> (hôtes et voyageurs) sur la manière dont leurs données
+                        personnelles sont collectées, utilisées et protégées, conformément au <span
+                            class="font-semibold">Règlement Général sur la Protection des Données (RGPD)</span> et à la
+                        législation française.</p>
+                </div>
+            </div>
+
+            <!-- 2. Données collectées -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">2. Données collectées</h2>
+                <div class="space-y-6 text-sm md:text-base text-gray-600">
+                    <!-- 2.1 -->
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">2.1. Lors de l'inscription</h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start"><span class="mr-2">•</span>Nom, prénom</li>
+                            <li class="flex items-start"><span class="mr-2">•</span>Adresse email</li>
+                            <li class="flex items-start"><span class="mr-2">•</span>Numéro de téléphone</li>
+                            <li class="flex items-start"><span class="mr-2">•</span>Mot de passe (crypté)</li>
+                        </ul>
+                    </div>
+
+                    <!-- 2.2 -->
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">2.2. Lors de l'utilisation de la
+                            plateforme</h3>
+                        <ul class="list-none space-y-2">
+                            <li class="flex items-start"><span class="mr-2">•</span>Historique des réservations</li>
+                            <li class="flex items-start"><span class="mr-2">•</span>Informations de facturation
+                                (adresse, montant des transactions)</li>
+                            <li class="flex items-start"><span class="mr-2">•</span>Avis et commentaires laissés sur la
+                                plateforme</li>
+                        </ul>
+                    </div>
+
+                    <!-- 2.3 -->
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">2.3. Données de paiement</h3>
+                    </div>
+
+                    <!-- 2.4 -->
+                    <div>
+                        <h3 class="text-lg md:text-xl font-semibold secondary mb-3">2.4. Traitement des données
+                            bancaires conformément au RGPD</h3>
+                        <div class="space-y-4">
+                            <p>Le traitement des données bancaires des utilisateurs de ParkSafe repose sur la base
+                                légale de l'exécution d'un contrat (article 6.1.b du RGPD). Ces données sont strictement
+                                nécessaires à la gestion des transactions financières et à la sécurisation des
+                                paiements.</p>
+
+                            <p>Conformément au RGPD, vous bénéficiez des droits suivants concernant vos données
+                                bancaires :</p>
+
+                            <ul class="list-none space-y-2">
+                                <li class="flex items-start">
+                                    <span class="mr-2">•</span>
+                                    <div>
+                                        <span class="font-medium">Droit d'accès :</span> Vous pouvez demander à
+                                        consulter les informations bancaires conservées par ParkSafe.
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="mr-2">•</span>
+                                    <div>
+                                        <span class="font-medium">Droit de rectification :</span> Vous pouvez demander
+                                        la correction des informations erronées.
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="mr-2">•</span>
+                                    <div>
+                                        <span class="font-medium">Droit à l'effacement :</span> Vous pouvez demander la
+                                        suppression de vos données bancaires, sauf si leur conservation est requise par
+                                        une obligation légale.
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="mr-2">•</span>
+                                    <div>
+                                        <span class="font-medium">Droit à la limitation :</span> Vous pouvez demander
+                                        une limitation du traitement de vos données en cas de contestation de leur
+                                        exactitude ou de leur utilisation.
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="mr-2">•</span>
+                                    <div>
+                                        <span class="font-medium">Droit d'opposition :</span> Vous pouvez vous opposer
+                                        au traitement de vos données dans certains cas précis.
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 3. Finalités de la collecte des données -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">3. Finalités de la collecte des
+                    données</h2>
+                <div class="text-sm md:text-base text-gray-600">
+                    <p class="mb-4">Les données collectées sont utilisées pour :</p>
+                    <ul class="list-none space-y-2">
+                        <li class="flex items-start"><span class="mr-2">•</span>Gérer les comptes utilisateurs.</li>
+                        <li class="flex items-start"><span class="mr-2">•</span>Faciliter la mise en relation entre
+                            hôtes et voyageurs.</li>
+                        <li class="flex items-start"><span class="mr-2">•</span>Traiter les paiements et les factures.
+                        </li>
+                        <li class="flex items-start"><span class="mr-2">•</span>Améliorer l'expérience utilisateur grâce
+                            à des analyses internes.</li>
+                        <li class="flex items-start"><span class="mr-2">•</span>Assurer le respect des CGU et CGV.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4. Partage des données -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">4. Partage des données</h2>
+                <div class="text-sm md:text-base text-gray-600">
+                    <p class="mb-4">ParkSafe ne partage pas les données personnelles des utilisateurs avec des tiers,
+                        sauf dans les cas suivants :</p>
+                    <ul class="list-none space-y-2">
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Prestataires de services :</span> Partage limité avec des
+                                partenaires comme Stripe pour la gestion des paiements.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Obligations légales :</span> Transmission des données aux
+                                autorités compétentes si requis par la loi.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 5. Durée de conservation des données -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">5. Durée de conservation des
+                    données</h2>
+                <div class="text-sm md:text-base text-gray-600">
+                    <ul class="list-none space-y-2">
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Données de compte :</span> Conservées tant que le compte est
+                                actif.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Données des utilisateurs inactifs :</span> Conservées pendant
+                                <span class="font-medium">3 ans</span> après la dernière interaction.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Données de facturation :</span> Conservées pendant <span
+                                    class="font-medium">10 ans</span> conformément aux obligations légales.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Données en cas de litige :</span> Conservées jusqu'à la
+                                résolution du litige, dans la limite des délais légaux de prescription (5 ans).
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 6. Droits des utilisateurs -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">6. Droits des utilisateurs</h2>
+                <div class="text-sm md:text-base text-gray-600">
+                    <p class="mb-4">Conformément au RGPD, les utilisateurs disposent des droits suivants :</p>
+                    <ul class="list-none space-y-2">
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Droit d'accès :</span> Obtenir une copie de leurs données
+                                personnelles.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Droit de rectification :</span> Corriger des informations
+                                inexactes ou incomplètes.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Droit à l'effacement :</span> Demander la suppression de leurs
+                                données personnelles (sous réserve des obligations légales).
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Droit d'opposition :</span> S'opposer à certains traitements
+                                de leurs données (par exemple à des fins commerciales).
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Droit à la portabilité :</span> Recevoir leurs données dans un
+                                format structuré et lisible.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 7. Sécurité des données -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">7. Sécurité des données</h2>
+                <div class="text-sm md:text-base text-gray-600">
+                    <p class="mb-4">ParkSafe met en place des mesures techniques et organisationnelles pour protéger les
+                        données contre :</p>
+                    <ul class="list-none space-y-2">
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <span>Les accès non autorisés.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <span>La perte, la destruction ou l'altération.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 8. Cookies -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">8. Cookies</h2>
+                <div class="text-sm md:text-base text-gray-600">
+                    <p>ParkSafe n'utilise pas de cookies ou de technologies similaires pour le suivi des utilisateurs.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 9. Modifications de la Charte -->
+            <div class="p-4 md:p-6 lg:p-8 border-b border-gray-200">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">9. Modifications de la Charte</h2>
+                <div class="text-sm md:text-base text-gray-600">
+                    <p>ParkSafe se réserve le droit de modifier la présente Charte de Confidentialité à tout moment. Les
+                        modifications seront applicables dès leur publication sur la plateforme.</p>
+                </div>
+            </div>
+
+            <!-- 10. Contact -->
+            <div class="p-4 md:p-6 lg:p-8">
+                <h2 class="text-xl md:text-2xl font-semibold secondary mb-4 md:mb-6">10. Contact</h2>
+                <div class="text-sm md:text-base text-gray-600">
+                    <p class="mb-4">Pour toute question relative à cette Charte ou au traitement des données
+                        personnelles, les utilisateurs peuvent contacter :</p>
+                    <ul class="list-none space-y-2">
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Email :</span>
+                                <a href="mailto:rgpd@parksafe.fr"
+                                    class="text-primary hover:underline">rgpd@parksafe.fr</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">•</span>
+                            <div>
+                                <span class="font-medium">Numéro de Téléphone :</span>
+                                <a href="tel:0712345678" class="hover:text-primary">07.12.34.56.78</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <p class="mt-4">Les demandes seront traitées dans un délai maximal de <span class="font-medium">30
+                            jours</span>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

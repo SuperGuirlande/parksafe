@@ -4,6 +4,7 @@
 {% block title %}Proposer ma place de parking | ParkSafe{% endblock %}
 
 {% block extra_head %}
+
 <style>
     #comment-title {
         position: relative;
@@ -11,6 +12,8 @@
 
     #comment-title span {
         position: absolute;
+        top: 0;
+        right: 0;
         font-size: 50px;
         transform: translate(10px, -35px) rotate(30deg);
     }
@@ -37,7 +40,7 @@
 {% block content %}
 <!-- TITLE -->
 <section class="pt-16 pb-5 poppins flex flex-col">
-    <h1 class="text-4xl secondary font-semibold text-center mt-5">
+    <h1 class="text-3xl sm:text-4xl secondary font-semibold text-center mt-5">
         Devenir Hôte ParkSafe
     </h1>
     <p class="text-center px-5 text-lg font-light mt-6">
@@ -45,7 +48,7 @@
         Transformez-la en une source de revenus en rejoignant notre communauté d'hôtes.
     </p>
     <a href="{% url 'create_parking_place' %}" class="text-center mx-auto my-12">
-        <button class="py-4 px-10 text-2xl text-white bg-secondary rounded-xl shadow-md
+        <button class="py-2 px-5 sm:py-4 sm:px-10 text-lg sm:text-xl md:text-2xl text-white bg-secondary rounded-xl shadow-md
         hover:bg-blue-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out">
             Créer mon annonce
         </button>

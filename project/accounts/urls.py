@@ -4,7 +4,7 @@ from .views import change_profil_pic, admin_index, faq_index, faq_item_form, cli
 from .views import parker_cancel_reservation, parker_confirm_cancel, parker_confirm_accept, devenir_hote_index, parker_my_gains, parker_my_reservations, places_waiting_accept
 from .views import accept_place, delete_place
 
-from .views import main_items_index, ccm_add_item, ccm_edit_item, move_ccm_item, delete_ccm_item, pq_add_item, pq_edit_item, move_pq_item, delete_ccm_item
+from .views import main_items_index, ccm_add_item, ccm_edit_item, pq_add_item, pq_edit_item, change_email
 from reservations.views import accept_message
 from interactive_map.views import create_poi, create_poi_category, create_poi_city, poi_index, update_poi_commission
 from faq.views import move_faq_item
@@ -43,6 +43,7 @@ urlpatterns = [
     # CHANGE INFORMATIONS
     path('ajouter-numero-de-telephone/', change_mobile_number, name="change_mobile_number"),
     path('changer-image-de-profil/', change_profil_pic, name="change_profil_pic"),
+    path('changer-adresse-email/', change_email, name="change_email"),
 
     # ADMIN
     path('administrateur/', admin_index, name="admin_index"),

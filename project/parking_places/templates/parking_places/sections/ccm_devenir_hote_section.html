@@ -1,16 +1,16 @@
 <!-- COMMENT CA MARCHE -->
-<section class="flex flex-col poppins pb-12 bg-gray-200 py-16 relative z-30">
+<section class="flex flex-col poppins pb-12 bg-gray-200 py-16 relative z-30 pl-2 pr-5">
     <div class="container max-w-[1200px] mx-auto relative">
-        <h1 class="text-4xl secondary font-semibold mt-5" id="comment-title">
+        <h1 class="text-4xl secondary font-semibold mt-5 w-fit relative" id="comment-title">
             Comment ça marche
-            <span>?</span>
+            <span class="absolute">?</span>
         </h1>
         <div class="absolute h-[2px] w-40 bg-slate-300 translate-y-2"></div>
         
         <div class="flex flex-col gap-6 max-w-[720px] mt-12">
             {% for item in ccm_items %}
-            <div class="flex gap-10 items-center">
-                <div class="h-24 basis-24 shrink-0 text-5xl font-bold shadow-xl rounded-2xl flex items-center justify-center
+            <div class="flex gap-5 sm:gap-10 items-center">
+                <div class="h-16 basis-16 sm:h-24 sm:basis-24 shrink-0 text-3xl sm:text-5xl font-bold shadow-xl rounded-2xl flex items-center justify-center
                 {% if item.ordre == 2 %}text-white bg-primary{% else %}primary bg-gray-100{% endif %} relative">
                     <p class="">{{item.ordre}}</p>
                     {% if item.ordre == 2 %}

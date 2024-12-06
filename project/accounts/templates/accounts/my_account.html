@@ -72,7 +72,13 @@
                 </div>
                 <!-- EMAIL -->
                 <div class="flex justify-between text-sm sm:text-lg md:text-xl leading-loose">
-                    <p class="secondary font-semibold">Email :</p><p>{{user.email}}</p>
+                    <p class="secondary font-semibold">Email :</p>
+                    <div class="text-right">
+                        <a href="{% url 'change_email' %}">
+                            <p>{{user.email}}</p>
+                            <p class="underline text-blue-500 text-sm sm:text-base">Changer l'adresse email</p>
+                        </a>
+                    </div>
                 </div>
                 <!-- TELEPHONE -->
                 <div class="flex justify-between text-base sm:text-lg md:text-xl leading-loose">

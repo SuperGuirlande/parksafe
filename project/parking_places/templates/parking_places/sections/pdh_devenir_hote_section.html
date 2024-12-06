@@ -1,23 +1,23 @@
 <!-- POURQUOI DEVENIR HOTE -->
 <section class="flex flex-col poppins py-12">
-    <div class="container max-w-[1200px] mx-auto relative flex flex-col">
-        <h1 class="text-4xl secondary font-semibold mt-5" id="comment-title">
+    <div class="container max-w-[1200px] mx-auto relative flex flex-col p-5">
+        <h1 class="text-4xl secondary font-semibold mt-5 w-fit" id="comment-title">
             Pourquoi devenir Hôte ParkSafe
             <span>?</span>
             <div class="absolute h-[2px] w-40 bg-slate-300 translate-y-2"></div>
         </h1>
 
-        <div class="flex justify-evenly gap-5 flex-wrap mt-12">
+        <div class="flex justify-evenly gap-8 flex-wrap mt-12">
             {% for item in pdh_items %}
-                <div class="flex flex-col gap-5 basis-[350px] shrink-0 mt-5">
+                <div class="flex flex-col gap-8 basis-[320px] shrink-0 grow max-w-[380px] mt-5">
                     <h3 class="text-xl secondary font-semibold text-center">{{item.title}}</h3>
-                    <p class="text-lg text-justify">{{item.content}}</p>
+                    <p class="text-base sm:text-lg text-justify">{{item.content}}</p>
                 </div>
             {% endfor %}
         </div>
         {% if not hide_buttons %}
         <a href="{% url 'create_parking_place' %}" class="text-center mx-auto my-12">
-            <button class="py-4 px-10 text-2xl text-white bg-secondary rounded-xl shadow-md
+            <button class="py-3 px-6 sm:py-4 sm:px-10 text-xl sm:text-2xl text-white bg-secondary rounded-xl shadow-md
             hover:bg-blue-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-in-out">
                 Créer mon annonce
             </button>

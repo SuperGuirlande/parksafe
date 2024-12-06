@@ -7,7 +7,7 @@ from reservations.models import Reservation
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
+from django.utils import formats
 
 def send_sms(to_number, message_body):
     """
@@ -91,7 +91,8 @@ L'équipe ParkSafe 🚗✨
             to=[to_email]
         )
         email.send()
-
+        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H\hi")  
+        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H\hi")
         # TO CLIENT
         to_email = reservation.client.email
         subject = "📭 Nouvelle demande de réservation reçue !"
@@ -100,7 +101,7 @@ L'équipe ParkSafe 🚗✨
 Votre demande de réservation a été envoyée avec succès ! Voici les détails :
     • Hôte : {reservation.parker.first_name} {reservation.parker.last_name}
     • Adresse du stationnement : {reservation.place.address}
-    • Dates de réservation : {reservation.arrivee} - {reservation.departure}
+    • Dates de réservation : {arrivee_formatted} - {departure_formatted}
     • Prix total : {reservation.total_price}€
 
 👉 Et maintenant ?
@@ -154,7 +155,8 @@ def send_parker_accept_reserv_email(reservation):
     try:
         from_email = "noreply@agencecodemaster.com"
         client_confirmation_url = f"{settings.SITE_URL}/compte/mes-reservations/#attente-de-paiement"
-
+        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H\hi")  
+        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H\hi")
         # TO CLIENT
         to_email = reservation.client.email
         subject = "✅ Votre demande de réservation a été acceptée : Passez au paiement ! "
@@ -164,7 +166,7 @@ Bonne nouvelle, votre demande de réservation a été acceptée par {reservation
 
 Voici les détails :
     • Hôte : {reservation.parker.first_name} {reservation.parker.last_name}
-    • Dates de réservation : {reservation.arrivee} - {reservation.departure}
+    • Dates de réservation : {arrivee_formatted} - {departure_formatted}
     • Prix total : {reservation.total_price}€
     • Nombre de passagers : {reservation.passengers}
 
@@ -255,7 +257,8 @@ def send_client_payed_reserv_email(reservation):
         client_confirmation_url = f"{settings.SITE_URL}/compte/mes-reservations/#en-cours"
         client_number = str(reservation.phone)
         parker_number = str(reservation.place.phone)
-
+        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H\hi")  
+        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H\hi")
         # TO PARKER
         to_email = reservation.parker.email
         subject = f"💰 {reservation.client.first_name} {reservation.client.last_name} à finalisé sa réservation !"
@@ -264,7 +267,7 @@ Bonne nouvelle ! {reservation.client.first_name} {reservation.client.last_name} 
 
 Détails de la réservation :
     • Voyageur : {reservation.client.first_name} {reservation.client.last_name}
-    • Dates de réservation : {reservation.arrivee} - {reservation.departure}
+    • Dates de réservation : {arrivee_formatted} - {departure_formatted}
     • Adresse de stationnement : {reservation.place.address}
 
 Vous pouvez maintenant contacter le voyageur directement par téléphone au {client_number}.
@@ -281,7 +284,8 @@ L'équipe ParkSafe 🚗✨
             to=[to_email]
         )
         email.send()
-
+        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H\hi")  
+        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H\hi")
         # TO CLIENT
         to_email = reservation.client.email
         subject = "🎉 Réservation confirmée : Votre stationnement est prêt !"
@@ -292,7 +296,7 @@ Voici les détails :
     • Hôte : {reservation.parker.first_name} {reservation.parker.last_name}
     • Adresse du stationnement : {reservation.place.address}
     • Téléphone de l'hôte : {parker_number}
-    • Dates de réservation : {reservation.arrivee} - {reservation.departure}
+    • Dates de réservation : {arrivee_formatted} - {departure_formatted}
     • Prix total : {reservation.total_price}€
 
 👉 Prochaine étape :
@@ -443,17 +447,17 @@ def send_place_checked_mail(place):
 Bonne nouvelle ! Votre annonce a été vérifiée et est désormais en ligne. Les voyageurs peuvent
 maintenant la consulter et effectuer des réservations.
 
-👉 <b>Consultez votre annonce ici</b> : {confirmation_url}
+👉 Consultez votre annonce ici : {confirmation_url}
 
 
-<b>Suivi des notifications</b>
+Suivi des notifications
 
 Pour vous accompagner, vous recevrez des SMS et e-mails tout au long du processus de réservation :
     • Lorsque vous recevez une demande de réservation.
     • Lorsque le voyageur finalise la réservation en procédant au paiement. 
 
     
-<b>Important</b>
+Important
 
 Il est crucial de traiter les demandes de réservation le plus rapidement possible afin d'éviter que le
 voyageur ne finalise sa réservation ailleurs. Une réponse rapide améliore votre visibilité et votre

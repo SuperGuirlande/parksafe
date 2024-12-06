@@ -1,4 +1,5 @@
 {% load static %}
+{% load places_tags %}
 <section class="bg-primary mt-auto text-white flex flex-col py-10 poppins">
     <div class="flex flex-wrap w-full justify-between max-w-[1400px] mx-auto px-4 gap-10">
         <!-- LEFT -->
@@ -11,7 +12,7 @@
             <p class="text-white text-base md:text-lg text-center md:text-left mt-4">
                 Réservations simplifiées | Paiements sécurisés
             </p>
-            <div class="my-5 bg-white rounded-xl py-2 px-4 flex justify-center md:justify-start">
+            <div class="my-5 bg-white rounded-xl py-2 px-4 flex justify-center w-auto md:w-fit mx-auto md:mx-0">
                 <img class="h-8" src="{% static 'images/secure-pay.png' %}" alt="Paiement sécurisé">
             </div>
             <p class="text-base md:text-lg font-extrabold text-center md:text-left">
@@ -36,7 +37,8 @@
                     </p>
                     {% for city in cat.unique_cities %}
                     <a href="{% url 'search_parking_place' poi_slug=city.slug %}" 
-                       class="font-light mb-2 hover:text-blue-300 transition-colors">
+                       class="font-light mb-2 hover:text-blue-300 transition-colors"
+                       alt="Places de parking autour de {{cat|remove_plural}} de {{city.name}}">
                         {{ city.name }}
                     </a>
                     {% endfor %}
@@ -55,10 +57,10 @@
                 <a href="{% url 'a_propos' %}" class="hover:text-blue-300 transition-colors">À Propos</a>
                 <a href="{% url 'create_parking_place' %}" class="hover:text-blue-300 transition-colors">Proposer mes places</a>
                 <a href="{% url 'search_parking_place_index' %}" class="hover:text-blue-300 transition-colors mb-3">Rechercher une place</a>
-                <a href="#" class="hover:text-blue-300 transition-colors">→ Nous Contacter</a>
-                <a href="#" class="hover:text-blue-300 transition-colors">→ Politique de Confidentialité</a>
-                <a href="#" class="hover:text-blue-300 transition-colors">→ Mentions Légales</a>
-                <a href="#" class="hover:text-blue-300 transition-colors">→ Termes & Conditions</a>
+               <!-- <a href="#" class="hover:text-blue-300 transition-colors">→ Nous Contacter</a> -->
+                <a href="{% url 'confidentitalite' %}" class="hover:text-blue-300 transition-colors">→ Politique de Confidentialité</a>
+                <a href="{% url 'mentions_legales' %}" class="hover:text-blue-300 transition-colors">→ Mentions Légales</a>
+                <a href="{% url 'cgv' %}" class="hover:text-blue-300 transition-colors">→ Termes & Conditions</a>
             </nav>
         </div>
     </div>
