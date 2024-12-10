@@ -44,10 +44,7 @@
     <!-- Section Demandes à traiter -->
     <section class="w-full flex flex-col px-4 sm:px-6 lg:px-8 bg-gray-200 mt-10" id="a-confirmer">
         <div class="w-full max-w-[1080px] mx-auto py-10 sm:py-20">
-            <h1 class="text-3xl sm:text-4xl primary font-bold text-center">Demandes à traiter</h1>
-            <p class="text-lg sm:text-xl font-light my-3 sm:my-5 text-center">
-                Vous trouverez ici toutes vos réservations en cours, à venir, et terminées
-            </p>
+            <h1 class="text-3xl sm:text-4xl secondary font-bold text-center">Demandes à traiter</h1>
             
             <div class="flex flex-col my-5 sm:my-10">
                 {% if not waiting_accept.exists %}
@@ -147,16 +144,23 @@
                                     <th class="py-3 px-4">Téléphone</th>
                                     <th class="py-3 px-4">Arrivée</th>
                                     <th class="py-3 px-4">Départ</th>
+                                    <th class="py-3 px-4">Status</th>
                                     <th class="py-3 px-4 rounded-tr-xl">Revenus</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-sm">
                                 {% for res in current_reservations %}
                                 <tr class="border-b border-gray-200 hover:bg-gray-50">
-                                    <td class="py-3 px-4">{{res.client.first_name|default:"Client supprimé"}} {{res.client.last_name.0|default:""}}.</td>
-                                    <td class="py-3 px-4">{{res.phone}}</td>
+                                    <td class="py-3 px-4">
+                                        {{res.client.first_name|default:"Client supprimé"}} {{res.client.last_name.0|default:""}}.
+                                        <br>
+                                        <a href="{% url 'reservation_detail' res.token %}" class="underline text-blue-600">Détails →</a>
+                                    
+                                    </td>
+                                    <td class="py-3 px-4"><a href="tel:{{res.phone}}" class="underline text-blue-600">{{res.phone}}</a></td>
                                     <td class="py-3 px-4">{{res.arrivee}}</td>
                                     <td class="py-3 px-4">{{res.departure}}</td>
+                                    <td class="py-3 px-4">{% if res.is_current %}En cours{% else %}A venir{% endif %}</td>
                                     <td class="py-3 px-4">{{res.price}}€</td>
                                 </tr>
                                 {% endfor %}
@@ -168,7 +172,7 @@
                     <div class="md:hidden space-y-4 mt-5">
                         {% for res in current_reservations %}
                         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                            <div class="space-y-2">
+                            <div class="space-y-2 flex flex-col">
                                 <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                                     <span class="font-medium">{{res.client.first_name|default:"Client supprimé"}} {{res.client.last_name.0|default:""}}.</span>
                                     <span class="text-primary font-semibold">{{res.price}}€</span>
@@ -176,7 +180,7 @@
                                 <div class="space-y-1 text-sm">
                                     <div class="flex justify-between">
                                         <span class="text-gray-500">Téléphone</span>
-                                        <span>{{res.phone}}</span>
+                                        <span><a href="tel:{{res.phone}}" class="underline text-blue-600">{{res.phone}}</a></span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-gray-500">Arrivée</span>
@@ -187,6 +191,8 @@
                                         <span>{{res.departure}}</span>
                                     </div>
                                 </div>
+                                <a href="{% url 'reservation_detail' res.token %}" class="underline text-blue-600 mt-3">Détails →</a>
+
                             </div>
                         </div>
                         {% endfor %}

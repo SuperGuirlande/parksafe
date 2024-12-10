@@ -1,0 +1,147 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load places_tags %}
+
+{% block extra_head %}
+<style>
+    .reservation-detail {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="py-12 md:py-24 bg-gray-200 shadow-xl poppins">
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-10 secondary">
+            Détails de la Réservation
+        </h1>
+
+        <div class="reservation-detail max-w-2xl mx-auto">
+            <!-- Informations client et hôte -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <h2 class="font-semibold text-gray-600">Client</h2>
+                    <p>{{ reservation.client.first_name }} {{ reservation.client.last_name }}</p>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-gray-600">Hôte</h2>
+                    <p>{{ reservation.parker.first_name }} {{ reservation.parker.last_name }}</p>
+                </div>
+            </div>
+
+            <!-- Détails de la réservation -->
+            <div class="border-t pt-4 mb-4">
+                <h2 class="font-semibold text-gray-600 mb-2">Détails de la Réservation</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-500">Date d'arrivée</p>
+                        <p>{{ reservation.arrivee|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Date de départ</p>
+                        <p>{{ reservation.departure|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Durée</p>
+                        <p>{{ reservation.days }} jour(s)</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Nombre de véhicules</p>
+                        <p>{{ reservation.vehicules_number }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Nombre de passagers</p>
+                        <p>{{ reservation.passengers }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations sur les véhicules -->
+            <div class="border-t pt-4 mb-4">
+                <h2 class="font-semibold text-gray-600 mb-2">Véhicules</h2>
+                {% for vehicle in vehicles %}
+                    <div class="mb-2">
+                        <p class="text-sm text-gray-500">Véhicule {{ forloop.counter }}</p>
+                        <p>
+                            Type : {{ vehicle.type }}
+                            | Modèle : {{ vehicle.model|default:"Modèle non spécifié" }}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>  
+
+            <!-- Tarification -->
+            <div class="border-t pt-4 mb-4">
+                <h2 class="font-semibold text-gray-600 mb-2">Tarification</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-500">Prix de l'hôte</p>
+                        <p>{{ reservation.price }} €</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Prix total</p>
+                        <p>{{ reservation.total_price }} €</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Commission ParkSafe</p>
+                        <p>{{ reservation.commission }}%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statut -->
+            <div class="border-t pt-4 mb-4">
+                <h2 class="font-semibold text-gray-600 mb-2">Statut</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-500">Statut</p>
+                        <p>
+                            {% if reservation.accepted %}
+                                <span class="text-green-600">Acceptée</span>
+                            {% elif reservation.refused %}
+                                <span class="text-red-600">Refusée</span>
+                            {% else %}
+                                <span class="text-yellow-600">En attente</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Paiement</p>
+                        <p>
+                            {% if reservation.payed %}
+                                <span class="text-green-600">Payée</span>
+                            {% else %}
+                                <span class="text-yellow-600">Non payée</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message -->
+            <div class="border-t pt-4">
+                <h2 class="font-semibold text-gray-600 mb-2">Message</h2>
+                <p>{{ reservation.message }}</p>
+            </div>
+
+            <!-- Réponse de l'hôte -->
+            {% if reponse %}
+            <div class="border-t pt-4 mt-4">
+                <h2 class="font-semibold text-gray-600 mb-2">Réponse de l'hôte</h2>
+                <p>{{ reponse }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+    // Vous pouvez ajouter du script supplémentaire ici si nécessaire
+</script>
+{% endblock %}

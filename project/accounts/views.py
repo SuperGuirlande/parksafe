@@ -83,17 +83,29 @@ def user_logout(request):
 @login_required
 def client_index(request):
     user = request.user
-    
+    from django.utils import timezone
+    now = timezone.now()
+
     all_reservation = Reservation.objects.filter(client=user, finished=False, canceled=False)
     for reservation in all_reservation:
         if not reservation.place:
             reservation.canceled = True
             reservation.save()
 
+    check_res = Reservation.objects.filter(client=user, accepted=True, payed=True, canceled=False, finished=False)
+    for res in check_res:
+        if res.departure < now:
+            res.finished = True
+            res.save()
+
     waiting_accept_reservations = Reservation.objects.filter(client=user, accepted=False, canceled=False, payed=False, finished=False).order_by('-id')
     waiting_paiement_reservations = Reservation.objects.filter(client=user, accepted=True, canceled=False, payed=False, finished=False).order_by('-id')
     current_reservations = Reservation.objects.filter(client=user, accepted=True, payed=True, canceled=False, finished=False).order_by('-id')
     finished_reservations = Reservation.objects.filter(client=user, accepted=True, payed=True, canceled=False, finished=True).order_by('-id')
+
+    for reservation in current_reservations:
+        reservation.is_current = reservation.arrivee <= now < reservation.departure
+        reservation.is_future = reservation.arrivee > now
 
     context={
         'waiting_accept_reservations': waiting_accept_reservations,
@@ -150,6 +162,7 @@ def parker_confirm_cancel(request, token):
     if request.user != reservation.parker:
         return redirect('my_account')
     
+    reservation.refused = True
     reservation.canceled = True
     reservation.save()
     request.session['message'] = "La réservation à bien été refusée"
@@ -183,6 +196,8 @@ def parker_confirm_accept(request, token):
 def parker_my_reservations(request):
     import json
     from django.core.serializers.json import DjangoJSONEncoder
+    from django.utils import timezone
+    now = timezone.now()
     user = request.user
 
     all_reservation = Reservation.objects.filter(parker=user, finished=False, canceled=False)
@@ -190,6 +205,12 @@ def parker_my_reservations(request):
         if not reservation.place:
             reservation.canceled = True
             reservation.save()
+
+    check_res = Reservation.objects.filter(parker=user, accepted=True, payed=True, canceled=False, finished=False)
+    for res in check_res:
+        if res.departure < now:
+            res.finished = True
+            res.save()
 
     waiting_accept = Reservation.objects.filter(parker=user, accepted=False, payed=False, canceled=False, finished=False).order_by('arrivee')
     waiting_paiements = Reservation.objects.filter(parker=user, accepted=True, payed=False, canceled=False, finished=False).order_by('arrivee')
@@ -199,6 +220,11 @@ def parker_my_reservations(request):
     avis = AvisClientParker.objects.filter(parker=user)
 
     indisponibles = PlaceIndisponibility.objects.filter(place__user=user)
+
+    for reservation in current_reservations:
+        reservation.is_current = reservation.arrivee <= now < reservation.departure
+        reservation.is_future = reservation.arrivee > now
+
 
     reservations_data = []
     for res in current_reservations:

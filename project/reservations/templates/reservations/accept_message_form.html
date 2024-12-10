@@ -24,16 +24,16 @@
 {% endblock %}
 
 {% block account_content %}
-<main class="flex flex-col poppins px-4 sm:px-6">
-    <div class="w-full max-w-[850px] mx-auto py-10 sm:py-20 flex flex-col">
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl primary text-center font-semibold mt-10">
+<main class="flex flex-col poppins px-4 sm:px-6 bg-gray-100">
+    <div class="w-full max-w-[1080px] mx-auto py-10 sm:py-20 flex flex-col">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl secondary text-center font-semibold mt-10">
             Accepter la réservation
         </h1>
         <p class="text-lg sm:text-xl font-light text-slate-600 my-4 sm:my-5 text-center">
             Après acceptation de votre part, le client sera invité à payer la réservation.
         </p>
 
-        <div class="bg-gray-200 shadow-xl py-6 px-4 sm:px-8 flex flex-col sm:flex-row gap-6 sm:gap-8 mt-8 sm:mt-12 items-start sm:items-center rounded-2xl">
+        <div class="bg-white shadow-xl py-6 px-4 sm:px-8 flex flex-col sm:flex-row gap-6 sm:gap-8 mt-8 sm:mt-12 items-start sm:items-center rounded-2xl">
             <!-- MINIATURE -->
             <div class="w-full sm:w-64 h-48 sm:h-64 overflow-hidden rounded-xl">
                 <img src="{{ reservation.place.thumbnail.url }}" alt="" class="object-cover object-center h-full w-full">
@@ -43,7 +43,7 @@
                 <h2 class="secondary text-2xl sm:text-3xl font-normal">
                     Demande de <span class="font-semibold">{{ reservation.client.first_name }} {{ reservation.client.last_name.0 }}.</span>
                 </h2>
-                <div class="text-lg sm:text-xl text-slate-800 flex flex-col sm:flex-row gap-2">
+                <div class="text-lg tracking-wider text-slate-800 flex flex-col sm:flex-row gap-2">
                     <p><b>Départ:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}}</p>
                     <span class="hidden sm:inline">|</span>
                     <p><b>Retour:</b> {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}</p>

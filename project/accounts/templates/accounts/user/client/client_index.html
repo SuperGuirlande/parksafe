@@ -6,6 +6,14 @@
 {% block account_title %}Réservations en attente | ParkSafe{% endblock %}
 
 {% block account_head %}
+<style>
+    td, th {
+        padding: 10px 20px;
+    }
+    td {
+        border: solid 1px gray;
+    }
+</style>
 {% endblock %}
 
 {% block account_content %}
@@ -181,31 +189,62 @@
                     </button>
                 </a>
                 {% else %}
-                <div class="flex flex-col gap-5">
-                    {% for res in current_reservations %}
-                        <div class="bg-white shadow-xl py-6 md:py-10 px-4 md:px-10 flex flex-col md:flex-row gap-6 md:gap-10 rounded-xl items-center">
-                            <div class="w-full md:w-64 h-48 md:h-64 overflow-hidden rounded-xl">
-                                <img src="{{ res.place.thumbnail.url }}" alt="" class="object-cover object-center">
-                            </div>
-                            <div class="flex flex-col gap-5 w-full">
-                                <h2 class="secondary text-2xl md:text-3xl font-semibold">
-                                    {{ res.place|simple_format_title }}
-                                </h2>
-                                <p class="text-lg md:text-xl text-slate-800">
-                                    <b>Départ:</b> {{ res.arrivee|date:"d/m/Y"}} à {{ res.arrivee|date:"H:i"}} |
-                                    <b>Retour:</b> {{ res.departure|date:"d/m/Y"}} à {{ res.departure|date:"H:i"}}
-                                </p>
-                                <p class="text-sm md:text-md">
-                                    {{res.place.description}}
-                                </p>
-            
-                                <div class="space-y-2 text-gray-700 text-sm md:text-md">
-                                    <p><b>Nb de véhicules : </b>{{ res.vehicules_number }} | <b>Nb de passagers : </b>{{ res.passengers }}</p>
-                                    <p><b>Durée : </b>{{ res.days }} jours | <b>Prix total :</b> {{ res.total_price }} €</p>
+                <div class="w-full">
+                    <!-- Version desktop -->
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="w-full rounded-t-xl mt-5 sm:mt-10 bg-white">
+                            <thead class="bg-secondary text-left text-white font-semibold rounded-t-xl">
+                                <tr>
+                                    <th class="py-3 px-4 rounded-tl-xl">Client</th>
+                                    <th class="py-3 px-4">Téléphone</th>
+                                    <th class="py-3 px-4">Arrivée</th>
+                                    <th class="py-3 px-4">Départ</th>
+                                    <th class="py-3 px-4 rounded-tr-xl"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for res in current_reservations %}
+                                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                    <td class="py-3 px-4">{{res.client.first_name|default:"Client supprimé"}} {{res.client.last_name.0|default:""}}.</td>
+                                    <td class="py-3 px-4"><a href="tel:{{res.phone}}" class="underline text-blue-600">{{res.phone}}</a></td>
+                                    <td class="py-3 px-4">{{res.arrivee}}</td>
+                                    <td class="py-3 px-4">{{res.departure}}</td>
+                                    <td class="py-3 px-4"><a href="{% url 'reservation_detail' res.token %}" class="text-blue-600 underline">Détails →</a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                
+                    <!-- Version mobile -->
+                    <div class="md:hidden space-y-4 mt-5">
+                        {% for res in current_reservations %}
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                            <div class="space-y-2 flex flex-col">
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                    <span class="font-medium">{{res.client.first_name|default:"Client supprimé"}} {{res.client.last_name.0|default:""}}.</span>
+                                    <span class="text-primary font-semibold">{{res.price}}€</span>
                                 </div>
+                                <div class="space-y-1 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Téléphone</span>
+                                        <span><a href="tel:{{res.phone}}" class="underline text-blue-600">{{res.phone}}</a></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Arrivée</span>
+                                        <span>{{res.arrivee}}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500">Départ</span>
+                                        <span>{{res.departure}}</span>
+                                    </div>
+                                    
+                                </div>
+                                <a href="{% url 'reservation_detail' res.token %}" class="text-blue-600 underline mt-3"><p>Détails →</p></a>
                             </div>
                         </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             </div>

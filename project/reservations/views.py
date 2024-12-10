@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import AcceptMessageForm, ReservationForm
-from .models import Reservation
+from .models import AcceptMessage, Reservation
 from parking_places.models import ParkingPlace
 from django.template.response import TemplateResponse
 from interactive_map.models import PointOfInterest
@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def make_reservation(request, place_token):
+    
     place = get_object_or_404(ParkingPlace, token=place_token)
     hide_button = True
     
@@ -92,3 +93,23 @@ def accept_message(request, token):
         'form': form,
         'reservation': reservation,
     })
+
+
+def reservation_detail(request, token):
+    reservation = get_object_or_404(Reservation, token=token)
+    reponse = AcceptMessage.objects.filter(reservation=reservation).last()
+    vehicles = [
+        {
+            'type': reservation.get_vehicle_type_display(getattr(reservation, f"vehicule_type_{i}", None)),
+            'model': getattr(reservation, f"vehicule_model_{i}", None)
+        }
+        for i in range(1, reservation.vehicules_number + 1)
+    ]
+
+    context = {
+        'reservation': reservation,
+        'vehicles': vehicles,
+        'reponse': reponse,
+    }
+
+    return TemplateResponse(request, 'reservations/reservation_detail.html', context)

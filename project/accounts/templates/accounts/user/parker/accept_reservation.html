@@ -10,8 +10,8 @@
 <div class="flex flex-col lg:flex-row gap-8 lg:gap-20 min-h-screen poppins">
     {% include 'accounts/account_sidebar.html' %}
     
-    <main class="w-full lg:basis-[1080px] lg:shrink lg:grow-0 mx-auto flex flex-col px-4 lg:px-0">
-        <div class="w-full max-w-[1080px] mx-auto text-center py-10 lg:py-20 flex flex-col">
+    <main class="w-full lg:basis-[1280px] lg:shrink lg:grow-0 mx-auto flex flex-col px-4 lg:px-0">
+        <div class="w-full max-w-[1280px] mx-auto text-center py-10 lg:py-20 flex flex-col">
             <h1 class="text-3xl sm:text-4xl lg:text-5xl primary text-center font-semibold">
                 Accepter la réservation
             </h1>
@@ -34,17 +34,17 @@
             </div>
         </div>
 
-        <div class="bg-slate-100 shadow-xl py-6 lg:py-10 px-4 lg:px-12 flex flex-col sm:flex-row gap-6">
+        <div class="bg-gray-100 shadow-xl py-6 lg:py-10 px-4 lg:px-12 flex flex-col sm:flex-row gap-6">
             <!-- MINIATURE -->
             <div class="w-full sm:w-64 h-48 sm:h-64 overflow-hidden rounded-lg">
                 <img src="{{ reservation.place.thumbnail.url }}" alt="" class="w-full h-full object-cover object-center">
             </div>
             <!-- TEXT -->
             <div class="flex flex-col gap-4 lg:gap-5">
-                <h2 class="secondary text-2xl lg:text-3xl font-normal">
+                <h2 class="secondary text-xl lg:text-2xl font-normal">
                     Demande de <span class="font-semibold">{{ reservation.name }}</span>
                 </h2>
-                <div class="text-lg lg:text-xl text-slate-800 flex flex-col sm:flex-row gap-2 sm:gap-4">
+                <div class="text text-slate-800 flex flex-col sm:flex-row gap-2 sm:gap-4">
                     <p><b>Départ:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}}</p>
                     <p class="hidden sm:block">|</p>
                     <p><b>Retour:</b> {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}</p>

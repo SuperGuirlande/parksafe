@@ -36,6 +36,7 @@ class Reservation(models.Model):
     total_price = models.DecimalField(verbose_name="Prix de total (en €)", max_digits=5, decimal_places=2, blank=True, null=True)
 
     accepted = models.BooleanField(default=False, verbose_name="Acceptée par le loueur")
+    refused = models.BooleanField(default=False, verbose_name="Refusée par le loueur")
     payed = models.BooleanField(default=False, verbose_name="Payée par le client")
     finished = models.BooleanField(default=False, verbose_name="Réservation terminée")
     canceled = models.BooleanField(default=False, verbose_name="Réservation annulée")
@@ -115,6 +116,18 @@ class Reservation(models.Model):
         formatted_arrivee = self.arrivee.strftime('%d/%m/%Y à %Hh%M')
         formatted_departure = self.departure.strftime('%d/%m/%Y à %Hh%M')
         return f"Réservation de {self.client.first_name} {self.client.last_name[0]}. vers {self.parker.first_name} {self.parker.last_name[0]}. | Début: {formatted_arrivee} -- Fin: {formatted_departure}"
+    
+    def get_vehicle_type_display(self, vehicule_type):
+        mapping = {
+            'VT': 'Voiture',
+            'UT': 'Utilitaire',
+            'FG': 'Fourgon',
+            'CM': 'Camion',
+            'VN': 'Van',
+            'CC': 'Camping Car',
+            'MT': 'Moto',
+        }
+        return mapping.get(vehicule_type, vehicule_type)
 
 
 class AcceptMessage(models.Model):

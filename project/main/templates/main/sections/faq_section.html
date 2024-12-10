@@ -1,6 +1,6 @@
 <section class="min-h-screen shadow-lg flex flex-col py-16 px-5 poppins">
     <div class="my-auto mx-auto flex flex-col">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl primary font-extrabold w-fit text-center mx-auto"
+        <h1 class="text-3xl sm:text-4xl md:text-5xl secondary font-extrabold w-fit text-center mx-auto"
             id="faq-title">FAQ - Questions Fréquentes</h1>
         <p class="text-center text-base sm:text-lg mt-12">
             Trouvez ici les réponses aux questions les plus courantes sur ParkSafe. <br><br>
@@ -8,10 +8,10 @@
             contactez-nous au <a href="tel:0712345678" class="text-blue-500 underline">07.12.34.56.78</a> ou par
             e-mail à <a href="mailto:support@parksafe.com" class="text-blue-500 underline">support@parksafe.com</a>.
         </p>
-        <div class="w-full max-w-4xl mx-auto my-20">
+        <div class="w-full max-w-4xl mx-auto my-20 flex flex-col">
             {% for item in faq_items %}
-            <div class="question-card flex flex-col w-full bg-gray-100 py-5 px-10 my-3 shadow-md cursor-pointer
-            transition-all duration-200 hover:bg-gray-200" data-target="{{item.id}}">
+            <div class="question-card flex flex-col w-full bg-gray-100 py-5 px-10 my-1 shadow-md cursor-pointer
+            transition-all duration-200 hover:bg-gray-200 {% if item.ordre > 5 %}hidden dynamic{% endif %}" data-target="{{item.id}}">
 
                 <div class="flex w-full justify-between secondary">
                     <p class="text-md sm:text-md md:text-lg poppins font-semibold">{{ item.question }}</p>
@@ -26,7 +26,10 @@
                     </div>
                 </p>
             </div>
-            {% endfor %}    
+            {% endfor %}   
+            <button id="more_btn" class="py-3 px-8 bg-secondary text-white uppercase mx-auto shadow-lg text-center my-6 hover:bg-blue-800 hover:shadow-xl transition-all duration-300 rounded-xl hover:-translate-y-1">
+                Voir plus
+            </button> 
         </div>
     </div>
 </section>
