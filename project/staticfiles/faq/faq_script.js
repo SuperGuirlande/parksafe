@@ -116,3 +116,19 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+const btn = document.getElementById('more_btn')
+const dynamics = document.getElementsByClassName('dynamic')
+
+btn.addEventListener('click', function() {
+    Array.from(dynamics).forEach((d) => {
+        // Perform actions on each element
+        d.classList.toggle('hidden')
+    });
+    console.log(btn.innerText)
+    if (btn.innerText == "VOIR PLUS") {
+        btn.innerText = "VOIR MOINS"
+    } else {
+        btn.innerText = "VOIR PLUS"
+    }
+});
