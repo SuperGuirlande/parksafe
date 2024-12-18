@@ -42,7 +42,7 @@
                         <p>{{ reservation.arrivee|date:"d/m/Y H:i" }}</p>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-500">Date de départ</p>
+                        <p class="text-sm text-gray-500">Date de retour</p>
                         <p>{{ reservation.departure|date:"d/m/Y H:i" }}</p>
                     </div>
                     <div>
@@ -78,18 +78,17 @@
             <div class="border-t pt-4 mb-4">
                 <h2 class="font-semibold text-gray-600 mb-2">Tarification</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {% if is_parker %}
                     <div>
-                        <p class="text-sm text-gray-500">Prix de l'hôte</p>
+                        <p class="text-sm text-gray-500">Vos revenus</p>
                         <p>{{ reservation.price }} €</p>
                     </div>
+                    {% else %}
                     <div>
                         <p class="text-sm text-gray-500">Prix total</p>
                         <p>{{ reservation.total_price }} €</p>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Commission ParkSafe</p>
-                        <p>{{ reservation.commission }}%</p>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
 

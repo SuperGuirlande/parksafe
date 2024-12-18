@@ -225,7 +225,6 @@ def parker_my_reservations(request):
         reservation.is_current = reservation.arrivee <= now < reservation.departure
         reservation.is_future = reservation.arrivee > now
 
-
     reservations_data = []
     for res in current_reservations:
         first_name = "Client supprimé" if res.client is None else res.client.first_name
@@ -240,7 +239,8 @@ def parker_my_reservations(request):
             },
             'arrivee': localtime(res.arrivee).strftime('%Y-%m-%dT%H:%M'),
             'departure': localtime(res.departure).strftime('%Y-%m-%dT%H:%M'),
-            'price': str(res.price)
+            'price': str(res.price),
+            'token': res.token
         })
 
     context = {

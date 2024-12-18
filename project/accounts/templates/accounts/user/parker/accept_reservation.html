@@ -45,7 +45,7 @@
                     Demande de <span class="font-semibold">{{ reservation.name }}</span>
                 </h2>
                 <div class="text text-slate-800 flex flex-col sm:flex-row gap-2 sm:gap-4">
-                    <p><b>Départ:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}}</p>
+                    <p><b>Arrivée:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}}</p>
                     <p class="hidden sm:block">|</p>
                     <p><b>Retour:</b> {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}</p>
                 </div>

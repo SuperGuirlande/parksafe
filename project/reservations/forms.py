@@ -38,7 +38,8 @@ class ReservationForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'rows': 4,  # ou le nombre de lignes que vous souhaitez
             'placeholder': "Ex: Bonjour, nous seront 2 adultes et 2 enfants. Notre vol est prévue pour 15h30."
-        })
+        }),
+        required=False
     )
     vehicule_model_1 = forms.CharField(
         required=True,
@@ -154,7 +155,8 @@ class AcceptMessageForm(forms.ModelForm):
         widget=forms.Textarea(attrs={
             'rows': 6,
             'placeholder': "Laissez un message à l'utilisateur"
-        })
+        }),
+        required=False
     )
 
     class Meta:

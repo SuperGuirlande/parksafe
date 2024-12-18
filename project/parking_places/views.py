@@ -96,7 +96,8 @@ def change_parking_place(request, token):
         form = CreateParkingPlaceForm(request.POST, request.FILES, instance=place)
         if form.is_valid():
             form.save()
-            return redirect('my_account_places')
+            request.session['message'] = "Votre annonce a été modifiée avec succès !"
+            return redirect('parker_index')
     else:
         form = CreateParkingPlaceForm(instance=place)
 

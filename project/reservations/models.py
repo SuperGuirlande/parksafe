@@ -90,7 +90,7 @@ class Reservation(models.Model):
 
     passengers=models.IntegerField(default=1, verbose_name="Nombre de passager(s)")
     phone = phone = PhoneNumberField(region='FR')
-    message = models.TextField(verbose_name="Message")
+    message = models.TextField(verbose_name="Message", null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # GENERATE UNIQUE TOKEN
@@ -131,7 +131,7 @@ class Reservation(models.Model):
 
 
 class AcceptMessage(models.Model):
-    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="accept_messages")
+    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name="accept_messages", null=True, blank=True)
     message = models.TextField(verbose_name="Message")
 
     def __str__(self):

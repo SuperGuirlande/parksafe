@@ -77,6 +77,9 @@ def reservation_confirm(request):
 def accept_message(request, token):
     reservation = get_object_or_404(Reservation, token=token)
 
+    if request.user != reservation.parker:
+        return redirect('index')
+
     if request.method == 'POST':
         form = AcceptMessageForm(request.POST)
 
@@ -98,6 +101,12 @@ def accept_message(request, token):
 def reservation_detail(request, token):
     reservation = get_object_or_404(Reservation, token=token)
     reponse = AcceptMessage.objects.filter(reservation=reservation).last()
+
+    if reservation.parker == request.user:
+        is_parker = True
+    else:
+        is_parker = False
+
     vehicles = [
         {
             'type': reservation.get_vehicle_type_display(getattr(reservation, f"vehicule_type_{i}", None)),
@@ -110,6 +119,7 @@ def reservation_detail(request, token):
         'reservation': reservation,
         'vehicles': vehicles,
         'reponse': reponse,
+        'is_parker': is_parker,
     }
 
     return TemplateResponse(request, 'reservations/reservation_detail.html', context)

@@ -44,7 +44,7 @@
                 {{ reservation.place|simple_format_title }}
             </h2>
             <p class="text-xl text-slate-800">
-                <b>Départ:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}} |
+                <b>Arrivée:</b> {{ reservation.arrivee|date:"d/m/Y"}} à {{ reservation.arrivee|date:"H:i"}} |
                 <b>Retour:</b> {{ reservation.departure|date:"d/m/Y"}} à {{ reservation.departure|date:"H:i"}}
 
             </p>
