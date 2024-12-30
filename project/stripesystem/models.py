@@ -65,8 +65,8 @@ class StripeConnectAccount(models.Model):
             stripe.api_key = settings.STRIPE_SECRET_KEY.strip()
             account_link = stripe.AccountLink.create(
                 account=self.stripe_account_id,
-                refresh_url="http://127.0.0.1:8000/compte/mes-revenus/",
-                return_url="http://127.0.0.1:8000/compte/mes-revenus/",
+                refresh_url="https://www.parksafe.fr/compte/mes-revenus/",
+                return_url="https://www.parksafe.fr/compte/mes-revenus/",
                 type="account_onboarding",
             )
             return account_link.url
