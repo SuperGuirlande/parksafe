@@ -67,7 +67,7 @@ L'hôte dispose de 24h pour répondre. Consultez les détails ici : {client_conf
 
 def send_client_make_reserv_email(reservation):
     try:
-        from_email = "noreply@park-safe.fr"
+        from_email = "ParkSafe <noreply@park-safe.fr>"
         parker_confirmation_url = f"{settings.SITE_URL}/compte/hote/mes-reservations/#a-confirmer"
         client_confirmation_url = f"{settings.SITE_URL}/compte/mes-reservations/#en-attente"
 
@@ -91,8 +91,8 @@ L'équipe ParkSafe 🚗✨
             to=[to_email]
         )
         email.send()
-        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H/hi")  
-        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H/hi")
+        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H:h")  
+        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H:h")
         # TO CLIENT
         to_email = reservation.client.email
         subject = "📭 Nouvelle demande de réservation envoyée !"
@@ -154,10 +154,10 @@ Procédez au paiement sous 48h pour la finaliser {client_confirmation_url} 🚗"
 
 def send_parker_accept_reserv_email(reservation):
     try:
-        from_email = "noreply@park-safe.fr"
+        from_email = "ParkSafe <noreply@park-safe.fr>"
         client_confirmation_url = f"{settings.SITE_URL}/compte/mes-reservations/#attente-de-paiement"
-        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H/hi")  
-        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H/hi")
+        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H:h")  
+        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H:h")
         # TO CLIENT
         to_email = reservation.client.email
         subject = "✅ Votre demande de réservation a été acceptée : Passez au paiement ! "
@@ -253,13 +253,13 @@ Bon voyage ! 🚗✈️
 
 def send_client_payed_reserv_email(reservation):
     try:
-        from_email = "noreply@park-safe.fr"
+        from_email = "ParkSafe <noreply@park-safe.fr>"
         parker_confirmation_url = f"{settings.SITE_URL}/compte/hote/mes-reservations/#mes-reservations"
         client_confirmation_url = f"{settings.SITE_URL}/compte/mes-reservations/#en-cours"
         client_number = str(reservation.phone)
         parker_number = str(reservation.place.phone)
-        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H/hi")  
-        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H/hi")
+        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H:h")  
+        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H:h")
         # TO PARKER
         to_email = reservation.parker.email
         subject = f"💰 {reservation.client.first_name} {reservation.client.last_name} à finalisé sa réservation !"
@@ -285,8 +285,8 @@ L'équipe ParkSafe 🚗✨
             to=[to_email]
         )
         email.send()
-        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H/hi")  
-        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H/hi")
+        arrivee_formatted = formats.date_format(reservation.arrivee, format="l j F Y à H:h")  
+        departure_formatted = formats.date_format(reservation.departure, format="l j F Y à H:h")
         # TO CLIENT
         to_email = reservation.client.email
         subject = "🎉 Réservation confirmée : Votre stationnement est prêt !"
@@ -327,7 +327,7 @@ L'équipe ParkSafe
 # COMPTE CREE
 def send_account_created_mail(user):
     try:
-        from_email = "noreply@park-safe.fr"
+        from_email = "ParkSafe <noreply@park-safe.fr>"
         connect_url = f"{settings.SITE_URL}/compte/se-connecter/"
 
         to_email = user.email
@@ -382,7 +382,7 @@ Vous serez informé dès qu'elle sera active. 🚗✨
 
 def send_place_created_mail(place):
     try:
-        from_email = "noreply@park-safe.fr"
+        from_email = "ParkSafe <noreply@park-safe.fr>"
 
         to_email = place.user.email
         subject = f"📋 Votre annonce est en cours de vérification"
@@ -439,7 +439,7 @@ Consultez-la ici : {confirmation_url}
 def send_place_checked_mail(place):
     confirmation_url = f"{settings.SITE_URL}/places/detail-de-la-place/{place.token}/"
     try:
-        from_email = "noreply@park-safe.fr"
+        from_email = "ParkSafe <noreply@park-safe.fr>"
 
         to_email = place.user.email
         subject = f"🎉 Votre annonce est maintenant en ligne !"
