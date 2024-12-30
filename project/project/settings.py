@@ -184,7 +184,7 @@ STRIPE_ENDPOINT_SECRET = env('STRIPE_ENDPOINT_SECRET', default='').strip()
 if DEBUG:
     SITE_URL = 'http://127.0.0.1:8000' 
 else:
-    SITE_URL = 'https://superguirlande.pythonanywhere.com'
+    SITE_URL = 'https://www.parksafe.fr'
 
 
 # CKEDITOR
