@@ -5,7 +5,7 @@ from interactive_map.models import PointOfInterest, PoiCategory
 from django.template.response import TemplateResponse
 from avis.models import AvisClientParker
 from parking_places.models import CommentCaMarcheItem, PourquoiParksafeItem
-
+from .forms import ContactForm
 
 def index(request):
     user = request.user
@@ -38,6 +38,20 @@ def a_propos(request):
         'faq_items': faq_items,
         'ccm_items': ccm_items,
         'pq_items': pq_items,
+    })
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            request.session['message'] = "Votre message nous a bien été envoyé !"
+    else:
+        form = ContactForm()
+
+    return TemplateResponse(request, 'main/contact.html', context={
+        'form': form,
     })
 
 
